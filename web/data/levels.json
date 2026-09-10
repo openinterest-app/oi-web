@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-09-10T01:16:19.494020Z",
+  "updated_at": "2026-09-10T01:46:14.099289Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
-      "close": 762.4,
+      "close": 762.4000244140625,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-10",
         "pull_date": "10-9",
-        "support": 695.0,
+        "support": 737.0,
         "resistance": 770.0,
         "prev_support": 695.0,
         "prev_resistance": 770.0,
@@ -27,7 +27,7 @@
         "exp": "2026-09-11",
         "pull_date": "10-9",
         "support": 760.0,
-        "resistance": 777.0,
+        "resistance": 770.0,
         "prev_support": 760.0,
         "prev_resistance": 777.0,
         "prev_as_of": "9-9"
@@ -147,24 +147,24 @@
         },
         {
           "date": "9-9",
-          "close": 762.4
+          "close": 762.4000244140625
         },
         {
           "date": "10-9",
-          "close": 762.4
+          "close": 762.4000244140625
         }
       ]
     },
     "QQQ": {
       "ticker": "QQQ",
-      "close": 716.31,
+      "close": 716.3099975585938,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-10",
         "pull_date": "10-9",
-        "support": 656.0,
-        "resistance": 725.0,
+        "support": 710.0,
+        "resistance": 722.0,
         "prev_support": 656.0,
         "prev_resistance": 725.0,
         "prev_as_of": "9-9"
@@ -301,23 +301,23 @@
         },
         {
           "date": "9-9",
-          "close": 716.31
+          "close": 716.3099975585938
         },
         {
           "date": "10-9",
-          "close": 716.31
+          "close": 716.3099975585938
         }
       ]
     },
     "IWM": {
       "ticker": "IWM",
-      "close": 290.64,
+      "close": 290.6400146484375,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-10",
         "pull_date": "10-9",
-        "support": 292.0,
+        "support": 289.0,
         "resistance": 303.0,
         "prev_support": 292.0,
         "prev_resistance": 303.0,
@@ -455,23 +455,23 @@
         },
         {
           "date": "9-9",
-          "close": 290.64
+          "close": 290.6400146484375
         },
         {
           "date": "10-9",
-          "close": 290.64
+          "close": 290.6400146484375
         }
       ]
     },
     "GLD": {
       "ticker": "GLD",
-      "close": 403.35,
+      "close": 403.3500061035156,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-10",
         "pull_date": "10-9",
-        "support": 395.0,
+        "support": 402.0,
         "resistance": 410.0,
         "prev_support": 395.0,
         "prev_resistance": 410.0,
@@ -609,11 +609,11 @@
         },
         {
           "date": "9-9",
-          "close": 403.35
+          "close": 403.3500061035156
         },
         {
           "date": "10-9",
-          "close": 403.35
+          "close": 403.3500061035156
         }
       ]
     },
@@ -621,11 +621,11 @@
       "ticker": "SPX",
       "close": 7636.35986328125,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-10",
         "pull_date": "10-9",
-        "support": 7600.0,
+        "support": 7475.0,
         "resistance": 7875.0,
         "prev_support": 7600.0,
         "prev_resistance": 7875.0,
@@ -643,7 +643,7 @@
         "exp": "2026-09-11",
         "pull_date": "10-9",
         "support": 6000.0,
-        "resistance": 7825.0,
+        "resistance": 7750.0,
         "prev_support": 6000.0,
         "prev_resistance": 7825.0,
         "prev_as_of": "9-9"
@@ -775,12 +775,12 @@
       "ticker": "NDX",
       "close": 29421.552734375,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-10",
         "pull_date": "10-9",
-        "support": 26600.0,
-        "resistance": 30500.0,
+        "support": 28400.0,
+        "resistance": 29730.0,
         "prev_support": 26600.0,
         "prev_resistance": 30500.0,
         "prev_as_of": "9-9"
@@ -815,7 +815,7 @@
         "exp": "2026-10-16",
         "pull_date": "10-9",
         "support": 22000.0,
-        "resistance": 29975.0,
+        "resistance": 30425.0,
         "prev_support": 22000.0,
         "prev_resistance": 29975.0,
         "prev_as_of": "9-9"
@@ -887,13 +887,13 @@
     },
     "AAPL": {
       "ticker": "AAPL",
-      "close": 315.34,
+      "close": 315.3399963378906,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
-        "support": 300.0,
+        "support": 255.0,
         "resistance": 330.0,
         "prev_support": 300.0,
         "prev_resistance": 330.0,
@@ -910,7 +910,7 @@
       "weekly": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
-        "support": 300.0,
+        "support": 255.0,
         "resistance": 330.0,
         "prev_support": 300.0,
         "prev_resistance": 330.0,
@@ -1023,19 +1023,19 @@
         },
         {
           "date": "9-9",
-          "close": 315.34
+          "close": 315.3399963378906
         },
         {
           "date": "10-9",
-          "close": 315.34
+          "close": 315.3399963378906
         }
       ]
     },
     "MSFT": {
       "ticker": "MSFT",
-      "close": 491.65,
+      "close": 491.6499938964844,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -1169,19 +1169,19 @@
         },
         {
           "date": "9-9",
-          "close": 491.65
+          "close": 491.6499938964844
         },
         {
           "date": "10-9",
-          "close": 491.65
+          "close": 491.6499938964844
         }
       ]
     },
     "NVDA": {
       "ticker": "NVDA",
-      "close": 223.67,
+      "close": 223.6699981689453,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -1315,19 +1315,19 @@
         },
         {
           "date": "9-9",
-          "close": 223.67
+          "close": 223.6699981689453
         },
         {
           "date": "10-9",
-          "close": 223.67
+          "close": 223.6699981689453
         }
       ]
     },
     "TSLA": {
       "ticker": "TSLA",
-      "close": 367.81,
+      "close": 367.80999755859375,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -1461,19 +1461,19 @@
         },
         {
           "date": "9-9",
-          "close": 367.81
+          "close": 367.80999755859375
         },
         {
           "date": "10-9",
-          "close": 367.81
+          "close": 367.80999755859375
         }
       ]
     },
     "AMZN": {
       "ticker": "AMZN",
-      "close": 252.4,
+      "close": 252.39999389648438,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -1503,7 +1503,7 @@
       "opx": {
         "exp": "2026-09-18",
         "pull_date": "10-9",
-        "support": 160.0,
+        "support": 250.0,
         "resistance": 280.0,
         "prev_support": 160.0,
         "prev_resistance": 280.0,
@@ -1607,24 +1607,24 @@
         },
         {
           "date": "9-9",
-          "close": 252.4
+          "close": 252.39999389648438
         },
         {
           "date": "10-9",
-          "close": 252.4
+          "close": 252.39999389648438
         }
       ]
     },
     "META": {
       "ticker": "META",
-      "close": 653.69,
+      "close": 653.6900024414062,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
-        "support": 590.0,
-        "resistance": 650.0,
+        "support": 630.0,
+        "resistance": 700.0,
         "prev_support": 590.0,
         "prev_resistance": 650.0,
         "prev_as_of": "9-9"
@@ -1640,8 +1640,8 @@
       "weekly": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
-        "support": 590.0,
-        "resistance": 650.0,
+        "support": 630.0,
+        "resistance": 700.0,
         "prev_support": 590.0,
         "prev_resistance": 650.0,
         "prev_as_of": "9-9"
@@ -1650,7 +1650,7 @@
         "exp": "2026-09-18",
         "pull_date": "10-9",
         "support": 140.0,
-        "resistance": 650.0,
+        "resistance": 700.0,
         "prev_support": 140.0,
         "prev_resistance": 650.0,
         "prev_as_of": "9-9"
@@ -1753,19 +1753,19 @@
         },
         {
           "date": "9-9",
-          "close": 653.69
+          "close": 653.6900024414062
         },
         {
           "date": "10-9",
-          "close": 653.69
+          "close": 653.6900024414062
         }
       ]
     },
     "GOOGL": {
       "ticker": "GOOGL",
-      "close": 330.65,
+      "close": 330.6499938964844,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -1804,7 +1804,7 @@
       "next_opx": {
         "exp": "2026-10-16",
         "pull_date": "10-9",
-        "support": 340.0,
+        "support": 320.0,
         "resistance": 375.0,
         "prev_support": 340.0,
         "prev_resistance": 375.0,
@@ -1899,19 +1899,19 @@
         },
         {
           "date": "9-9",
-          "close": 330.65
+          "close": 330.6499938964844
         },
         {
           "date": "10-9",
-          "close": 330.65
+          "close": 330.6499938964844
         }
       ]
     },
     "AVGO": {
       "ticker": "AVGO",
-      "close": 364.38,
+      "close": 364.3800048828125,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -2045,19 +2045,19 @@
         },
         {
           "date": "9-9",
-          "close": 364.38
+          "close": 364.3800048828125
         },
         {
           "date": "10-9",
-          "close": 364.38
+          "close": 364.3800048828125
         }
       ]
     },
     "MSTR": {
       "ticker": "MSTR",
-      "close": 132.7,
+      "close": 132.6999969482422,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -2191,24 +2191,24 @@
         },
         {
           "date": "9-9",
-          "close": 132.7
+          "close": 132.6999969482422
         },
         {
           "date": "10-9",
-          "close": 132.7
+          "close": 132.6999969482422
         }
       ]
     },
     "AMD": {
       "ticker": "AMD",
-      "close": 521.095,
+      "close": 521.0999755859375,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
         "support": 280.0,
-        "resistance": 500.0,
+        "resistance": 520.0,
         "prev_support": 280.0,
         "prev_resistance": 500.0,
         "prev_as_of": "9-9"
@@ -2225,7 +2225,7 @@
         "exp": "2026-09-11",
         "pull_date": "10-9",
         "support": 280.0,
-        "resistance": 500.0,
+        "resistance": 520.0,
         "prev_support": 280.0,
         "prev_resistance": 500.0,
         "prev_as_of": "9-9"
@@ -2234,7 +2234,7 @@
         "exp": "2026-09-18",
         "pull_date": "10-9",
         "support": 140.0,
-        "resistance": 470.0,
+        "resistance": 500.0,
         "prev_support": 140.0,
         "prev_resistance": 470.0,
         "prev_as_of": "9-9"
@@ -2243,7 +2243,7 @@
         "exp": "2026-10-16",
         "pull_date": "10-9",
         "support": 400.0,
-        "resistance": 450.0,
+        "resistance": 490.0,
         "prev_support": 400.0,
         "prev_resistance": 450.0,
         "prev_as_of": "9-9"
@@ -2337,19 +2337,19 @@
         },
         {
           "date": "9-9",
-          "close": 521.095
+          "close": 521.0999755859375
         },
         {
           "date": "10-9",
-          "close": 521.095
+          "close": 521.0999755859375
         }
       ]
     },
     "MU": {
       "ticker": "MU",
-      "close": 1027.77,
+      "close": 1027.77001953125,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -2483,19 +2483,19 @@
         },
         {
           "date": "9-9",
-          "close": 1027.77
+          "close": 1027.77001953125
         },
         {
           "date": "10-9",
-          "close": 1027.77
+          "close": 1027.77001953125
         }
       ]
     },
     "COHR": {
       "ticker": "COHR",
-      "close": 303.48,
+      "close": 303.4800109863281,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -2535,7 +2535,7 @@
         "exp": "2026-10-16",
         "pull_date": "10-9",
         "support": 240.0,
-        "resistance": 400.0,
+        "resistance": 500.0,
         "prev_support": 240.0,
         "prev_resistance": 400.0,
         "prev_as_of": "9-9"
@@ -2629,19 +2629,19 @@
         },
         {
           "date": "9-9",
-          "close": 303.48
+          "close": 303.4800109863281
         },
         {
           "date": "10-9",
-          "close": 303.48
+          "close": 303.4800109863281
         }
       ]
     },
     "SNDK": {
       "ticker": "SNDK",
-      "close": 1764.17,
+      "close": 1764.1700439453125,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
@@ -2743,23 +2743,23 @@
         },
         {
           "date": "9-9",
-          "close": 1764.17
+          "close": 1764.1700439453125
         },
         {
           "date": "10-9",
-          "close": 1764.17
+          "close": 1764.1700439453125
         }
       ]
     },
     "VOO": {
       "ticker": "VOO",
-      "close": 700.87,
+      "close": 700.8699951171875,
       "as_of": "10-9",
-      "updated_at": "2026-09-09T01:15:39Z",
+      "updated_at": "2026-09-10T01:45:42Z",
       "daily": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
-        "support": 550.0,
+        "support": 702.5,
         "resistance": 710.0,
         "prev_support": 550.0,
         "prev_resistance": 710.0,
@@ -2776,7 +2776,7 @@
       "weekly": {
         "exp": "2026-09-11",
         "pull_date": "10-9",
-        "support": 550.0,
+        "support": 702.5,
         "resistance": 710.0,
         "prev_support": 550.0,
         "prev_resistance": 710.0,
@@ -2841,11 +2841,11 @@
         },
         {
           "date": "9-9",
-          "close": 700.87
+          "close": 700.8699951171875
         },
         {
           "date": "10-9",
-          "close": 700.87
+          "close": 700.8699951171875
         }
       ]
     }
