@@ -2929,10 +2929,14 @@ function openExportDialog() {
   html += '<div class="exp-month exp-series-row-block">';
   html += '<div class="exp-month-dates">';
   html +=
-    '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__SERIES_PREV__">' +
+    '<button type="button" class="exp-date-chip exp-series-chip' +
+    (state.seriesMode ? ' on' : '') +
+    '" data-exp="__SERIES_PREV__">' +
     '<span class="d">اليوم بالسابق</span></button>';
   html +=
-    '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__TAWAFUQ__">' +
+    '<button type="button" class="exp-date-chip exp-series-chip' +
+    (state.tawafuqMode ? ' on' : '') +
+    '" data-exp="__TAWAFUQ__">' +
     '<span class="d">التوافق</span></button>';
   html += "</div></div>";
   order.forEach(function (key) {
@@ -2941,7 +2945,7 @@ function openExportDialog() {
     html += '<div class="exp-month-title">' + (g.label || key) + "</div>";
     html += '<div class="exp-month-dates">';
     g.items.forEach(function (it) {
-      const on = it.exp === curExp ? " on" : "";
+      const on = (!state.tawafuqMode && !state.seriesMode && it.exp === curExp) ? " on" : "";
       html +=
         '<button type="button" class="exp-date-chip' +
         on +
