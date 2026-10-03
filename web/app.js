@@ -3242,8 +3242,8 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب بصري: اليوم بالسابق | التوافق | الانتهاء | التاريخ الظاهر | Days
-  // التاريخ الظاهر = #expDropdown وليس #expSelect المخفي
+  // ترتيب نهائي حسب طلب المستخدم:
+  // [مربع التاريخ + الانتهاء] → اليوم بالسابق → التوافق (أخيرًا) → Days
   (function layoutExpSeriesRow() {
     var controls = document.querySelector(".controls");
     if (!controls) return;
@@ -3270,12 +3270,14 @@ function init() {
       host.className = "exp-series-row";
     }
 
-    if (seriesBtn) host.appendChild(seriesBtn);
-    host.appendChild(tw);
+    // 1) الانتهاء  2) التاريخ الظاهر  3) اليوم بالسابق  4) التوافق
     if (expLabel) host.appendChild(expLabel);
     if (expSelect) host.appendChild(expSelect);
     if (expDd) host.appendChild(expDd);
+    if (seriesBtn) host.appendChild(seriesBtn);
+    host.appendChild(tw);
 
+    // ضع الصف قبل Days مباشرة
     var daysLab = null;
     Array.prototype.forEach.call(controls.children, function (ch) {
       if (ch.tagName === "LABEL" && (ch.textContent || "").trim() === "Days") daysLab = ch;
@@ -3300,6 +3302,7 @@ function init() {
     styleTab(seriesBtn);
     styleTab(tw);
   })();
+
 
 
 
