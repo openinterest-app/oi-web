@@ -1772,7 +1772,7 @@ function latestPullIso(data) {
 }
 
 /**
- * التوافق: أعمدة = انتهاءات من تاريخ السحب الحالي فصاعداً.
+ * جدول الأيام: أعمدة = انتهاءات من تاريخ السحب الحالي فصاعداً.
  * القيمة = أوبن آخر سحب لكل انتهاء.
  * Δ = آخر سحب مقابل السحب السابق لنفس الانتهاء.
  */
@@ -1961,7 +1961,7 @@ function renderTawafuqTable() {
   var html =
     '<div class="table-title"><div>' +
     state.ticker +
-    " | التوافق</div>";
+    " | جدول الأيام</div>";
   if (close != null) {
     var liveTag = state.livePrice != null ? " · مباشر" : "";
     html +=
@@ -2925,7 +2925,7 @@ function openExportDialog() {
   html += "</div>";
 
   html += '<div class="exp-month-list">';
-  // شريط خاص: اليوم بالسابق + التوافق (نفس المقاس والشكل)
+  // شريط خاص: اليوم بالسابق + جدول الأيام (نفس المقاس والشكل)
   html += '<div class="exp-month exp-series-row-block">';
   html += '<div class="exp-month-dates">';
   html +=
@@ -2933,7 +2933,7 @@ function openExportDialog() {
     '<span class="d">اليوم بالسابق</span></button>';
   html +=
     '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__TAWAFUQ__">' +
-    '<span class="d">التوافق</span></button>';
+    '<span class="d">جدول الأيام</span></button>';
   html += "</div></div>";
   order.forEach(function (key) {
     const g = groups[key];
@@ -3005,7 +3005,7 @@ function openExportDialog() {
   body.innerHTML = html;
   modal.classList.remove("hidden");
 
-  // إن كنا في وضع التوافق — فعّل بطاقة التوافق تلقائياً
+  // إن كنا في وضع جدول الأيام — فعّل بطاقة جدول الأيام تلقائياً
   if (state.tawafuqMode) {
     var autoTw = body.querySelector('[data-exp="__TAWAFUQ__"]');
     if (autoTw) {
@@ -3137,50 +3137,18 @@ function runExportFromDialog(emode, edays, estrikes) {
       return String(exp).slice(0, 31);
     }
 
-    function exportTawafuqSheet(wb, data, edays, estrikes) {
+    // يكتب جدول الأيام في الورقة المعطاة ويعيد آخر عمود، أو 0 عند عدم وجود بيانات
+    function writeDaysTable(ws, startCol, data, edays, estrikes) {
       var daysTry = [edays, "ALL", "10", "5", "2"];
-      var written = false;
-      // أضف الورقة في البداية حتى يفتحها Excel أولاً
-      var wsTw = wb.addWorksheet("جدول الأيام", {
-        views: [{ rightToLeft: true }],
-        properties: { tabColor: { argb: "FF0D9488" } },
-      });
-      try { wb.removeWorksheet(wsTw.id); } catch (eR) {}
-      // أعد إضافتها كأول ورقة
-      wsTw = wb.addWorksheet("جدول الأيام", {
-        views: [{ rightToLeft: true }],
-        properties: { tabColor: { argb: "FF0D9488" } },
-      });
-      if (wb.worksheets.length > 1) {
-        try {
-          // انقل للموضع الأول إن أمكن
-          var id = wsTw.id;
-          var list = wb.worksheets.slice();
-        } catch (eO) {}
-      }
-      if (typeof writeTawafuqToSheet !== "function") {
-        wsTw.getCell(1, 1).value = "دالة التوافق غير متاحة";
-        return false;
-      }
       for (var di = 0; di < daysTry.length; di++) {
         var d = daysTry[di];
         if (d == null || d === "") continue;
-        if (written) break;
-        var ret = writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, d, estrikes);
-        if (typeof ret === "number" && ret > 2) {
-          written = true;
-          break;
-        }
+        var ret = writeTawafuqToSheet(ws, 2, startCol, data, state.ticker, d, estrikes);
+        if (typeof ret === "number" && ret > startCol) return ret;
       }
-      if (!written) {
-        // محاولة أخيرة بدون حد سترايك
-        var ret2 = writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, "ALL", "ALL");
-        if (typeof ret2 === "number" && ret2 > 2) written = true;
-      }
-      if (!written) {
-        wsTw.getCell(2, 2).value = (state.ticker || "") + " | جدول الأيام — لا بيانات متاحة";
-      }
-      return written;
+      // محاولة أخيرة بدون حد سترايك
+      var ret2 = writeTawafuqToSheet(ws, 2, startCol, data, state.ticker, "ALL", "ALL");
+      return typeof ret2 === "number" && ret2 > startCol ? ret2 : 0;
     }
 
     var hasTw = chosen.indexOf("__TAWAFUQ__") >= 0;
@@ -3189,10 +3157,39 @@ function runExportFromDialog(emode, edays, estrikes) {
       return e !== "__TAWAFUQ__" && e !== "__SERIES_PREV__";
     });
 
-    // 1) جدول الأيام أولاً دائماً
+    // وضع «صفحة واحدة»: كل الجداول في ورقة Export (جدول الأيام أولاً) مثل النسخة الخاصة
+    // وضع «متعددة»: ورقة مستقلة باسم «جدول الأيام»
     var twOk = false;
+    var twErr = "";
+    var wsMain = null;
+    var mainCol = 2;
+    if (emode !== "multi" && (hasTw || normals.length)) {
+      wsMain = wb.addWorksheet("Export", { views: [{ rightToLeft: true }] });
+    }
+
+    // 1) جدول الأيام أولاً دائماً
     if (hasTw) {
-      twOk = !!exportTawafuqSheet(wb, data, edays, estrikes);
+      try {
+        var wsTw = wsMain;
+        var twStart = mainCol;
+        if (emode === "multi") {
+          wsTw = wb.addWorksheet("جدول الأيام", {
+            views: [{ rightToLeft: true }],
+            properties: { tabColor: { argb: "FF0D9488" } },
+          });
+          twStart = 2;
+        }
+        var twLast = writeDaysTable(wsTw, twStart, data, edays, estrikes);
+        if (twLast) {
+          twOk = true;
+          if (emode !== "multi") mainCol = twLast + 1 + GAP;
+        } else {
+          wsTw.getCell(2, twStart).value = (state.ticker || "") + " | جدول الأيام — لا بيانات متاحة";
+        }
+      } catch (eTw) {
+        twErr = eTw && eTw.message ? eTw.message : String(eTw);
+        if (typeof console !== "undefined") console.error("days-table export failed", eTw);
+      }
     }
 
     // 2) اليوم بالسابق
@@ -3216,24 +3213,24 @@ function runExportFromDialog(emode, edays, estrikes) {
         });
         writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta);
       });
-    } else if (normals.length) {
-      var wsN = wb.addWorksheet("Export", {
-        views: [{ rightToLeft: true }],
-      });
-      var col = 2;
+    } else if (normals.length && wsMain) {
+      var col = mainCol;
       normals.forEach(function (exp) {
         var viewN = getViewRowsFor(data, exp, edays, estrikes);
         if (!viewN) return;
-        var last = writeOiTableToSheet(wsN, 2, col, viewN, state.ticker, showDelta);
+        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta);
         col = (typeof last === "number" ? last : col) + 1 + GAP;
       });
     }
 
-    // رسالة واضحة
-    if (hasTw && st) {
-      st.textContent = twOk
-        ? "تم تصدير جدول الأيام ✓"
-        : "تحذير: جدول الأيام بدون بيانات";
+    var twNote = "";
+    if (hasTw) {
+      twNote = twOk
+        ? " — تم تصدير جدول الأيام ✓"
+        : twErr
+        ? " — خطأ في جدول الأيام: " + twErr
+        : " — تحذير: جدول الأيام بدون بيانات";
+      if (st) st.textContent = twNote.replace(/^ — /, "");
     }
 
     if (wb.worksheets.length === 0) {
@@ -3265,7 +3262,7 @@ function runExportFromDialog(emode, edays, estrikes) {
         a.click();
         URL.revokeObjectURL(a.href);
       }
-      if (st) st.textContent = "تم التصدير";
+      if (st) st.textContent = "تم التصدير" + (typeof twNote === "string" ? twNote : "");
       setStatus("تم التصدير", "ok");
     }).catch(function (err) {
       if (st) st.textContent = "خطأ: " + (err && err.message ? err.message : err);
@@ -3499,7 +3496,7 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب مثل الخاص: اليوم بالسابق | التوافق | الانتهاء | التاريخ
+  // ترتيب مثل الخاص: اليوم بالسابق | جدول الأيام | الانتهاء | التاريخ
   (function layoutExpSeriesRow() {
     var controls = document.querySelector(".controls");
     if (!controls) return;
@@ -3516,8 +3513,8 @@ function init() {
       tw.id = "tawafuqBtn";
       tw.type = "button";
       tw.className = "series-btn tawafuq-btn";
-      tw.title = "التوافق";
-      tw.textContent = "التوافق";
+      tw.title = "جدول الأيام";
+      tw.textContent = "جدول الأيام";
     }
 
     var host = document.querySelector(".exp-series-row");
