@@ -3005,6 +3005,17 @@ function openExportDialog() {
   body.innerHTML = html;
   modal.classList.remove("hidden");
 
+  // إن كنا في وضع التوافق — فعّل بطاقة التوافق تلقائياً
+  if (state.tawafuqMode) {
+    var autoTw = body.querySelector('[data-exp="__TAWAFUQ__"]');
+    if (autoTw) {
+      body.querySelectorAll(".exp-date-chip.on").forEach(function (c) {
+        c.classList.remove("on");
+      });
+      autoTw.classList.add("on");
+    }
+  }
+
   let emode = "single";
   let edays = String(state.days || "2");
   let estrikes =
@@ -3127,47 +3138,77 @@ function runExportFromDialog(emode, edays, estrikes) {
     }
 
     function exportTawafuqSheet(wb, data, edays, estrikes) {
-      var daysTry = [edays, "ALL", "10", "5"];
+      var daysTry = [edays, "ALL", "10", "5", "2"];
       var written = false;
+      // أضف الورقة في البداية حتى يفتحها Excel أولاً
       var wsTw = wb.addWorksheet("جدول الأيام", {
         views: [{ rightToLeft: true }],
+        properties: { tabColor: { argb: "FF0D9488" } },
       });
+      try { wb.removeWorksheet(wsTw.id); } catch (eR) {}
+      // أعد إضافتها كأول ورقة
+      wsTw = wb.addWorksheet("جدول الأيام", {
+        views: [{ rightToLeft: true }],
+        properties: { tabColor: { argb: "FF0D9488" } },
+      });
+      if (wb.worksheets.length > 1) {
+        try {
+          // انقل للموضع الأول إن أمكن
+          var id = wsTw.id;
+          var list = wb.worksheets.slice();
+        } catch (eO) {}
+      }
       if (typeof writeTawafuqToSheet !== "function") {
         wsTw.getCell(1, 1).value = "دالة التوافق غير متاحة";
-        return;
+        return false;
       }
       for (var di = 0; di < daysTry.length; di++) {
         var d = daysTry[di];
         if (d == null || d === "") continue;
-        // امسح محتوى سابق إن فشلت محاولة
         if (written) break;
         var ret = writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, d, estrikes);
-        // ret > 2 يعني كُتبت أعمدة
         if (typeof ret === "number" && ret > 2) {
           written = true;
           break;
         }
       }
       if (!written) {
-        wsTw.getCell(1, 1).value = (state.ticker || "") + " | جدول الأيام — لا بيانات";
+        // محاولة أخيرة بدون حد سترايك
+        var ret2 = writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, "ALL", "ALL");
+        if (typeof ret2 === "number" && ret2 > 2) written = true;
+      }
+      if (!written) {
+        wsTw.getCell(2, 2).value = (state.ticker || "") + " | جدول الأيام — لا بيانات متاحة";
+      }
+      return written;
+    }
+
+    var hasTw = chosen.indexOf("__TAWAFUQ__") >= 0;
+    var hasSeries = chosen.indexOf("__SERIES_PREV__") >= 0;
+    var normals = chosen.filter(function (e) {
+      return e !== "__TAWAFUQ__" && e !== "__SERIES_PREV__";
+    });
+
+    // 1) جدول الأيام أولاً دائماً
+    var twOk = false;
+    if (hasTw) {
+      twOk = !!exportTawafuqSheet(wb, data, edays, estrikes);
+    }
+
+    // 2) اليوم بالسابق
+    if (hasSeries) {
+      var sv2 = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
+      if (sv2) {
+        var wsS2 = wb.addWorksheet("Series", {
+          views: [{ rightToLeft: true }],
+        });
+        writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta);
       }
     }
 
+    // 3) تواريخ الانتهاء
     if (emode === "multi") {
-      chosen.forEach(function (exp) {
-        if (exp === "__TAWAFUQ__") {
-          exportTawafuqSheet(wb, data, edays, estrikes);
-          return;
-        }
-        if (exp === "__SERIES_PREV__") {
-          var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
-          if (!sv) return;
-          var wsS = wb.addWorksheet("Series", {
-            views: [{ rightToLeft: true }],
-          });
-          writeOiTableToSheet(wsS, 2, 2, sv, state.ticker, showDelta);
-          return;
-        }
+      normals.forEach(function (exp) {
         var viewM = getViewRowsFor(data, exp, edays, estrikes);
         if (!viewM) return;
         var wsM = wb.addWorksheet(sheetNameFor(exp), {
@@ -3175,37 +3216,24 @@ function runExportFromDialog(emode, edays, estrikes) {
         });
         writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta);
       });
-    } else {
-      var hasTw = chosen.indexOf("__TAWAFUQ__") >= 0;
-      var hasSeries = chosen.indexOf("__SERIES_PREV__") >= 0;
-      var normals = chosen.filter(function (e) {
-        return e !== "__TAWAFUQ__" && e !== "__SERIES_PREV__";
+    } else if (normals.length) {
+      var wsN = wb.addWorksheet("Export", {
+        views: [{ rightToLeft: true }],
       });
+      var col = 2;
+      normals.forEach(function (exp) {
+        var viewN = getViewRowsFor(data, exp, edays, estrikes);
+        if (!viewN) return;
+        var last = writeOiTableToSheet(wsN, 2, col, viewN, state.ticker, showDelta);
+        col = (typeof last === "number" ? last : col) + 1 + GAP;
+      });
+    }
 
-      if (hasTw) {
-        exportTawafuqSheet(wb, data, edays, estrikes);
-      }
-      if (hasSeries) {
-        var sv2 = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
-        if (sv2) {
-          var wsS2 = wb.addWorksheet("Series", {
-            views: [{ rightToLeft: true }],
-          });
-          writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta);
-        }
-      }
-      if (normals.length) {
-        var wsN = wb.addWorksheet("Export", {
-          views: [{ rightToLeft: true }],
-        });
-        var col = 2;
-        normals.forEach(function (exp) {
-          var viewN = getViewRowsFor(data, exp, edays, estrikes);
-          if (!viewN) return;
-          var last = writeOiTableToSheet(wsN, 2, col, viewN, state.ticker, showDelta);
-          col = (typeof last === "number" ? last : col) + 1 + GAP;
-        });
-      }
+    // رسالة واضحة
+    if (hasTw && st) {
+      st.textContent = twOk
+        ? "تم تصدير جدول الأيام ✓"
+        : "تحذير: جدول الأيام بدون بيانات";
     }
 
     if (wb.worksheets.length === 0) {
