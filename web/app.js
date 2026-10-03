@@ -2732,151 +2732,6 @@ function isFirstMondayOfMonth(d) {
   return d.getDate() <= 7;
 }
 
-function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, strikesLimit) {
-  var view = getTawafuqView(data, daysLimit, strikesLimit);
-  if (!view || !view.columns || !view.columns.length) return startCol;
-  var cols = view.columns;
-  var rows = view.rows;
-  var nCols = cols.length;
-  var showDelta = !!state.showDelta;
-  var fontB = { name: "Calibri", size: 11, bold: true, color: { argb: "FF000000" } };
-  var fontN = { name: "Calibri", size: 11, color: { argb: "FF000000" } };
-  var fontD = { name: "Calibri", size: 9, bold: true, color: { argb: "FF0D9488" } };
-  var alignC = { horizontal: "center", vertical: "middle", wrapText: true };
-  var border = {
-    top: { style: "thin", color: { argb: "FFD9D9D9" } },
-    bottom: { style: "thin", color: { argb: "FFD9D9D9" } },
-    left: { style: "thin", color: { argb: "FFD9D9D9" } },
-    right: { style: "thin", color: { argb: "FFD9D9D9" } },
-  };
-  var fillMax = { type: "pattern", pattern: "solid", fgColor: { argb: "FFC8C4D6" } };
-  var fillOpx = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEDE9FE" } };
-  var fillFri = { type: "pattern", pattern: "solid", fgColor: { argb: "FFDBEAFE" } };
-  var fillEom = { type: "pattern", pattern: "solid", fgColor: { argb: "FFCCFBF1" } };
-  var fillNorm = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF1F5F9" } };
-  var fillHead = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE7E6E6" } };
-
-  function kindFill(k) {
-    if (k === "opx") return fillOpx;
-    if (k === "fri") return fillFri;
-    if (k === "eom") return fillEom;
-    return fillNorm;
-  }
-
-  var rTitle = startRow;
-  var rHead = startRow + 1;
-  var dataStart = startRow + 2;
-  var strikeCol = startCol + nCols;
-  var endCol = strikeCol + nCols;
-
-  // title
-  for (var c = startCol; c <= endCol; c++) {
-    var cell = ws.getCell(rTitle, c);
-    cell.border = border;
-    cell.fill = fillHead;
-    cell.font = fontB;
-    cell.alignment = alignC;
-  }
-  ws.getCell(rTitle, startCol).value = (ticker || "") + " | التوافق";
-
-  // headers CALL reversed | STRIKE | PUT forward
-  for (var i = 0; i < nCols; i++) {
-    var fh = formatTawafuqHeader(cols[nCols - 1 - i].exp);
-    var th = ws.getCell(rHead, startCol + i);
-    th.value = fh.top + (fh.sub ? "\n" + fh.sub : "");
-    th.font = fontB;
-    th.alignment = alignC;
-    th.border = border;
-    th.fill = kindFill(cols[nCols - 1 - i].kind);
-  }
-  var sc = ws.getCell(rHead, strikeCol);
-  sc.value = "STRIKE";
-  sc.font = fontB;
-  sc.alignment = alignC;
-  sc.border = border;
-  sc.fill = fillHead;
-  for (var j = 0; j < nCols; j++) {
-    var fh2 = formatTawafuqHeader(cols[j].exp);
-    var th2 = ws.getCell(rHead, strikeCol + 1 + j);
-    th2.value = fh2.top + (fh2.sub ? "\n" + fh2.sub : "");
-    th2.font = fontB;
-    th2.alignment = alignC;
-    th2.border = border;
-    th2.fill = kindFill(cols[j].kind);
-  }
-
-  // max per col
-  var callMax = [], putMax = [];
-  for (var ci = 0; ci < nCols; ci++) {
-    var mc = 0, mp = 0;
-    rows.forEach(function (r) {
-      if (r.calls[ci] != null && r.calls[ci] > mc) mc = r.calls[ci];
-      if (r.puts[ci] != null && r.puts[ci] > mp) mp = r.puts[ci];
-    });
-    callMax[ci] = mc;
-    putMax[ci] = mp;
-  }
-
-  rows.forEach(function (r, ri) {
-    var rowIdx = dataStart + ri;
-    // calls reversed
-    for (var ic = 0; ic < nCols; ic++) {
-      var srcI = nCols - 1 - ic;
-      var cell = ws.getCell(rowIdx, startCol + ic);
-      cell.border = border;
-      cell.alignment = alignC;
-      cell.fill = kindFill(cols[srcI].kind);
-      if (!r.present[srcI] || r.calls[srcI] == null || r.calls[srcI] === 0) {
-        cell.value = "";
-        continue;
-      }
-      var oi = r.calls[srcI];
-      var isMax = callMax[srcI] > 0 && oi === callMax[srcI];
-      if (showDelta && r.callDeltas[srcI] != null && r.callDeltas[srcI] > 0) {
-        cell.value = oi.toLocaleString() + "\n+" + r.callDeltas[srcI].toLocaleString();
-        cell.font = isMax ? fontB : fontN;
-      } else {
-        cell.value = oi;
-        cell.numFmt = "#,##0";
-        cell.font = isMax ? fontB : fontN;
-      }
-      if (isMax) cell.fill = fillMax;
-    }
-    var strikeCell = ws.getCell(rowIdx, strikeCol);
-    strikeCell.value = r.strike;
-    strikeCell.font = fontB;
-    strikeCell.alignment = alignC;
-    strikeCell.border = border;
-    // puts
-    for (var ip = 0; ip < nCols; ip++) {
-      var cellp = ws.getCell(rowIdx, strikeCol + 1 + ip);
-      cellp.border = border;
-      cellp.alignment = alignC;
-      cellp.fill = kindFill(cols[ip].kind);
-      if (!r.present[ip] || r.puts[ip] == null || r.puts[ip] === 0) {
-        cellp.value = "";
-        continue;
-      }
-      var oip = r.puts[ip];
-      var isMaxP = putMax[ip] > 0 && oip === putMax[ip];
-      if (showDelta && r.putDeltas[ip] != null && r.putDeltas[ip] > 0) {
-        cellp.value = oip.toLocaleString() + "\n+" + r.putDeltas[ip].toLocaleString();
-        cellp.font = isMaxP ? fontB : fontN;
-      } else {
-        cellp.value = oip;
-        cellp.numFmt = "#,##0";
-        cellp.font = isMaxP ? fontB : fontN;
-      }
-      if (isMaxP) cellp.fill = fillMax;
-    }
-  });
-
-  for (var w = startCol; w <= endCol; w++) {
-    ws.getColumn(w).width = w === strikeCol ? 10 : 9;
-  }
-  return endCol;
-}
-
 function openExportDialog() {
   const data = state.cache[state.ticker];
   if (!data) {
@@ -2925,15 +2780,12 @@ function openExportDialog() {
   html += "</div>";
 
   html += '<div class="exp-month-list">';
-  // شريط خاص: اليوم بالسابق + التوافق (نفس المقاس والشكل)
+  // شريط منفصل: اليوم بالسابق (تنسيق ذهبي)
   html += '<div class="exp-month exp-series-row-block">';
   html += '<div class="exp-month-dates">';
   html +=
     '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__SERIES_PREV__">' +
     '<span class="d">اليوم بالسابق</span></button>';
-  html +=
-    '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__TAWAFUQ__">' +
-    '<span class="d">التوافق</span></button>';
   html += "</div></div>";
   order.forEach(function (key) {
     const g = groups[key];
@@ -3093,35 +2945,27 @@ function runExportFromDialog(emode, edays, estrikes) {
     const GAP = 4;
     const showDelta = !!state.showDelta;
 
+    function viewForChoice(exp) {
+      if (exp === "__SERIES_PREV__") {
+        return typeof getSeriesPrevDayView === "function"
+          ? getSeriesPrevDayView(data)
+          : null;
+      }
+      return getViewRowsFor(data, exp, edays, estrikes);
+    }
     function sheetNameFor(exp) {
       if (exp === "__SERIES_PREV__") return "اليوم بالسابق";
-      if (exp === "__TAWAFUQ__") return "التوافق";
       return String(exp).slice(0, 31);
     }
 
-    function writeOne(ws, exp, col) {
-      if (exp === "__TAWAFUQ__") {
-        if (typeof writeTawafuqToSheet === "function") {
-          return writeTawafuqToSheet(ws, 2, col, data, state.ticker, edays, estrikes);
-        }
-        return col;
-      }
-      if (exp === "__SERIES_PREV__") {
-        var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
-        if (!sv) return col;
-        return writeOiTableToSheet(ws, 2, col, sv, state.ticker, showDelta);
-      }
-      var view = getViewRowsFor(data, exp, edays, estrikes);
-      if (!view) return col;
-      return writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
-    }
-
     if (emode === "multi") {
-      chosen.forEach(function (exp) {
+      chosen.forEach(function (exp, i) {
+        const view = viewForChoice(exp);
+        if (!view) return;
         const ws = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
         });
-        writeOne(ws, exp, 2);
+        writeOiTableToSheet(ws, 2, 2, view, state.ticker, showDelta);
       });
     } else {
       const ws = wb.addWorksheet("Export", {
@@ -3129,8 +2973,10 @@ function runExportFromDialog(emode, edays, estrikes) {
       });
       let col = 2;
       chosen.forEach(function (exp) {
-        const last = writeOne(ws, exp, col);
-        col = (typeof last === "number" ? last : col) + 1 + GAP;
+        const view = viewForChoice(exp);
+        if (!view) return;
+        const last = writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
+        col = last + 1 + GAP;
       });
     }
 
