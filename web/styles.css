@@ -4660,3 +4660,18 @@ table.oi.tawafuq-oi td.tw-wall {
 .controls .exp-series-row .exp-label,
 .controls .exp-series-row label { order: 3 !important; }
 .controls .exp-series-row #expSelect { order: 4 !important; }
+
+.controls .exp-series-row {
+  display: flex !important;
+  flex-direction: row !important;
+  direction: ltr !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.controls .exp-series-row #seriesBtn { order: 1 !important; }
+.controls .exp-series-row #tawafuqBtn { order: 2 !important; }
+.controls .exp-series-row .exp-label,
+.controls .exp-series-row label[for="expSelect"] { order: 3 !important; }
+.controls .exp-series-row #expSelect { order: 4 !important; }
+.controls .exp-series-row #expDropdown { order: 5 !important; }
+.controls .select-exp-series:empty { display: none !important; }

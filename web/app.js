@@ -3242,28 +3242,18 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب بصري مطلوب (من اليسار لليمين مثل الخاص):
-  // اليوم بالسابق | التوافق | الانتهاء | التاريخ | Days
+  // ترتيب بصري: اليوم بالسابق | التوافق | الانتهاء | التاريخ الظاهر | Days
+  // التاريخ الظاهر = #expDropdown وليس #expSelect المخفي
   (function layoutExpSeriesRow() {
     var controls = document.querySelector(".controls");
     if (!controls) return;
 
-    var expSelect = $("#expSelect");
     var seriesBtn = $("#seriesBtn");
     var expLabel =
       document.querySelector("label.exp-label") ||
-      document.querySelector("label[for='expSelect']") ||
-      null;
-    // إن وُجد label نصه الانتهاء بدون for
-    if (!expLabel) {
-      var labs = controls.querySelectorAll("label");
-      for (var i = 0; i < labs.length; i++) {
-        if ((labs[i].textContent || "").indexOf("انتهاء") >= 0) {
-          expLabel = labs[i];
-          break;
-        }
-      }
-    }
+      document.querySelector("label[for='expSelect']");
+    var expSelect = $("#expSelect");
+    var expDd = $("#expDropdown");
     var tw = $("#tawafuqBtn");
     if (!tw) {
       tw = document.createElement("button");
@@ -3280,32 +3270,21 @@ function init() {
       host.className = "exp-series-row";
     }
 
-    // فكّ أي order قديم
-    [seriesBtn, tw, expLabel, expSelect].forEach(function (el) {
-      if (el) {
-        el.style.order = "0";
-        el.style.removeProperty("order");
-      }
-    });
-
-    // ترتيب DOM = الترتيب البصري المطلوب تمامًا
     if (seriesBtn) host.appendChild(seriesBtn);
     host.appendChild(tw);
     if (expLabel) host.appendChild(expLabel);
     if (expSelect) host.appendChild(expSelect);
+    if (expDd) host.appendChild(expDd);
 
-    // ضع الصف قبل تسمية Days مباشرة
     var daysLab = null;
-    var ch = controls.children;
-    for (var j = 0; j < ch.length; j++) {
-      var t = (ch[j].textContent || "").trim();
-      if (ch[j].tagName === "LABEL" && t === "Days") {
-        daysLab = ch[j];
-        break;
-      }
-    }
+    Array.prototype.forEach.call(controls.children, function (ch) {
+      if (ch.tagName === "LABEL" && (ch.textContent || "").trim() === "Days") daysLab = ch;
+    });
     if (daysLab) controls.insertBefore(host, daysLab);
-    else if (!host.parentNode) controls.insertBefore(host, controls.firstChild);
+    else if (!host.parentNode) controls.appendChild(host);
+
+    var wrap = document.querySelector(".select-exp-series");
+    if (wrap && !wrap.children.length) wrap.style.display = "none";
 
     host.style.cssText =
       "display:flex!important;flex-direction:row!important;align-items:center!important;" +
@@ -3321,6 +3300,7 @@ function init() {
     styleTab(seriesBtn);
     styleTab(tw);
   })();
+
 
 
 
