@@ -4530,3 +4530,99 @@ html[data-theme="light"] table.oi td.hi5k {
   background: #0f172a !important;
   box-shadow: 0 0 0 1px rgba(232, 201, 155, 0.25) !important;
 }
+
+
+/* ——— التوافق (ويب عام) ——— */
+#seriesBtn,
+#tawafuqBtn,
+.controls .series-btn,
+.controls .tawafuq-btn {
+  cursor: pointer !important;
+  border: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  outline: none !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #cbd5e1 !important;
+  padding: 0 6px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+#seriesBtn:hover,
+#tawafuqBtn:hover {
+  color: #f8fafc !important;
+  background: transparent !important;
+  border-bottom: none !important;
+  text-decoration: none !important;
+}
+#seriesBtn.active,
+#tawafuqBtn.active {
+  color: #f8fafc !important;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+}
+
+.controls .chip-row .days-free-input,
+.controls input.days-free-input {
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 32px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  border: 1px solid #2a3548 !important;
+  background: #1a2332 !important;
+  color: #e2e8f0 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+table.oi.tawafuq-oi th,
+table.oi.tawafuq-oi td {
+  min-width: 64px;
+  vertical-align: middle;
+}
+table.oi.tawafuq-oi th .d { font-weight: 700; }
+table.oi.tawafuq-oi th .subh {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+table.oi.tawafuq-oi th.strike,
+table.oi.tawafuq-oi td.strike {
+  position: sticky;
+  z-index: 2;
+  font-weight: 700;
+}
+table.oi.tawafuq-oi td .tw-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1.15;
+}
+table.oi.tawafuq-oi td .tw-delta {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #5eead4;
+}
+table.oi.tawafuq-oi td.max-oi,
+table.oi.tawafuq-oi td.tw-wall {
+  background: #3730a3 !important;
+  color: #e0e7ff !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}

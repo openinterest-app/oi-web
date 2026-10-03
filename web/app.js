@@ -29,7 +29,7 @@ const TICKERS = INDEX_TICKERS.concat(STOCKS_TICKERS);
 
 const state = {
   ticker: "SPY", days: "2", strikes: "30",
-  expiration: null, showDelta: false, showSigma: false, sigmaExps: [], seriesMode: false, spx5k: false, dark: false, cache: {}, livePrice: null, sessionClose: null, mapRange: "ALL",
+  expiration: null, showDelta: false, showSigma: false, sigmaExps: [], seriesMode: false, tawafuqMode: false, spx5k: false, dark: false, cache: {}, livePrice: null, sessionClose: null, mapRange: "ALL",
   archDays: "2", archStrikes: "30", archShowDelta: false, archExportMode: "multi", archSelected: [],
 };
 
@@ -991,6 +991,40 @@ function renderChips(rowId, options, key) {
     };
     row.appendChild(b);
   });
+  if (key === "days") {
+    var free = document.createElement("input");
+    free.type = "number";
+    free.min = "1";
+    free.className = "days-free-input";
+    free.placeholder = "";
+    free.title = "عدد مخصص";
+    free.setAttribute("aria-label", "عدد مخصص");
+    free.setAttribute(
+      "style",
+      "width:32px!important;min-width:32px!important;max-width:32px!important;" +
+        "height:32px!important;min-height:32px!important;max-height:32px!important;" +
+        "padding:0!important;margin:0!important;flex:0 0 32px!important;" +
+        "border-radius:8px!important;border:1px solid #2a3548!important;" +
+        "background:#1a2332!important;color:#e2e8f0!important;" +
+        "font-size:11px!important;font-weight:700!important;text-align:center!important;" +
+        "box-sizing:border-box!important;-webkit-appearance:none!important;appearance:none!important;"
+    );
+    var known = options.map(String);
+    var cur = String(state.days || "");
+    free.value = known.indexOf(cur) >= 0 ? "" : cur && cur !== "ALL" ? cur : "";
+    free.addEventListener("change", function () {
+      var v = parseInt(free.value, 10);
+      if (isFinite(v) && v >= 1) {
+        state.days = String(v);
+        renderChips(rowId, options, key);
+        renderTable();
+      }
+    });
+    free.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") free.blur();
+    });
+    row.appendChild(free);
+  }
 }
 
 
@@ -1670,11 +1704,441 @@ function renderSeriesTable() {
 }
 
 
+function isFridayExp(exp) {
+  try {
+    return new Date(String(exp) + "T12:00:00").getDay() === 5;
+  } catch (e) {
+    return false;
+  }
+}
+
+function isMonthEndExp(exp) {
+  try {
+    var d = new Date(String(exp) + "T12:00:00");
+    if (isNaN(d.getTime())) return false;
+    var n = new Date(d.getTime());
+    n.setDate(d.getDate() + 1);
+    return n.getMonth() !== d.getMonth();
+  } catch (e) {
+    return false;
+  }
+}
+
+function tawafuqColKind(exp) {
+  if (typeof isThirdFridayExp === "function" && isThirdFridayExp(exp)) return "opx";
+  if (isMonthEndExp(exp)) return "eom";
+  if (isFridayExp(exp)) return "fri";
+  return "";
+}
+
+function formatTawafuqHeader(exp) {
+  try {
+    var d = new Date(String(exp) + "T12:00:00");
+    var kind = tawafuqColKind(exp);
+    var mon = d.toLocaleString("en", { month: "short" });
+    var wd = d.toLocaleString("en", { weekday: "short" });
+    // مثل باقي الجداول: 5Oct — وتحته opx أو اسم اليوم
+    var sub = kind === "opx" ? "opx" : wd;
+    return {
+      top: d.getDate() + mon,
+      sub: sub,
+      kind: kind,
+    };
+  } catch (e) {
+    return { top: String(exp), sub: "", kind: "" };
+  }
+}
+
+/** أحدث يوم سحب عام في البيانات → ISO للمقارنة */
+function latestPullIso(data) {
+  var pulls = (data && data.pull_dates) || [];
+  if (!pulls.length) {
+    var seen = {};
+    Object.keys((data && data.by_expiration) || {}).forEach(function (exp) {
+      ((data.by_expiration[exp].pull_dates) || []).forEach(function (pd) {
+        seen[pd] = true;
+      });
+    });
+    pulls = Object.keys(seen);
+  }
+  if (!pulls.length) return null;
+  pulls = pulls.slice().sort(function (a, b) {
+    return pullDateSortKey(a) - pullDateSortKey(b);
+  });
+  var last = pulls[pulls.length - 1];
+  var session = typeof dataSessionFromPull === "function" ? dataSessionFromPull(data) : null;
+  var y = session && session.year ? session.year : new Date().getFullYear();
+  return pullLabelToExpIso(last, y);
+}
+
+/**
+ * التوافق: أعمدة = انتهاءات من تاريخ السحب الحالي فصاعداً.
+ * القيمة = أوبن آخر سحب لكل انتهاء.
+ * Δ = آخر سحب مقابل السحب السابق لنفس الانتهاء.
+ */
+function getTawafuqView(data, daysLimit, strikesLimit) {
+  if (!data || !data.by_expiration) return null;
+  if (strikesLimit == null) strikesLimit = state.strikes;
+
+  var allExps = Object.keys(data.by_expiration).sort(function (a, b) {
+    return expSortKey(a) - expSortKey(b);
+  });
+  if (!allExps.length) return null;
+
+  var fromIso = latestPullIso(data);
+  if (!fromIso) {
+    // احتياط: اليوم المحلي
+    var now = new Date();
+    fromIso =
+      now.getFullYear() +
+      "-" +
+      String(now.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(now.getDate()).padStart(2, "0");
+  }
+
+  var forward = allExps.filter(function (exp) {
+    return exp >= fromIso;
+  });
+  if (!forward.length) {
+    // إن لم يبقَ انتهاء لاحق، اعرض من أقرب انتهاء موجود
+    forward = allExps.slice();
+  }
+
+  var limit = daysLimit;
+  if (limit == null || limit === "" || limit === "ALL") {
+    // بلا حد — كل المتاح
+  } else {
+    var k = parseInt(limit, 10);
+    if (isFinite(k) && k > 0) forward = forward.slice(0, k);
+  }
+
+  var columns = [];
+  forward.forEach(function (exp) {
+    var block = data.by_expiration[exp];
+    if (!block || !block.rows || !block.rows.length) return;
+    var bpulls =
+      block.pull_dates && block.pull_dates.length
+        ? block.pull_dates
+        : data.pull_dates || [];
+    if (!bpulls.length) return;
+    var lastIdx = bpulls.length - 1;
+    var prevIdx = lastIdx - 1;
+    var strikeMap = {};
+    (block.rows || []).forEach(function (r) {
+      var c = (r.calls && r.calls[lastIdx]) || 0;
+      var p = (r.puts && r.puts[lastIdx]) || 0;
+      var dc =
+        prevIdx >= 0
+          ? positiveDelta(
+              (r.calls && r.calls[lastIdx]) || 0,
+              (r.calls && r.calls[prevIdx]) || 0
+            )
+          : null;
+      var dp =
+        prevIdx >= 0
+          ? positiveDelta(
+              (r.puts && r.puts[lastIdx]) || 0,
+              (r.puts && r.puts[prevIdx]) || 0
+            )
+          : null;
+      // نحتفظ بالصف حتى لو 0/0 لأنه سترايك موجود في هذا الانتهاء
+      strikeMap[String(r.strike)] = {
+        c: c,
+        p: p,
+        dc: dc,
+        dp: dp,
+        strike: r.strike,
+        present: true,
+      };
+    });
+    columns.push({
+      exp: exp,
+      label: exp,
+      kind: tawafuqColKind(exp),
+      strikeMap: strikeMap,
+    });
+  });
+
+  if (!columns.length) return null;
+
+  var strikeSet = {};
+  columns.forEach(function (col) {
+    Object.keys(col.strikeMap).forEach(function (k) {
+      strikeSet[k] = col.strikeMap[k].strike;
+    });
+  });
+  var strikeNums = Object.keys(strikeSet)
+    .map(Number)
+    .sort(function (a, b) {
+      return a - b;
+    });
+
+  var close = effectiveClose(data);
+  var rows = strikeNums.map(function (s) {
+    var calls = [];
+    var puts = [];
+    var callDeltas = [];
+    var putDeltas = [];
+    var present = [];
+    columns.forEach(function (col) {
+      var cell = col.strikeMap[String(s)];
+      if (cell && cell.present) {
+        calls.push(cell.c);
+        puts.push(cell.p);
+        callDeltas.push(cell.dc);
+        putDeltas.push(cell.dp);
+        present.push(true);
+      } else {
+        calls.push(null);
+        puts.push(null);
+        callDeltas.push(null);
+        putDeltas.push(null);
+        present.push(false);
+      }
+    });
+    return {
+      strike: s,
+      calls: calls,
+      puts: puts,
+      callDeltas: callDeltas,
+      putDeltas: putDeltas,
+      present: present,
+    };
+  });
+
+  if (strikesLimit && strikesLimit !== "ALL" && close != null) {
+    var n = parseInt(strikesLimit, 10);
+    if (isFinite(n) && n > 0) {
+      rows = rows
+        .map(function (r) {
+          return { r: r, dist: Math.abs(r.strike - close) };
+        })
+        .sort(function (a, b) {
+          return a.dist - b.dist;
+        })
+        .slice(0, n * 2)
+        .map(function (x) {
+          return x.r;
+        })
+        .sort(function (a, b) {
+          return a.strike - b.strike;
+        });
+    }
+  }
+
+  return {
+    columns: columns,
+    pullDates: columns.map(function (c) {
+      return c.exp;
+    }),
+    rows: rows,
+    close: close,
+    fromIso: fromIso,
+  };
+}
+
+function renderTawafuqTable() {
+  var data = state.cache[state.ticker];
+  var host = $("#tableHost");
+  if (!host) return;
+  if (!data) {
+    host.innerHTML = '<p class="status">لا بيانات</p>';
+    return;
+  }
+  var view = getTawafuqView(data, state.days, state.strikes);
+  if (!view || !view.columns.length) {
+    host.innerHTML =
+      '<p class="status">لا انتهاءات قادمة متاحة في البيانات</p>';
+    return;
+  }
+  var cols = view.columns;
+  var rows = view.rows;
+  var close = view.close;
+  var canDelta = !!state.showDelta;
+  var nCols = cols.length;
+
+  var html =
+    '<div class="table-title"><div>' +
+    state.ticker +
+    " | التوافق</div>";
+  if (close != null) {
+    var liveTag = state.livePrice != null ? " · مباشر" : "";
+    html +=
+      '<div class="close-pill">الإغلاق: ' +
+      Number(close).toLocaleString(undefined, { maximumFractionDigits: 2 }) +
+      liveTag +
+      "</div>";
+  }
+  html += '</div>';
+
+  html +=
+    '<div class="table-scroll tawafuq-wrap"><table class="oi tawafuq-oi" style="width:auto;max-width:none"><thead>';
+  html += '<tr class="side-label-row">';
+  html += '<th class="side-label call-side" colspan="' + nCols + '">CALL</th>';
+  html += '<th class="strike side-mid"></th>';
+  html += '<th class="side-label put-side" colspan="' + nCols + '">PUT</th>';
+  html += "</tr><tr>";
+
+  for (var i = nCols - 1; i >= 0; i--) {
+    var fh = formatTawafuqHeader(cols[i].exp);
+    var kcls = fh.kind ? " tw-" + fh.kind : "";
+    html +=
+      '<th class="' +
+      kcls +
+      '" style="' +
+      tawafuqColStyle(fh.kind) +
+      '"><span class="d">' +
+      fh.top +
+      '</span><br><span class="subh">' +
+      (fh.sub || "&nbsp;") +
+      "</span></th>";
+  }
+  html += '<th class="strike">STRIKE</th>';
+  for (var j = 0; j < nCols; j++) {
+    var fh2 = formatTawafuqHeader(cols[j].exp);
+    var kcls2 = fh2.kind ? " tw-" + fh2.kind : "";
+    html +=
+      '<th class="' +
+      kcls2 +
+      '" style="' +
+      tawafuqColStyle(fh2.kind) +
+      '"><span class="d">' +
+      fh2.top +
+      '</span><br><span class="subh">' +
+      (fh2.sub || "&nbsp;") +
+      "</span></th>";
+  }
+  html += "</tr></thead><tbody>";
+
+  // max per column + قمة (أعلى كول إجمالي) وقاع (أعلى بوت إجمالي)
+  var callMax = [];
+  var putMax = [];
+  var peakCall = 0;
+  var floorPut = 0;
+  for (var ci = 0; ci < nCols; ci++) {
+    var mc = 0,
+      mp = 0;
+    rows.forEach(function (r) {
+      var cv = r.calls[ci];
+      var pv = r.puts[ci];
+      if (cv != null && cv > mc) mc = cv;
+      if (pv != null && pv > mp) mp = pv;
+      if (cv != null && cv > peakCall) peakCall = cv;
+      if (pv != null && pv > floorPut) floorPut = pv;
+    });
+    callMax[ci] = mc;
+    putMax[ci] = mp;
+  }
+
+  var barDone = false;
+  rows.forEach(function (r, ri) {
+    if (close != null && !barDone && r.strike > close) {
+      if (typeof greenBarRow === "function") {
+        html += greenBarRow(false, nCols, close);
+      } else {
+        html +=
+          '<tr class="close-bar-row"><td colspan="99"><div class="close-bar-line">' +
+          Number(close).toLocaleString(undefined, { maximumFractionDigits: 2 }) +
+          "</div></td></tr>";
+      }
+      barDone = true;
+    }
+    var zebra = ri % 2 === 1 ? " zebra" : "";
+    html += '<tr class="' + zebra + '">';
+
+    for (var ic = nCols - 1; ic >= 0; ic--) {
+      html += tawafuqCellHtml(
+        r.calls[ic],
+        r.callDeltas[ic],
+        r.present[ic],
+        cols[ic].kind,
+        callMax[ic],
+        canDelta,
+        peakCall
+      );
+    }
+    html += '<td class="strike">' + r.strike + "</td>";
+    for (var ip = 0; ip < nCols; ip++) {
+      html += tawafuqCellHtml(
+        r.puts[ip],
+        r.putDeltas[ip],
+        r.present[ip],
+        cols[ip].kind,
+        putMax[ip],
+        canDelta,
+        floorPut
+      );
+    }
+    html += "</tr>";
+  });
+  if (close != null && !barDone && typeof greenBarRow === "function") {
+    html += greenBarRow(false, nCols, close);
+  }
+  html += "</tbody></table></div>";
+  host.innerHTML = html;
+}
+
+function tawafuqColStyle(kind) {
+  // شفافية خفيفة مثل اليوم بالسابق: بنفسجي / أخضر تركواز / أزرق
+  if (kind === "opx") return "background-color:rgba(167,139,250,0.14)!important;";
+  if (kind === "fri") return "background-color:rgba(59,130,246,0.13)!important;";
+  if (kind === "eom") return "background-color:rgba(45,212,191,0.12)!important;";
+  // باقي الأيام: أغمق بهدوء مثل الجدول الأساسي
+  return "background-color:rgba(15,23,42,0.55)!important;";
+}
+
+function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax) {
+  var kcls = kind ? " tw-" + kind : "";
+  var st = tawafuqColStyle(kind);
+  if (!present || oi == null || oi === 0) {
+    return '<td class="tw-empty' + kcls + '" style="' + st + '"></td>';
+  }
+  var isColMax = colMax > 0 && oi === colMax;
+  var isWall = wallMax > 0 && oi === wallMax;
+  var maxCls = isColMax ? " max-oi" : "";
+  if (isWall) maxCls += " tw-wall";
+  // خلفية التحديد inline حتى لا يغطيها تلوين العمود
+  // لون هادئ مثل الشاشة الثلاثية — بدون إطار
+  if (isWall || isColMax) {
+    st =
+      "background-color:#3730a3!important;color:#e0e7ff!important;font-weight:700!important;box-shadow:none!important;";
+  }
+  var inner =
+    '<div class="tw-stack"><div class="tw-oi">' +
+    Number(oi).toLocaleString() +
+    "</div>";
+  if (canDelta && dlt != null && dlt > 0) {
+    // كل التزايدات بلون خفيف؛ الأصغر أخف بكثير
+    var op = 0.18;
+    if (dlt >= 800) op = 0.65;
+    else if (dlt >= 300) op = 0.48;
+    else if (dlt >= 100) op = 0.32;
+    else if (dlt >= 40) op = 0.22;
+    inner +=
+      '<div class="tw-delta" style="display:block;font-size:10px;font-weight:600;color:#5eead4;margin-top:2px;line-height:1.1;opacity:' +
+      op +
+      '">+' +
+      Number(dlt).toLocaleString() +
+      "</div>";
+  }
+  inner += "</div>";
+  return (
+    '<td class="' + kcls + maxCls + '" style="' + st + '">' + inner + "</td>"
+  );
+}
+
+
+
 function renderTable() {
   const data = state.cache[state.ticker];
   const host = $("#tableHost");
   if (state.x3Mode) {
     renderX3();
+    return;
+  }
+  if (state.tawafuqMode && typeof renderTawafuqTable === "function") {
+    renderTawafuqTable();
     return;
   }
   if (state.seriesMode) {
@@ -2778,15 +3242,78 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
+  // ترتيب الشريط: الانتهاء → اليوم بالسابق → التوافق (بدون خط تحت)
+  (function layoutExpSeriesRow() {
+    var row = document.querySelector(".exp-series-row");
+    if (!row) return;
+    var expLabel = row.querySelector("label.exp-label, label[for='expSelect']");
+    var expSelect = $("#expSelect");
+    var seriesBtn = $("#seriesBtn");
+    var tw = $("#tawafuqBtn");
+    if (!tw) {
+      tw = document.createElement("button");
+      tw.id = "tawafuqBtn";
+      tw.type = "button";
+      tw.className = "series-btn tawafuq-btn";
+      tw.title = "التوافق";
+      tw.textContent = "التوافق";
+      row.appendChild(tw);
+    }
+    // إعادة ترتيب: label, select, series, tawafuq
+    var nodes = [];
+    if (expLabel) nodes.push(expLabel);
+    if (expSelect) nodes.push(expSelect);
+    if (seriesBtn) nodes.push(seriesBtn);
+    if (tw) nodes.push(tw);
+    nodes.forEach(function (n) { row.appendChild(n); });
+    [seriesBtn, tw].forEach(function (b) {
+      if (!b) return;
+      b.style.setProperty("border-bottom", "none", "important");
+      b.style.setProperty("text-decoration", "none", "important");
+      b.style.setProperty("cursor", "pointer", "important");
+      b.style.setProperty("background", "transparent", "important");
+    });
+  })();
+
   if ($("#seriesBtn")) {
     $("#seriesBtn").onclick = function () {
       state.seriesMode = !state.seriesMode;
       if (state.seriesMode) {
         state.x3Mode = false;
+        state.tawafuqMode = false;
         var xb = $("#x3Btn");
         if (xb) xb.classList.remove("active");
+        var tw = $("#tawafuqBtn");
+        if (tw) tw.classList.remove("active");
       }
       $("#seriesBtn").classList.toggle("active", state.seriesMode);
+      var _sb = $("#seriesBtn");
+      if (_sb) {
+        _sb.style.setProperty("border-bottom", "none", "important");
+        _sb.style.setProperty("text-decoration", "none", "important");
+      }
+      renderTable();
+    };
+  }
+  if ($("#tawafuqBtn")) {
+    $("#tawafuqBtn").onclick = function () {
+      state.tawafuqMode = !state.tawafuqMode;
+      if (state.tawafuqMode) {
+        state.seriesMode = false;
+        state.x3Mode = false;
+        var sb = $("#seriesBtn");
+        if (sb) sb.classList.remove("active");
+        var xb = $("#x3Btn");
+        if (xb) xb.classList.remove("active");
+        if (!state.days || state.days === "ALL") state.days = "5";
+        renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
+      }
+      $("#tawafuqBtn").classList.toggle("active", state.tawafuqMode);
+      var _tw = $("#tawafuqBtn");
+      if (_tw) {
+        _tw.style.setProperty("border-bottom", "none", "important");
+        _tw.style.setProperty("text-decoration", "none", "important");
+      }
       renderTable();
     };
   }
@@ -2795,6 +3322,10 @@ if ($("#expSelect")) {
     $("#expSelect").onchange = function (e) {
       try {
         state.expiration = e.target.value || null;
+        state.seriesMode = false;
+        state.tawafuqMode = false;
+        var sb = $("#seriesBtn"); if (sb) sb.classList.remove("active");
+        var tw = $("#tawafuqBtn"); if (tw) tw.classList.remove("active");
         syncExpDropdownLabel();
         renderTable();
       } catch (err) {}
@@ -2803,7 +3334,7 @@ if ($("#expSelect")) {
   if ($("#x3Btn")) {
     $("#x3Btn").onclick = function () {
       state.x3Mode = !state.x3Mode;
-      if (state.x3Mode) { state.seriesMode = false; var sb = $("#seriesBtn"); if (sb) sb.classList.remove("active"); }
+      if (state.x3Mode) { state.seriesMode = false; state.tawafuqMode = false; var sb = $("#seriesBtn"); if (sb) sb.classList.remove("active"); var tw = $("#tawafuqBtn"); if (tw) tw.classList.remove("active"); }
       $("#x3Btn").classList.toggle("active", state.x3Mode);
       renderTable();
     };
