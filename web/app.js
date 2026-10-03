@@ -2974,6 +2974,10 @@ function openExportDialog() {
       d +
       "</button>";
   });
+  // مربع حر لعدد الأيام
+  html +=
+    '<input type="number" min="1" id="expDaysFree" class="exp-days-free" ' +
+    'placeholder="" title="عدد مخصص" inputmode="numeric" />';
   html += '<span class="lab">Strikes</span>';
   ["50", "100", "ALL"].forEach(function (s) {
     const curS =
@@ -3029,8 +3033,27 @@ function openExportDialog() {
       body.querySelectorAll("[data-edays]").forEach(function (b) {
         b.classList.toggle("on", b === btn);
       });
+      var free = body.querySelector("#expDaysFree");
+      if (free) free.value = "";
     };
   });
+  var freeDays = body.querySelector("#expDaysFree");
+  if (freeDays) {
+    var knownDays = ["2", "3", "5", "10", "ALL"];
+    if (knownDays.indexOf(String(edays)) < 0 && edays) freeDays.value = edays;
+    freeDays.addEventListener("change", function () {
+      var v = parseInt(freeDays.value, 10);
+      if (isFinite(v) && v >= 1) {
+        edays = String(v);
+        body.querySelectorAll("[data-edays]").forEach(function (b) {
+          b.classList.remove("on");
+        });
+      }
+    });
+    freeDays.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") freeDays.blur();
+    });
+  }
   body.querySelectorAll("[data-estrikes]").forEach(function (btn) {
     btn.onclick = function () {
       estrikes = btn.getAttribute("data-estrikes");
@@ -3070,6 +3093,14 @@ function runExportFromDialog(emode, edays, estrikes) {
   const data = state.cache[state.ticker];
   const body = $("#exportBody");
   const st = $("#expStatus");
+  // اقرأ المربع الحر إن وُجدت قيمة
+  if (body) {
+    var freeEl0 = body.querySelector("#expDaysFree");
+    if (freeEl0 && freeEl0.value) {
+      var fv0 = parseInt(freeEl0.value, 10);
+      if (isFinite(fv0) && fv0 >= 1) edays = String(fv0);
+    }
+  }
   const chosen = [];
   if (body) {
     body.querySelectorAll(".exp-date-chip.on").forEach(function (chip) {
@@ -3100,29 +3131,73 @@ function runExportFromDialog(emode, edays, estrikes) {
     }
 
     function writeOne(ws, exp, col) {
-      if (exp === "__TAWAFUQ__") {
-        if (typeof writeTawafuqToSheet === "function") {
-          return writeTawafuqToSheet(ws, 2, col, data, state.ticker, edays, estrikes);
+      try {
+        if (exp === "__TAWAFUQ__") {
+          if (typeof writeTawafuqToSheet !== "function") {
+            if (st) st.textContent = "دالة التوافق غير متاحة";
+            return col;
+          }
+          // أيام التوافق من مربع حر أو الشيبس
+          var twDays = edays;
+          var freeEl = body && body.querySelector("#expDaysFree");
+          if (freeEl && freeEl.value) {
+            var fv = parseInt(freeEl.value, 10);
+            if (isFinite(fv) && fv >= 1) twDays = String(fv);
+          }
+          var before = col;
+          var after = writeTawafuqToSheet(ws, 2, col, data, state.ticker, twDays, estrikes);
+          if (after == null || after === before) {
+            // لا بيانات — حاول بدون حد أيام
+            after = writeTawafuqToSheet(ws, 2, col, data, state.ticker, "ALL", estrikes);
+          }
+          return after;
         }
+        if (exp === "__SERIES_PREV__") {
+          var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
+          if (!sv || !sv.rows || !sv.rows.length) return col;
+          return writeOiTableToSheet(ws, 2, col, sv, state.ticker, showDelta);
+        }
+        var view = getViewRowsFor(data, exp, edays, estrikes);
+        if (!view) return col;
+        return writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
+      } catch (errWrite) {
+        if (st) st.textContent = "خطأ كتابة: " + (errWrite && errWrite.message ? errWrite.message : errWrite);
         return col;
       }
-      if (exp === "__SERIES_PREV__") {
-        var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
-        if (!sv) return col;
-        return writeOiTableToSheet(ws, 2, col, sv, state.ticker, showDelta);
-      }
-      var view = getViewRowsFor(data, exp, edays, estrikes);
-      if (!view) return col;
-      return writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
     }
 
-    if (emode === "multi") {
-      chosen.forEach(function (exp) {
+    // الصفحات الخاصة دائمًا في ورقة مستقلة حتى في وضع «صفحة واحدة»
+    var specials = chosen.filter(function (e) {
+      return e === "__SERIES_PREV__" || e === "__TAWAFUQ__";
+    });
+    var normals = chosen.filter(function (e) {
+      return e !== "__SERIES_PREV__" && e !== "__TAWAFUQ__";
+    });
+
+    if (emode === "multi" || specials.length) {
+      specials.forEach(function (exp) {
         const ws = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
         });
         writeOne(ws, exp, 2);
       });
+      if (emode === "multi") {
+        normals.forEach(function (exp) {
+          const ws = wb.addWorksheet(sheetNameFor(exp), {
+            views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
+          });
+          writeOne(ws, exp, 2);
+        });
+      } else if (normals.length) {
+        const ws = wb.addWorksheet("Export", {
+          views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
+        });
+        let col = 2;
+        normals.forEach(function (exp) {
+          const last = writeOne(ws, exp, col);
+          col = (typeof last === "number" ? last : col) + 1 + GAP;
+        });
+      }
     } else {
       const ws = wb.addWorksheet("Export", {
         views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
@@ -3397,7 +3472,7 @@ function init() {
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
   // ترتيب نهائي حسب طلب المستخدم:
-  // اليوم بالسابق → التوافق → الانتهاء → التاريخ → Days
+  // [مربع التاريخ + الانتهاء] → اليوم بالسابق → التوافق (أخيرًا) → Days
   (function layoutExpSeriesRow() {
     var controls = document.querySelector(".controls");
     if (!controls) return;
@@ -3424,12 +3499,12 @@ function init() {
       host.className = "exp-series-row";
     }
 
-    // ترتيب مطلوب: اليوم بالسابق → التوافق → الانتهاء → التاريخ → Days
-    if (seriesBtn) host.appendChild(seriesBtn);
-    host.appendChild(tw);
+    // 1) الانتهاء  2) التاريخ الظاهر  3) اليوم بالسابق  4) التوافق
     if (expLabel) host.appendChild(expLabel);
     if (expSelect) host.appendChild(expSelect);
     if (expDd) host.appendChild(expDd);
+    if (seriesBtn) host.appendChild(seriesBtn);
+    host.appendChild(tw);
 
     // ضع الصف قبل Days مباشرة
     var daysLab = null;
