@@ -3242,12 +3242,20 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب الشريط: الانتهاء → اليوم بالسابق → التوافق (بدون خط تحت)
+  // ترتيب: الانتهاء → مربع التاريخ → اليوم بالسابق → التوافق
   (function layoutExpSeriesRow() {
-    var row = document.querySelector(".exp-series-row");
+    var row =
+      document.querySelector(".exp-series-row") ||
+      document.querySelector(".select-exp-series") ||
+      document.querySelector(".controls .select");
     if (!row) return;
-    var expLabel = row.querySelector("label.exp-label, label[for='expSelect']");
+    var expLabel =
+      row.querySelector("label.exp-label, label[for='expSelect']") ||
+      document.querySelector("label.exp-label, label[for='expSelect']");
     var expSelect = $("#expSelect");
+    var expDd =
+      document.getElementById("expDropdown") ||
+      (expSelect && expSelect.parentNode && expSelect.parentNode.querySelector(".exp-dd"));
     var seriesBtn = $("#seriesBtn");
     var tw = $("#tawafuqBtn");
     if (!tw) {
@@ -3257,15 +3265,28 @@ function init() {
       tw.className = "series-btn tawafuq-btn";
       tw.title = "التوافق";
       tw.textContent = "التوافق";
-      row.appendChild(tw);
     }
-    // إعادة ترتيب: label, select, series, tawafuq
+    // اجعل الصف يحتوي العناصر
+    var host = row;
+    if (expSelect && expSelect.parentNode && expSelect.parentNode !== host) {
+      // إن وُجدت الحاوية الأقرب التي تضم الـ select
+      if (expSelect.closest) {
+        var c = expSelect.closest(".exp-series-row, .select-exp-series, .select, .controls");
+        if (c) host = c.querySelector(".exp-series-row") || c;
+      }
+    }
+    // الترتيب المطلوب بصريًا (حتى مع RTL): label + تاريخ ثم السابق ثم التوافق
     var nodes = [];
     if (expLabel) nodes.push(expLabel);
     if (expSelect) nodes.push(expSelect);
+    if (expDd) nodes.push(expDd);
     if (seriesBtn) nodes.push(seriesBtn);
     if (tw) nodes.push(tw);
-    nodes.forEach(function (n) { row.appendChild(n); });
+    nodes.forEach(function (n) {
+      try {
+        host.appendChild(n);
+      } catch (e) {}
+    });
     [seriesBtn, tw].forEach(function (b) {
       if (!b) return;
       b.style.setProperty("border-bottom", "none", "important");
