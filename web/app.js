@@ -2974,10 +2974,9 @@ function openExportDialog() {
       d +
       "</button>";
   });
-  // مربع حر لعدد الأيام
   html +=
     '<input type="number" min="1" id="expDaysFree" class="exp-days-free" ' +
-    'placeholder="" title="عدد مخصص" inputmode="numeric" />';
+    'title="عدد مخصص" inputmode="numeric" />';
   html += '<span class="lab">Strikes</span>';
   ["50", "100", "ALL"].forEach(function (s) {
     const curS =
@@ -3039,8 +3038,6 @@ function openExportDialog() {
   });
   var freeDays = body.querySelector("#expDaysFree");
   if (freeDays) {
-    var knownDays = ["2", "3", "5", "10", "ALL"];
-    if (knownDays.indexOf(String(edays)) < 0 && edays) freeDays.value = edays;
     freeDays.addEventListener("change", function () {
       var v = parseInt(freeDays.value, 10);
       if (isFinite(v) && v >= 1) {
@@ -3093,7 +3090,6 @@ function runExportFromDialog(emode, edays, estrikes) {
   const data = state.cache[state.ticker];
   const body = $("#exportBody");
   const st = $("#expStatus");
-  // اقرأ المربع الحر إن وُجدت قيمة
   if (body) {
     var freeEl0 = body.querySelector("#expDaysFree");
     if (freeEl0 && freeEl0.value) {
@@ -3130,81 +3126,60 @@ function runExportFromDialog(emode, edays, estrikes) {
       return String(exp).slice(0, 31);
     }
 
+    function isSpecial(exp) {
+      return exp === "__SERIES_PREV__" || exp === "__TAWAFUQ__";
+    }
+
     function writeOne(ws, exp, col) {
       try {
         if (exp === "__TAWAFUQ__") {
-          if (typeof writeTawafuqToSheet !== "function") {
-            if (st) st.textContent = "دالة التوافق غير متاحة";
-            return col;
+          if (typeof writeTawafuqToSheet !== "function") return col;
+          var ret = writeTawafuqToSheet(ws, 2, col, data, state.ticker, edays, estrikes);
+          // إن فشل الحد الضيّق جرّب ALL
+          if (ret === col) {
+            ret = writeTawafuqToSheet(ws, 2, col, data, state.ticker, "ALL", estrikes);
           }
-          // أيام التوافق من مربع حر أو الشيبس
-          var twDays = edays;
-          var freeEl = body && body.querySelector("#expDaysFree");
-          if (freeEl && freeEl.value) {
-            var fv = parseInt(freeEl.value, 10);
-            if (isFinite(fv) && fv >= 1) twDays = String(fv);
-          }
-          var before = col;
-          var after = writeTawafuqToSheet(ws, 2, col, data, state.ticker, twDays, estrikes);
-          if (after == null || after === before) {
-            // لا بيانات — حاول بدون حد أيام
-            after = writeTawafuqToSheet(ws, 2, col, data, state.ticker, "ALL", estrikes);
-          }
-          return after;
+          return ret;
         }
         if (exp === "__SERIES_PREV__") {
           var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
-          if (!sv || !sv.rows || !sv.rows.length) return col;
+          if (!sv) return col;
           return writeOiTableToSheet(ws, 2, col, sv, state.ticker, showDelta);
         }
         var view = getViewRowsFor(data, exp, edays, estrikes);
         if (!view) return col;
         return writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
-      } catch (errWrite) {
-        if (st) st.textContent = "خطأ كتابة: " + (errWrite && errWrite.message ? errWrite.message : errWrite);
+      } catch (eW) {
+        if (st) st.textContent = "خطأ: " + (eW && eW.message ? eW.message : eW);
         return col;
       }
     }
 
-    // الصفحات الخاصة دائمًا في ورقة مستقلة حتى في وضع «صفحة واحدة»
-    var specials = chosen.filter(function (e) {
-      return e === "__SERIES_PREV__" || e === "__TAWAFUQ__";
-    });
-    var normals = chosen.filter(function (e) {
-      return e !== "__SERIES_PREV__" && e !== "__TAWAFUQ__";
+    // التوافق / اليوم بالسابق دائمًا في ورقة باسمها (حتى لوحدها)
+    var specials = chosen.filter(isSpecial);
+    var normals = chosen.filter(function (e) { return !isSpecial(e); });
+
+    specials.forEach(function (exp) {
+      var ws = wb.addWorksheet(sheetNameFor(exp), {
+        views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
+      });
+      writeOne(ws, exp, 2);
     });
 
-    if (emode === "multi" || specials.length) {
-      specials.forEach(function (exp) {
-        const ws = wb.addWorksheet(sheetNameFor(exp), {
+    if (emode === "multi") {
+      normals.forEach(function (exp) {
+        var ws = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
         });
         writeOne(ws, exp, 2);
       });
-      if (emode === "multi") {
-        normals.forEach(function (exp) {
-          const ws = wb.addWorksheet(sheetNameFor(exp), {
-            views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
-          });
-          writeOne(ws, exp, 2);
-        });
-      } else if (normals.length) {
-        const ws = wb.addWorksheet("Export", {
-          views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
-        });
-        let col = 2;
-        normals.forEach(function (exp) {
-          const last = writeOne(ws, exp, col);
-          col = (typeof last === "number" ? last : col) + 1 + GAP;
-        });
-      }
-    } else {
-      const ws = wb.addWorksheet("Export", {
+    } else if (normals.length) {
+      var wsN = wb.addWorksheet("Export", {
         views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
       });
-      let col = 2;
-      chosen.forEach(function (exp) {
-        const last = writeOne(ws, exp, col);
+      var col = 2;
+      normals.forEach(function (exp) {
+        var last = writeOne(wsN, exp, col);
         col = (typeof last === "number" ? last : col) + 1 + GAP;
       });
     }
