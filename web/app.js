@@ -3000,7 +3000,7 @@ function openExportDialog() {
   html +=
     '<button type="button" class="btn btn-teal exp-do-inline" id="expDoBtn">Excel</button>';
   html += "</div>";
-  html += '<p id="expStatus" class="exp-status"></p>';
+  html += '<p id="expStatus" class="exp-status">نسخة الكود: 15</p>';
 
   body.innerHTML = html;
   modal.classList.remove("hidden");
@@ -3273,7 +3273,7 @@ function runExportFromDialog(emode, edays, estrikes) {
         a.click();
         URL.revokeObjectURL(a.href);
       }
-      if (st) st.textContent = "تم التصدير (الأوراق: " + wb.worksheets.map(function (w) { return w.name; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "");
+      if (st) st.textContent = "تم التصدير (الأوراق: " + wb.worksheets.map(function (w) { return w.name + " [" + (typeof w.rowCount === "number" ? w.rowCount : "؟") + " صف]"; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "") + " — نسخة 15";
       setStatus("تم التصدير", "ok");
     }).catch(function (err) {
       if (st) st.textContent = "خطأ: " + (err && err.message ? err.message : err);
