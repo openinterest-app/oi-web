@@ -2929,14 +2929,10 @@ function openExportDialog() {
   html += '<div class="exp-month exp-series-row-block">';
   html += '<div class="exp-month-dates">';
   html +=
-    '<button type="button" class="exp-date-chip exp-series-chip' +
-    (state.seriesMode ? ' on' : '') +
-    '" data-exp="__SERIES_PREV__">' +
+    '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__SERIES_PREV__">' +
     '<span class="d">اليوم بالسابق</span></button>';
   html +=
-    '<button type="button" class="exp-date-chip exp-series-chip' +
-    (state.tawafuqMode ? ' on' : '') +
-    '" data-exp="__TAWAFUQ__">' +
+    '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__TAWAFUQ__">' +
     '<span class="d">التوافق</span></button>';
   html += "</div></div>";
   order.forEach(function (key) {
@@ -2945,7 +2941,7 @@ function openExportDialog() {
     html += '<div class="exp-month-title">' + (g.label || key) + "</div>";
     html += '<div class="exp-month-dates">';
     g.items.forEach(function (it) {
-      const on = (!state.tawafuqMode && !state.seriesMode && it.exp === curExp) ? " on" : "";
+      const on = it.exp === curExp ? " on" : "";
       html +=
         '<button type="button" class="exp-date-chip' +
         on +
@@ -3125,70 +3121,78 @@ function runExportFromDialog(emode, edays, estrikes) {
     const showDelta = !!state.showDelta;
 
     function sheetNameFor(exp) {
-      if (exp === "__SERIES_PREV__") return "اليوم بالسابق";
-      if (exp === "__TAWAFUQ__") return "التوافق";
+      if (exp === "__SERIES_PREV__") return "Series";
+      if (exp === "__TAWAFUQ__") return "Tawafuq";
       return String(exp).slice(0, 31);
     }
 
-    function isSpecial(exp) {
-      return exp === "__SERIES_PREV__" || exp === "__TAWAFUQ__";
-    }
-
-    function writeOne(ws, exp, col) {
-      try {
+    if (emode === "multi") {
+      chosen.forEach(function (exp) {
         if (exp === "__TAWAFUQ__") {
-          if (typeof writeTawafuqToSheet !== "function") return col;
-          var ret = writeTawafuqToSheet(ws, 2, col, data, state.ticker, edays, estrikes);
-          // إن فشل الحد الضيّق جرّب ALL
-          if (ret === col) {
-            ret = writeTawafuqToSheet(ws, 2, col, data, state.ticker, "ALL", estrikes);
+          var wsTw = wb.addWorksheet("Tawafuq", {
+            views: [{ rightToLeft: true }],
+          });
+          if (typeof writeTawafuqToSheet === "function") {
+            writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, edays, estrikes);
           }
-          return ret;
+          return;
         }
         if (exp === "__SERIES_PREV__") {
           var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
-          if (!sv) return col;
-          return writeOiTableToSheet(ws, 2, col, sv, state.ticker, showDelta);
+          if (!sv) return;
+          var wsS = wb.addWorksheet("Series", {
+            views: [{ rightToLeft: true }],
+          });
+          writeOiTableToSheet(wsS, 2, 2, sv, state.ticker, showDelta);
+          return;
         }
-        var view = getViewRowsFor(data, exp, edays, estrikes);
-        if (!view) return col;
-        return writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
-      } catch (eW) {
-        if (st) st.textContent = "خطأ: " + (eW && eW.message ? eW.message : eW);
-        return col;
+        var viewM = getViewRowsFor(data, exp, edays, estrikes);
+        if (!viewM) return;
+        var wsM = wb.addWorksheet(sheetNameFor(exp), {
+          views: [{ rightToLeft: true }],
+        });
+        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta);
+      });
+    } else {
+      var hasTw = chosen.indexOf("__TAWAFUQ__") >= 0;
+      var hasSeries = chosen.indexOf("__SERIES_PREV__") >= 0;
+      var normals = chosen.filter(function (e) {
+        return e !== "__TAWAFUQ__" && e !== "__SERIES_PREV__";
+      });
+
+      if (hasTw) {
+        var wsTw2 = wb.addWorksheet("Tawafuq", {
+          views: [{ rightToLeft: true }],
+        });
+        if (typeof writeTawafuqToSheet === "function") {
+          writeTawafuqToSheet(wsTw2, 2, 2, data, state.ticker, edays, estrikes);
+        }
+      }
+      if (hasSeries) {
+        var sv2 = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
+        if (sv2) {
+          var wsS2 = wb.addWorksheet("Series", {
+            views: [{ rightToLeft: true }],
+          });
+          writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta);
+        }
+      }
+      if (normals.length) {
+        var wsN = wb.addWorksheet("Export", {
+          views: [{ rightToLeft: true }],
+        });
+        var col = 2;
+        normals.forEach(function (exp) {
+          var viewN = getViewRowsFor(data, exp, edays, estrikes);
+          if (!viewN) return;
+          var last = writeOiTableToSheet(wsN, 2, col, viewN, state.ticker, showDelta);
+          col = (typeof last === "number" ? last : col) + 1 + GAP;
+        });
       }
     }
 
-    // التوافق / اليوم بالسابق دائمًا في ورقة باسمها (حتى لوحدها)
-    var specials = chosen.filter(isSpecial);
-    var normals = chosen.filter(function (e) { return !isSpecial(e); });
-
-    specials.forEach(function (exp) {
-      var ws = wb.addWorksheet(sheetNameFor(exp), {
-        views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
-      });
-      writeOne(ws, exp, 2);
-    });
-
-    if (emode === "multi") {
-      normals.forEach(function (exp) {
-        var ws = wb.addWorksheet(sheetNameFor(exp), {
-          views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
-        });
-        writeOne(ws, exp, 2);
-      });
-    } else if (normals.length) {
-      var wsN = wb.addWorksheet("Export", {
-        views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
-      });
-      var col = 2;
-      normals.forEach(function (exp) {
-        var last = writeOne(wsN, exp, col);
-        col = (typeof last === "number" ? last : col) + 1 + GAP;
-      });
-    }
-
     if (wb.worksheets.length === 0) {
+
       if (st) st.textContent = "لا بيانات للجداول المختارة";
       return;
     }
@@ -3450,8 +3454,7 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب نهائي حسب طلب المستخدم:
-  // [مربع التاريخ + الانتهاء] → اليوم بالسابق → التوافق (أخيرًا) → Days
+  // ترتيب مثل الخاص: اليوم بالسابق | التوافق | الانتهاء | التاريخ
   (function layoutExpSeriesRow() {
     var controls = document.querySelector(".controls");
     if (!controls) return;
@@ -3478,14 +3481,12 @@ function init() {
       host.className = "exp-series-row";
     }
 
-    // 1) الانتهاء  2) التاريخ الظاهر  3) اليوم بالسابق  4) التوافق
+    if (seriesBtn) host.appendChild(seriesBtn);
+    host.appendChild(tw);
     if (expLabel) host.appendChild(expLabel);
     if (expSelect) host.appendChild(expSelect);
     if (expDd) host.appendChild(expDd);
-    if (seriesBtn) host.appendChild(seriesBtn);
-    host.appendChild(tw);
 
-    // ضع الصف قبل Days مباشرة
     var daysLab = null;
     Array.prototype.forEach.call(controls.children, function (ch) {
       if (ch.tagName === "LABEL" && (ch.textContent || "").trim() === "Days") daysLab = ch;
@@ -3510,6 +3511,7 @@ function init() {
     styleTab(seriesBtn);
     styleTab(tw);
   })();
+
 
 
 
