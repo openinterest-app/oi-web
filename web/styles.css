@@ -4667,23 +4667,6 @@ table.oi.tawafuq-oi td.tw-wall {
 }
 
 
-/* ===== ترتيب الشريط = نسخة v6 (لا تغيّر) =====
-   الانتهاء + التاريخ → اليوم بالسابق → التوافق → Days */
-.controls .exp-series-row {
-  display: flex !important;
-  flex-direction: row !important;
-  direction: ltr !important;
-  align-items: center !important;
-  flex-wrap: nowrap !important;
-  gap: 8px !important;
-}
-.controls .exp-series-row .exp-label,
-.controls .exp-series-row label[for="expSelect"] { order: 1 !important; }
-.controls .exp-series-row #expSelect { order: 2 !important; }
-.controls .exp-series-row #expDropdown { order: 3 !important; }
-.controls .exp-series-row #seriesBtn { order: 4 !important; }
-.controls .exp-series-row #tawafuqBtn { order: 5 !important; }
-.controls .select-exp-series:empty { display: none !important; }
 
 /* بطاقة التوافق في التصدير = نفس مقاس اليوم بالسابق */
 #exportModal .exp-date-chip.exp-series-chip,
@@ -4700,3 +4683,21 @@ table.oi.tawafuq-oi td.tw-wall {
   gap: 10px !important;
   align-items: stretch !important;
 }
+
+
+/* ترتيب الشريط النهائي */
+.controls .exp-series-row {
+  display: flex !important;
+  flex-direction: row !important;
+  direction: ltr !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+}
+.controls .exp-series-row #seriesBtn { order: 1 !important; }
+.controls .exp-series-row #tawafuqBtn { order: 2 !important; }
+.controls .exp-series-row .exp-label,
+.controls .exp-series-row label[for="expSelect"] { order: 3 !important; }
+.controls .exp-series-row #expSelect { order: 4 !important; }
+.controls .exp-series-row #expDropdown { order: 5 !important; }
+.controls .select-exp-series:empty { display: none !important; }

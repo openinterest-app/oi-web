@@ -3397,7 +3397,7 @@ function init() {
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
   // ترتيب نهائي حسب طلب المستخدم:
-  // [مربع التاريخ + الانتهاء] → اليوم بالسابق → التوافق (أخيرًا) → Days
+  // اليوم بالسابق → التوافق → الانتهاء → التاريخ → Days
   (function layoutExpSeriesRow() {
     var controls = document.querySelector(".controls");
     if (!controls) return;
@@ -3424,12 +3424,12 @@ function init() {
       host.className = "exp-series-row";
     }
 
-    // 1) الانتهاء  2) التاريخ الظاهر  3) اليوم بالسابق  4) التوافق
+    // ترتيب مطلوب: اليوم بالسابق → التوافق → الانتهاء → التاريخ → Days
+    if (seriesBtn) host.appendChild(seriesBtn);
+    host.appendChild(tw);
     if (expLabel) host.appendChild(expLabel);
     if (expSelect) host.appendChild(expSelect);
     if (expDd) host.appendChild(expDd);
-    if (seriesBtn) host.appendChild(seriesBtn);
-    host.appendChild(tw);
 
     // ضع الصف قبل Days مباشرة
     var daysLab = null;
