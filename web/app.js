@@ -3242,22 +3242,21 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب: الانتهاء → مربع التاريخ → اليوم بالسابق → التوافق
+  // ترتيب ثابت: [الانتهاء + مربع التاريخ] ثم [اليوم بالسابق] ثم [التوافق آخر شيء]
   (function layoutExpSeriesRow() {
     var row =
       document.querySelector(".exp-series-row") ||
       document.querySelector(".select-exp-series") ||
-      document.querySelector(".controls .select");
+      document.querySelector(".controls");
     if (!row) return;
+
     var expLabel =
-      row.querySelector("label.exp-label, label[for='expSelect']") ||
-      document.querySelector("label.exp-label, label[for='expSelect']");
+      document.querySelector("label.exp-label") ||
+      document.querySelector("label[for='expSelect']");
     var expSelect = $("#expSelect");
-    var expDd =
-      document.getElementById("expDropdown") ||
-      (expSelect && expSelect.parentNode && expSelect.parentNode.querySelector(".exp-dd"));
     var seriesBtn = $("#seriesBtn");
     var tw = $("#tawafuqBtn");
+
     if (!tw) {
       tw = document.createElement("button");
       tw.id = "tawafuqBtn";
@@ -3266,34 +3265,47 @@ function init() {
       tw.title = "التوافق";
       tw.textContent = "التوافق";
     }
-    // اجعل الصف يحتوي العناصر
-    var host = row;
-    if (expSelect && expSelect.parentNode && expSelect.parentNode !== host) {
-      // إن وُجدت الحاوية الأقرب التي تضم الـ select
-      if (expSelect.closest) {
-        var c = expSelect.closest(".exp-series-row, .select-exp-series, .select, .controls");
-        if (c) host = c.querySelector(".exp-series-row") || c;
+
+    // أنشئ صفًا موحّدًا إن لزم
+    var host = document.querySelector(".exp-series-row");
+    if (!host) {
+      host = document.createElement("div");
+      host.className = "exp-series-row";
+      if (expSelect && expSelect.parentNode) {
+        expSelect.parentNode.insertBefore(host, expSelect);
+      } else if (row) {
+        row.insertBefore(host, row.firstChild);
       }
     }
-    // الترتيب المطلوب بصريًا (حتى مع RTL): label + تاريخ ثم السابق ثم التوافق
-    var nodes = [];
-    if (expLabel) nodes.push(expLabel);
-    if (expSelect) nodes.push(expSelect);
-    if (expDd) nodes.push(expDd);
-    if (seriesBtn) nodes.push(seriesBtn);
-    if (tw) nodes.push(tw);
-    nodes.forEach(function (n) {
-      try {
-        host.appendChild(n);
-      } catch (e) {}
-    });
-    [seriesBtn, tw].forEach(function (b) {
-      if (!b) return;
-      b.style.setProperty("border-bottom", "none", "important");
-      b.style.setProperty("text-decoration", "none", "important");
-      b.style.setProperty("cursor", "pointer", "important");
-      b.style.setProperty("background", "transparent", "important");
-    });
+
+    // فرّغ ثم أعد بنفس الترتيب المطلوب
+    // 1) الانتهاء  2) مربع التاريخ  3) اليوم بالسابق  4) التوافق (أخيرًا)
+    if (expLabel) host.appendChild(expLabel);
+    if (expSelect) host.appendChild(expSelect);
+    if (seriesBtn) host.appendChild(seriesBtn);
+    host.appendChild(tw);
+
+    // أوامر CSS صريحة لدعم RTL/LTR
+    if (expLabel) expLabel.style.order = "1";
+    if (expSelect) expSelect.style.order = "2";
+    if (seriesBtn) {
+      seriesBtn.style.order = "3";
+      seriesBtn.style.setProperty("border-bottom", "none", "important");
+      seriesBtn.style.setProperty("text-decoration", "none", "important");
+      seriesBtn.style.setProperty("cursor", "pointer", "important");
+      seriesBtn.style.setProperty("background", "transparent", "important");
+    }
+    tw.style.order = "4";
+    tw.style.setProperty("border-bottom", "none", "important");
+    tw.style.setProperty("text-decoration", "none", "important");
+    tw.style.setProperty("cursor", "pointer", "important");
+    tw.style.setProperty("background", "transparent", "important");
+
+    host.style.display = "flex";
+    host.style.flexDirection = "row";
+    host.style.alignItems = "center";
+    host.style.flexWrap = "nowrap";
+    host.style.gap = "8px";
   })();
 
   if ($("#seriesBtn")) {

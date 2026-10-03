@@ -4628,20 +4628,17 @@ table.oi.tawafuq-oi td.tw-wall {
 }
 
 
-/* فرض ترتيب شريط الانتهاء */
-.exp-series-row,
-.select-exp-series .exp-series-row {
+/* ترتيب صريح: الانتهاء → التاريخ → اليوم بالسابق → التوافق (أخيرًا) */
+.controls .exp-series-row,
+.exp-series-row {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
   align-items: center !important;
+  flex-wrap: nowrap !important;
   gap: 8px !important;
 }
-.exp-series-row > label.exp-label,
-.exp-series-row > label[for="expSelect"] { order: 1 !important; }
-.exp-series-row > #expSelect,
-.exp-series-row > select.exp-select-hidden { order: 2 !important; }
-.exp-series-row > #expDropdown,
-.exp-series-row > .exp-dd { order: 3 !important; }
-.exp-series-row > #seriesBtn { order: 4 !important; }
-.exp-series-row > #tawafuqBtn { order: 5 !important; }
+.exp-series-row .exp-label,
+.exp-series-row label[for="expSelect"] { order: 1 !important; }
+.exp-series-row #expSelect { order: 2 !important; }
+.exp-series-row #seriesBtn { order: 3 !important; }
+.exp-series-row #tawafuqBtn { order: 4 !important; }
