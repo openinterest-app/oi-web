@@ -2732,7 +2732,6 @@ function isFirstMondayOfMonth(d) {
   return d.getDate() <= 7;
 }
 
-/** تصدير جدول التوافق إلى ورقة Excel */
 function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, strikesLimit) {
   var view = getTawafuqView(data, daysLimit, strikesLimit);
   if (!view || !view.columns || !view.columns.length) return startCol;
@@ -2878,7 +2877,6 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   return endCol;
 }
 
-
 function openExportDialog() {
   const data = state.cache[state.ticker];
   if (!data) {
@@ -2927,14 +2925,14 @@ function openExportDialog() {
   html += "</div>";
 
   html += '<div class="exp-month-list">';
-  // شريط منفصل: اليوم بالسابق (تنسيق ذهبي)
+  // شريط خاص: اليوم بالسابق + التوافق (نفس المقاس والشكل)
   html += '<div class="exp-month exp-series-row-block">';
   html += '<div class="exp-month-dates">';
   html +=
     '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__SERIES_PREV__">' +
     '<span class="d">اليوم بالسابق</span></button>';
   html +=
-    '<button type="button" class="exp-date-chip exp-tawafuq-chip" data-exp="__TAWAFUQ__">' +
+    '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__TAWAFUQ__">' +
     '<span class="d">التوافق</span></button>';
   html += "</div></div>";
   order.forEach(function (key) {
@@ -3095,36 +3093,35 @@ function runExportFromDialog(emode, edays, estrikes) {
     const GAP = 4;
     const showDelta = !!state.showDelta;
 
-    function viewForChoice(exp) {
-      if (exp === "__SERIES_PREV__") {
-        return typeof getSeriesPrevDayView === "function"
-          ? getSeriesPrevDayView(data)
-          : null;
-      }
-      if (exp === "__TAWAFUQ__") return null; // handled separately
-      return getViewRowsFor(data, exp, edays, estrikes);
-    }
     function sheetNameFor(exp) {
       if (exp === "__SERIES_PREV__") return "اليوم بالسابق";
       if (exp === "__TAWAFUQ__") return "التوافق";
       return String(exp).slice(0, 31);
     }
 
-    if (emode === "multi") {
-      chosen.forEach(function (exp, i) {
-        if (exp === "__TAWAFUQ__") {
-          const wsTw = wb.addWorksheet(sheetNameFor(exp), {
-            views: [{ rightToLeft: true, state: "frozen", ySplit: 3 }],
-          });
-          writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, edays, estrikes);
-          return;
+    function writeOne(ws, exp, col) {
+      if (exp === "__TAWAFUQ__") {
+        if (typeof writeTawafuqToSheet === "function") {
+          return writeTawafuqToSheet(ws, 2, col, data, state.ticker, edays, estrikes);
         }
-        const view = viewForChoice(exp);
-        if (!view) return;
+        return col;
+      }
+      if (exp === "__SERIES_PREV__") {
+        var sv = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
+        if (!sv) return col;
+        return writeOiTableToSheet(ws, 2, col, sv, state.ticker, showDelta);
+      }
+      var view = getViewRowsFor(data, exp, edays, estrikes);
+      if (!view) return col;
+      return writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
+    }
+
+    if (emode === "multi") {
+      chosen.forEach(function (exp) {
         const ws = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true, state: "frozen", ySplit: 5 }],
         });
-        writeOiTableToSheet(ws, 2, 2, view, state.ticker, showDelta);
+        writeOne(ws, exp, 2);
       });
     } else {
       const ws = wb.addWorksheet("Export", {
@@ -3132,15 +3129,8 @@ function runExportFromDialog(emode, edays, estrikes) {
       });
       let col = 2;
       chosen.forEach(function (exp) {
-        if (exp === "__TAWAFUQ__") {
-          const lastTw = writeTawafuqToSheet(ws, 2, col, data, state.ticker, edays, estrikes);
-          col = lastTw + 1 + GAP;
-          return;
-        }
-        const view = viewForChoice(exp);
-        if (!view) return;
-        const last = writeOiTableToSheet(ws, 2, col, view, state.ticker, showDelta);
-        col = last + 1 + GAP;
+        const last = writeOne(ws, exp, col);
+        col = (typeof last === "number" ? last : col) + 1 + GAP;
       });
     }
 

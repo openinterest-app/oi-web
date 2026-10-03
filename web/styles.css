@@ -4691,3 +4691,19 @@ table.oi.tawafuq-oi td.tw-wall {
 .controls .exp-series-row #seriesBtn { order: 4 !important; }
 .controls .exp-series-row #tawafuqBtn { order: 5 !important; }
 .controls .select-exp-series:empty { display: none !important; }
+
+/* بطاقة التوافق = نفس مقاس اليوم بالسابق */
+#exportModal .exp-date-chip.exp-series-chip,
+.exp-date-chip.exp-series-chip {
+  min-width: 120px !important;
+  min-height: 40px !important;
+  padding: 8px 20px !important;
+  box-sizing: border-box !important;
+}
+#exportModal .exp-series-row-block .exp-month-dates {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
