@@ -3242,27 +3242,29 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب مثل الخاص (الصورة الثانية):
-  // اليوم بالسابق → التوافق → الانتهاء → مربع التاريخ → Days
+  // ترتيب بصري مطلوب (من اليسار لليمين مثل الخاص):
+  // اليوم بالسابق | التوافق | الانتهاء | التاريخ | Days
   (function layoutExpSeriesRow() {
-    var host = document.querySelector(".exp-series-row");
-    if (!host) {
-      var sel = $("#expSelect");
-      if (sel && sel.parentNode) {
-        host = document.createElement("div");
-        host.className = "exp-series-row";
-        sel.parentNode.insertBefore(host, sel);
-      }
-    }
-    if (!host) return;
+    var controls = document.querySelector(".controls");
+    if (!controls) return;
 
-    var expLabel =
-      document.querySelector("label.exp-label") ||
-      document.querySelector("label[for='expSelect']");
     var expSelect = $("#expSelect");
     var seriesBtn = $("#seriesBtn");
+    var expLabel =
+      document.querySelector("label.exp-label") ||
+      document.querySelector("label[for='expSelect']") ||
+      null;
+    // إن وُجد label نصه الانتهاء بدون for
+    if (!expLabel) {
+      var labs = controls.querySelectorAll("label");
+      for (var i = 0; i < labs.length; i++) {
+        if ((labs[i].textContent || "").indexOf("انتهاء") >= 0) {
+          expLabel = labs[i];
+          break;
+        }
+      }
+    }
     var tw = $("#tawafuqBtn");
-
     if (!tw) {
       tw = document.createElement("button");
       tw.id = "tawafuqBtn";
@@ -3272,12 +3274,42 @@ function init() {
       tw.textContent = "التوافق";
     }
 
-    // DOM order = visual LTR order matching private:
-    // 1 اليوم بالسابق  2 التوافق  3 الانتهاء  4 التاريخ
+    var host = document.querySelector(".exp-series-row");
+    if (!host) {
+      host = document.createElement("div");
+      host.className = "exp-series-row";
+    }
+
+    // فكّ أي order قديم
+    [seriesBtn, tw, expLabel, expSelect].forEach(function (el) {
+      if (el) {
+        el.style.order = "0";
+        el.style.removeProperty("order");
+      }
+    });
+
+    // ترتيب DOM = الترتيب البصري المطلوب تمامًا
     if (seriesBtn) host.appendChild(seriesBtn);
     host.appendChild(tw);
     if (expLabel) host.appendChild(expLabel);
     if (expSelect) host.appendChild(expSelect);
+
+    // ضع الصف قبل تسمية Days مباشرة
+    var daysLab = null;
+    var ch = controls.children;
+    for (var j = 0; j < ch.length; j++) {
+      var t = (ch[j].textContent || "").trim();
+      if (ch[j].tagName === "LABEL" && t === "Days") {
+        daysLab = ch[j];
+        break;
+      }
+    }
+    if (daysLab) controls.insertBefore(host, daysLab);
+    else if (!host.parentNode) controls.insertBefore(host, controls.firstChild);
+
+    host.style.cssText =
+      "display:flex!important;flex-direction:row!important;align-items:center!important;" +
+      "flex-wrap:nowrap!important;gap:8px!important;direction:ltr!important;";
 
     function styleTab(b) {
       if (!b) return;
@@ -3285,19 +3317,11 @@ function init() {
       b.style.setProperty("text-decoration", "none", "important");
       b.style.setProperty("cursor", "pointer", "important");
       b.style.setProperty("background", "transparent", "important");
-      b.style.order = "";
     }
     styleTab(seriesBtn);
     styleTab(tw);
-    if (expLabel) expLabel.style.order = "";
-    if (expSelect) expSelect.style.order = "";
-
-    host.style.display = "flex";
-    host.style.flexDirection = "row";
-    host.style.alignItems = "center";
-    host.style.flexWrap = "nowrap";
-    host.style.gap = "8px";
   })();
+
 
 
   if ($("#seriesBtn")) {
