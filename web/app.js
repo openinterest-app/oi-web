@@ -3242,13 +3242,19 @@ function init() {
   renderChips("#daysRow", ["2", "3", "5", "10", "ALL"], "days");
   renderChips("#strikesRow", ["30", "50", "ALL"], "strikes");
   
-  // ترتيب ثابت: [الانتهاء + مربع التاريخ] ثم [اليوم بالسابق] ثم [التوافق آخر شيء]
+  // ترتيب مثل الخاص (الصورة الثانية):
+  // اليوم بالسابق → التوافق → الانتهاء → مربع التاريخ → Days
   (function layoutExpSeriesRow() {
-    var row =
-      document.querySelector(".exp-series-row") ||
-      document.querySelector(".select-exp-series") ||
-      document.querySelector(".controls");
-    if (!row) return;
+    var host = document.querySelector(".exp-series-row");
+    if (!host) {
+      var sel = $("#expSelect");
+      if (sel && sel.parentNode) {
+        host = document.createElement("div");
+        host.className = "exp-series-row";
+        sel.parentNode.insertBefore(host, sel);
+      }
+    }
+    if (!host) return;
 
     var expLabel =
       document.querySelector("label.exp-label") ||
@@ -3266,40 +3272,25 @@ function init() {
       tw.textContent = "التوافق";
     }
 
-    // أنشئ صفًا موحّدًا إن لزم
-    var host = document.querySelector(".exp-series-row");
-    if (!host) {
-      host = document.createElement("div");
-      host.className = "exp-series-row";
-      if (expSelect && expSelect.parentNode) {
-        expSelect.parentNode.insertBefore(host, expSelect);
-      } else if (row) {
-        row.insertBefore(host, row.firstChild);
-      }
-    }
-
-    // فرّغ ثم أعد بنفس الترتيب المطلوب
-    // 1) الانتهاء  2) مربع التاريخ  3) اليوم بالسابق  4) التوافق (أخيرًا)
-    if (expLabel) host.appendChild(expLabel);
-    if (expSelect) host.appendChild(expSelect);
+    // DOM order = visual LTR order matching private:
+    // 1 اليوم بالسابق  2 التوافق  3 الانتهاء  4 التاريخ
     if (seriesBtn) host.appendChild(seriesBtn);
     host.appendChild(tw);
+    if (expLabel) host.appendChild(expLabel);
+    if (expSelect) host.appendChild(expSelect);
 
-    // أوامر CSS صريحة لدعم RTL/LTR
-    if (expLabel) expLabel.style.order = "1";
-    if (expSelect) expSelect.style.order = "2";
-    if (seriesBtn) {
-      seriesBtn.style.order = "3";
-      seriesBtn.style.setProperty("border-bottom", "none", "important");
-      seriesBtn.style.setProperty("text-decoration", "none", "important");
-      seriesBtn.style.setProperty("cursor", "pointer", "important");
-      seriesBtn.style.setProperty("background", "transparent", "important");
+    function styleTab(b) {
+      if (!b) return;
+      b.style.setProperty("border-bottom", "none", "important");
+      b.style.setProperty("text-decoration", "none", "important");
+      b.style.setProperty("cursor", "pointer", "important");
+      b.style.setProperty("background", "transparent", "important");
+      b.style.order = "";
     }
-    tw.style.order = "4";
-    tw.style.setProperty("border-bottom", "none", "important");
-    tw.style.setProperty("text-decoration", "none", "important");
-    tw.style.setProperty("cursor", "pointer", "important");
-    tw.style.setProperty("background", "transparent", "important");
+    styleTab(seriesBtn);
+    styleTab(tw);
+    if (expLabel) expLabel.style.order = "";
+    if (expSelect) expSelect.style.order = "";
 
     host.style.display = "flex";
     host.style.flexDirection = "row";
@@ -3307,6 +3298,7 @@ function init() {
     host.style.flexWrap = "nowrap";
     host.style.gap = "8px";
   })();
+
 
   if ($("#seriesBtn")) {
     $("#seriesBtn").onclick = function () {

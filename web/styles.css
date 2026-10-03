@@ -4628,7 +4628,9 @@ table.oi.tawafuq-oi td.tw-wall {
 }
 
 
-/* ترتيب صريح: الانتهاء → التاريخ → اليوم بالسابق → التوافق (أخيرًا) */
+
+
+/* ترتيب مثل الخاص: اليوم بالسابق → التوافق → الانتهاء → التاريخ */
 .controls .exp-series-row,
 .exp-series-row {
   display: flex !important;
@@ -4637,8 +4639,8 @@ table.oi.tawafuq-oi td.tw-wall {
   flex-wrap: nowrap !important;
   gap: 8px !important;
 }
+.exp-series-row #seriesBtn { order: 1 !important; }
+.exp-series-row #tawafuqBtn { order: 2 !important; }
 .exp-series-row .exp-label,
-.exp-series-row label[for="expSelect"] { order: 1 !important; }
-.exp-series-row #expSelect { order: 2 !important; }
-.exp-series-row #seriesBtn { order: 3 !important; }
-.exp-series-row #tawafuqBtn { order: 4 !important; }
+.exp-series-row label[for="expSelect"] { order: 3 !important; }
+.exp-series-row #expSelect { order: 4 !important; }
