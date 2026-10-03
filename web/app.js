@@ -2777,7 +2777,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     cell.font = fontB;
     cell.alignment = alignC;
   }
-  ws.getCell(rTitle, startCol).value = (ticker || "") + " | التوافق";
+  ws.getCell(rTitle, startCol).value = (ticker || "") + " | جدول الأيام";
 
   // headers CALL reversed | STRIKE | PUT forward
   for (var i = 0; i < nCols; i++) {
@@ -3122,19 +3122,41 @@ function runExportFromDialog(emode, edays, estrikes) {
 
     function sheetNameFor(exp) {
       if (exp === "__SERIES_PREV__") return "Series";
-      if (exp === "__TAWAFUQ__") return "Tawafuq";
+      if (exp === "__TAWAFUQ__") return "جدول الأيام";
       return String(exp).slice(0, 31);
+    }
+
+    function exportTawafuqSheet(wb, data, edays, estrikes) {
+      var daysTry = [edays, "ALL", "10", "5"];
+      var written = false;
+      var wsTw = wb.addWorksheet("جدول الأيام", {
+        views: [{ rightToLeft: true }],
+      });
+      if (typeof writeTawafuqToSheet !== "function") {
+        wsTw.getCell(1, 1).value = "دالة التوافق غير متاحة";
+        return;
+      }
+      for (var di = 0; di < daysTry.length; di++) {
+        var d = daysTry[di];
+        if (d == null || d === "") continue;
+        // امسح محتوى سابق إن فشلت محاولة
+        if (written) break;
+        var ret = writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, d, estrikes);
+        // ret > 2 يعني كُتبت أعمدة
+        if (typeof ret === "number" && ret > 2) {
+          written = true;
+          break;
+        }
+      }
+      if (!written) {
+        wsTw.getCell(1, 1).value = (state.ticker || "") + " | جدول الأيام — لا بيانات";
+      }
     }
 
     if (emode === "multi") {
       chosen.forEach(function (exp) {
         if (exp === "__TAWAFUQ__") {
-          var wsTw = wb.addWorksheet("Tawafuq", {
-            views: [{ rightToLeft: true }],
-          });
-          if (typeof writeTawafuqToSheet === "function") {
-            writeTawafuqToSheet(wsTw, 2, 2, data, state.ticker, edays, estrikes);
-          }
+          exportTawafuqSheet(wb, data, edays, estrikes);
           return;
         }
         if (exp === "__SERIES_PREV__") {
@@ -3161,12 +3183,7 @@ function runExportFromDialog(emode, edays, estrikes) {
       });
 
       if (hasTw) {
-        var wsTw2 = wb.addWorksheet("Tawafuq", {
-          views: [{ rightToLeft: true }],
-        });
-        if (typeof writeTawafuqToSheet === "function") {
-          writeTawafuqToSheet(wsTw2, 2, 2, data, state.ticker, edays, estrikes);
-        }
+        exportTawafuqSheet(wb, data, edays, estrikes);
       }
       if (hasSeries) {
         var sv2 = typeof getSeriesPrevDayView === "function" ? getSeriesPrevDayView(data) : null;
