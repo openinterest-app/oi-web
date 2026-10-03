@@ -3023,9 +3023,20 @@ function openExportDialog() {
       ? String(state.strikes)
       : "50";
 
+  // التاريخ الحالي يكون محدداً تلقائياً؛ إذا اخترت «جدول الأيام» أو «اليوم بالسابق» دون أن تلمس
+  // أي تاريخ بنفسك، نلغي التحديد التلقائي حتى لا يُصدَّر جدول إضافي لم تطلبه
+  var touchedDates = false;
   body.querySelectorAll(".exp-date-chip").forEach(function (btn) {
     btn.onclick = function () {
+      var special = btn.classList.contains("exp-series-chip");
+      var turningOn = !btn.classList.contains("on");
       btn.classList.toggle("on");
+      if (!special) touchedDates = true;
+      if (special && turningOn && !touchedDates) {
+        body.querySelectorAll(".exp-date-chip.on").forEach(function (c) {
+          if (!c.classList.contains("exp-series-chip")) c.classList.remove("on");
+        });
+      }
     };
   });
 
@@ -3262,7 +3273,7 @@ function runExportFromDialog(emode, edays, estrikes) {
         a.click();
         URL.revokeObjectURL(a.href);
       }
-      if (st) st.textContent = "تم التصدير" + (typeof twNote === "string" ? twNote : "");
+      if (st) st.textContent = "تم التصدير (الأوراق: " + wb.worksheets.map(function (w) { return w.name; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "");
       setStatus("تم التصدير", "ok");
     }).catch(function (err) {
       if (st) st.textContent = "خطأ: " + (err && err.message ? err.message : err);
