@@ -4749,113 +4749,97 @@ table.oi.tawafuq-oi td.tw-wall {
 
 
 /* =========================================================
-   شريط التحكم — تصميم «الشرائح المنزلقة» (v20)
+   شريط التحكم — «الشرائح المنزلقة» هادئة (v21)
    تنسيق فقط: لا يغيّر إظهار/إخفاء أي زر (5K+ وΣΔ يبقيان بتحكم app.js)
    ========================================================= */
 html body .controls {
   gap: 8px !important;
   padding: 8px 10px !important;
   border-radius: 16px !important;
-  border: 1px solid #223153 !important;
-  background: linear-gradient(90deg, transparent, #4c8dff, #7c5cff, transparent) top center / calc(100% - 40px) 1px no-repeat, #101a2e !important;
+  border: 1px solid #1f2b46 !important;
+  background: linear-gradient(90deg, transparent, rgba(148,163,184,.28), transparent) top center / calc(100% - 60px) 1px no-repeat, #111b2e !important;
 }
 html body .controls > label,
 html body .controls .stocks-inline .stocks-label {
-  font-size: 10.5px !important;
-  letter-spacing: .1em !important;
-  text-transform: uppercase !important;
-  color: #8190b0 !important;
-  font-weight: 600 !important;
+  font-size: 10.5px !important; letter-spacing: .1em !important; text-transform: uppercase !important;
+  color: #7c89a6 !important; font-weight: 600 !important;
 }
-/* حذف كلمة «الانتهاء» */
 html body .controls .exp-series-row .exp-label,
 html body .controls .exp-series-row label[for="expSelect"] { display: none !important; }
-/* فاصل بعد مجموعة (الأوضاع + التاريخ) */
 html body .controls .exp-series-row {
   padding-inline-end: 10px !important;
-  border-inline-end: 1px solid #223153 !important;
+  border-inline-end: 1px solid #1f2b46 !important;
 }
-/* المؤشر المنزلق */
+/* التحديد = خط تحت الخيار (بدون مربع) */
 html body .controls .oi-ind {
-  position: absolute; z-index: 0; top: 3px; bottom: 3px; left: 0; width: 0;
-  border-radius: 8px; opacity: 0; pointer-events: none;
-  background: linear-gradient(180deg, #223a6b, #1b2f58);
-  box-shadow: 0 0 0 1px #4c8dff88 inset;
+  position: absolute; z-index: 0; top: 3px; bottom: 1px; left: 0; width: 0;
+  opacity: 0; pointer-events: none; border-radius: 0; box-shadow: none;
+  background: linear-gradient(#8aa4d6, #8aa4d6) center bottom / calc(100% - 20px) 2px no-repeat;
   transition: left .28s cubic-bezier(.3,.8,.3,1), width .28s cubic-bezier(.3,.8,.3,1), opacity .2s;
 }
 html body .controls .oi-ind.show { opacity: 1; }
-/* شريحة الأوضاع: اليوم بالسابق | جدول الأيام */
-html body .controls .oi-seg {
-  position: relative; display: inline-flex; align-items: center; gap: 0;
-  padding: 3px; background: #0a101d; border: 1px solid #223153; border-radius: 11px; direction: ltr;
-}
-html body .controls .oi-seg .series-btn {
-  position: relative; z-index: 1;
-  height: 28px !important; padding: 0 13px !important; margin: 0 !important;
-  font-size: 13px !important; font-weight: 500 !important; color: #8190b0 !important;
-  border: 0 !important; border-radius: 8px !important; background: transparent !important;
-}
-html body .controls .oi-seg .series-btn:hover { color: #e8eefb !important; }
-html body .controls .oi-seg .series-btn.active { color: #fff !important; font-weight: 600 !important; }
-/* شرائح Days / Strikes */
+/* الحاويات: خلفية فاتحة هادئة بدل الغامقة */
+html body .controls .oi-seg,
 html body .controls .chip-row {
-  position: relative !important; gap: 0 !important; padding: 3px !important;
-  background: #0a101d !important; border: 1px solid #223153 !important;
-  border-radius: 11px !important; direction: ltr !important; align-items: center !important;
+  position: relative !important; display: inline-flex !important; align-items: center !important;
+  gap: 0 !important; padding: 3px !important; direction: ltr !important;
+  background: rgba(148,163,184,.06) !important;
+  border: 1px solid rgba(148,163,184,.16) !important; border-radius: 11px !important;
 }
+html body .controls .oi-seg .series-btn,
 html body .controls .chip-row .chip {
   position: relative; z-index: 1;
-  height: 28px !important; min-width: 0 !important; padding: 0 10px !important;
-  font-size: 13px !important; font-weight: 500 !important; color: #8190b0 !important;
-  background: transparent !important; border: 0 !important; border-radius: 8px !important; box-shadow: none !important;
+  height: 28px !important; min-width: 0 !important; padding: 0 10px !important; margin: 0 !important;
+  font-size: 13px !important; font-weight: 500 !important; color: #8f9bb5 !important;
+  background: transparent !important; border: 0 !important; border-radius: 6px !important; box-shadow: none !important;
 }
-html body .controls .chip-row .chip:hover { color: #e8eefb !important; }
-html body .controls .chip-row .chip.active { color: #fff !important; font-weight: 600 !important; background: transparent !important; }
-/* احتياط إن لم يعمل السكربت: تمييز مباشر للخيار المفعّل */
-html body .controls:not(.oi-slide) .chip-row .chip.active {
-  background: linear-gradient(180deg, #223a6b, #1b2f58) !important;
-  box-shadow: 0 0 0 1px #4c8dff88 inset !important;
+html body .controls .oi-seg .series-btn:hover,
+html body .controls .chip-row .chip:hover { color: #e6ecf8 !important; }
+html body .controls .oi-seg .series-btn.active,
+html body .controls .chip-row .chip.active {
+  color: #f1f5ff !important; font-weight: 600 !important; background: transparent !important; box-shadow: none !important;
 }
-/* قائمة التاريخ المنسدلة */
+/* احتياط إن لم يعمل السكربت: خط سفلي مباشر */
+html body .controls:not(.oi-slide) .chip-row .chip.active { border-bottom: 2px solid #8aa4d6 !important; border-radius: 0 !important; }
+/* قائمة التاريخ */
 html body .controls .exp-dd { min-width: 0 !important; width: auto !important; }
 html body .controls .exp-dd-btn {
   height: 36px !important; min-width: 100px !important; padding: 0 28px 0 11px !important;
-  border-radius: 11px !important; border: 1px solid #223153 !important; font-size: 13px !important; color: #e8eefb !important;
-  background: #0a101d url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238190b0' fill='none' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 12px center !important;
+  border-radius: 11px !important; border: 1px solid rgba(148,163,184,.16) !important; font-size: 13px !important; color: #e6ecf8 !important;
+  background: rgba(148,163,184,.06) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237c89a6' fill='none' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 12px center !important;
 }
-html body .controls .exp-dd-btn.open { border-color: #4c8dff !important; }
+html body .controls .exp-dd-btn.open { border-color: #5f7fb8 !important; }
 /* Δ · ΣΔ · 5K+ · ×3 */
 html body .controls .delta-btn,
 html body .controls .spx5k-btn,
 html body .controls button#x3Btn.x3-btn {
   height: 36px !important; min-width: 34px !important; padding: 0 11px !important;
-  border-radius: 11px !important; border: 1px solid #223153 !important;
-  background: #0a101d !important; color: #8190b0 !important;
+  border-radius: 11px !important; border: 1px solid rgba(148,163,184,.16) !important;
+  background: rgba(148,163,184,.06) !important; color: #8f9bb5 !important;
   font-size: 13px !important; font-weight: 600 !important; box-shadow: none !important;
 }
 html body .controls .delta-btn:hover,
 html body .controls .spx5k-btn:hover,
-html body .controls button#x3Btn.x3-btn:hover { color: #e8eefb !important; border-color: #34487a !important; }
+html body .controls button#x3Btn.x3-btn:hover { color: #e6ecf8 !important; border-color: rgba(148,163,184,.35) !important; }
 html body .controls .delta-btn.active,
 html body .controls button#x3Btn.x3-btn.active {
-  color: #fff !important; background: #2a2260 !important; border: 1px solid #7c5cff !important;
+  color: #f1f5ff !important; background: rgba(138,164,214,.14) !important; border: 1px solid rgba(138,164,214,.55) !important;
 }
-html body .controls .sigma-btn.active { color: #5eead4 !important; background: #0e3b3a !important; border: 1px solid #2dd4bf !important; }
-html body .controls .spx5k-btn.active { color: #e0f2fe !important; background: #0b2f4d !important; border: 1px solid #38bdf8 !important; }
-/* دفع المجموعة اليمنى (Δ…×3) إلى الطرف */
-html body .controls #deltaBtn { margin-inline-start: auto !important; }
+html body .controls .sigma-btn.active { color: #8fe3d6 !important; background: rgba(45,212,191,.10) !important; border: 1px solid rgba(45,212,191,.45) !important; }
+html body .controls .spx5k-btn.active { color: #d4ecfb !important; background: rgba(56,189,248,.12) !important; border: 1px solid rgba(56,189,248,.5) !important; }
+html body .controls #deltaBtn { margin-inline-start: 6px !important; }
 /* STOCKS */
 html body .controls .stocks-inline { gap: 8px !important; }
 html body .controls .stocks-dd-btn,
 html body .controls .stocks-inline .stocks-select {
   height: 36px !important; min-width: 84px !important; border-radius: 11px !important;
-  border: 1px solid #223153 !important; background: #0a101d !important; color: #8190b0 !important;
+  border: 1px solid rgba(148,163,184,.16) !important; background: rgba(148,163,184,.06) !important; color: #8f9bb5 !important;
   font-size: 13px !important; text-align: center !important;
 }
-html body .controls .stocks-dd-btn.open { border-color: #4c8dff !important; }
+html body .controls .stocks-dd-btn.open { border-color: #5f7fb8 !important; }
 @media (max-width: 700px) {
   html body .controls .chip-row .chip,
-  html body .controls .oi-seg .series-btn { padding: 0 10px !important; font-size: 12px !important; }
+  html body .controls .oi-seg .series-btn { padding: 0 8px !important; font-size: 12px !important; }
 }
 
 
