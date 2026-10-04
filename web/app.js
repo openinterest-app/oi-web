@@ -2930,10 +2930,10 @@ function openExportDialog() {
   html += '<div class="exp-month-dates">';
   html +=
     '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__SERIES_PREV__">' +
-    '<span class="d">اليوم بالسابق</span></button>';
+    '<span class="d">اليوم بالسابق</span><span class="s">مقارنة يومية</span></button>';
   html +=
     '<button type="button" class="exp-date-chip exp-series-chip" data-exp="__TAWAFUQ__">' +
-    '<span class="d">جدول الأيام</span></button>';
+    '<span class="d">جدول الأيام</span><span class="s">انتهاءات قادمة</span></button>';
   html += "</div></div>";
   order.forEach(function (key) {
     const g = groups[key];
@@ -3000,7 +3000,7 @@ function openExportDialog() {
   html +=
     '<button type="button" class="btn btn-teal exp-do-inline" id="expDoBtn">Excel</button>';
   html += "</div>";
-  html += '<p id="expStatus" class="exp-status">نسخة الكود: 15</p>';
+  html += '<p id="expStatus" class="exp-status">نسخة الكود: 16</p>';
 
   body.innerHTML = html;
   modal.classList.remove("hidden");
@@ -3273,7 +3273,7 @@ function runExportFromDialog(emode, edays, estrikes) {
         a.click();
         URL.revokeObjectURL(a.href);
       }
-      if (st) st.textContent = "تم التصدير (الأوراق: " + wb.worksheets.map(function (w) { return w.name + " [" + (typeof w.rowCount === "number" ? w.rowCount : "؟") + " صف]"; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "") + " — نسخة 15";
+      if (st) st.textContent = "تم التصدير — المحدد: " + chosen.map(function (e) { return e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e; }).join("، ") + " (الأوراق: " + wb.worksheets.map(function (w) { return w.name + " [" + (typeof w.rowCount === "number" ? w.rowCount : "؟") + " صف]"; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "") + " — نسخة 16";
       setStatus("تم التصدير", "ok");
     }).catch(function (err) {
       if (st) st.textContent = "خطأ: " + (err && err.message ? err.message : err);

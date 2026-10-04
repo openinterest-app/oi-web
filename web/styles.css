@@ -4746,3 +4746,30 @@ table.oi.tawafuq-oi td.tw-wall {
   min-height: 40px !important;
   padding: 8px 20px !important;
 }
+
+
+/* =========================================================
+   إصلاح جذري لشريط التحكم (آخر قاعدة في الملف — لا تضف بعدها شيئاً للشريط)
+   المشكلة: justify-content:center مع overflow-x:auto يقصّ طرف الشريط ولا يمكن الوصول إليه
+   الحل: «safe center» = يتوسّط عندما يتّسع المكان، ويبدأ من الطرف عندما يزيد المحتوى
+         فيصير الشريط كله قابلاً للسحب من أوله إلى آخره (مثل الآيفون).
+         السطر الأول احتياط للمتصفحات القديمة التي لا تفهم safe.
+   ========================================================= */
+html body .controls {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-start !important;
+  justify-content: safe center !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-x: contain !important;
+  touch-action: pan-x pan-y !important;
+  scrollbar-width: none !important;
+}
+html body .controls::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+html body .controls > * { flex: 0 0 auto !important; }
+html body .controls::before,
+html body .controls::after { content: none !important; display: none !important; }
