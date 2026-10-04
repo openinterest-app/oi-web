@@ -2999,8 +2999,10 @@ function openExportDialog() {
     '<button type="button" class="chip" data-emode="multi">متعددة</button>';
   html +=
     '<button type="button" class="btn btn-teal exp-do-inline" id="expDoBtn">Excel</button>';
+  html +=
+    '<button type="button" class="btn exp-do-inline" id="expDaysOnlyBtn" title="يصدّر جدول الأيام وحده بغض النظر عن التحديد">جدول الأيام فقط</button>';
   html += "</div>";
-  html += '<p id="expStatus" class="exp-status">نسخة الكود: 16</p>';
+  html += '<p id="expStatus" class="exp-status">نسخة الكود: 17</p>';
 
   body.innerHTML = html;
   modal.classList.remove("hidden");
@@ -3101,6 +3103,29 @@ function openExportDialog() {
       runExportFromDialog(emode, edays, estrikes);
     };
   }
+  const daysOnlyBtn = $("#expDaysOnlyBtn");
+  if (daysOnlyBtn) {
+    daysOnlyBtn.onclick = function () {
+      runExportFromDialog(emode, edays, estrikes, ["__TAWAFUQ__"]);
+    };
+  }
+  // سطر حي يعرض ما سيُصدَّر قبل الضغط على Excel
+  function showSelNow() {
+    var st0 = $("#expStatus");
+    if (!st0) return;
+    var names = [];
+    body.querySelectorAll(".exp-date-chip.on").forEach(function (c) {
+      var e = c.getAttribute("data-exp");
+      names.push(e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e);
+    });
+    st0.textContent = "المحدد الآن: " + (names.length ? names.join("، ") : "لا شيء") + " — نسخة 17";
+  }
+  body.querySelectorAll(".exp-date-chip").forEach(function (c) {
+    c.addEventListener("click", function () { setTimeout(showSelNow, 0); });
+  });
+  var selAllBtn = $("#expSelectAll");
+  if (selAllBtn) selAllBtn.addEventListener("click", function () { setTimeout(showSelNow, 0); });
+  showSelNow();
 }
 
 function closeExportDialog() {
@@ -3108,7 +3133,7 @@ function closeExportDialog() {
   if (modal) modal.classList.add("hidden");
 }
 
-function runExportFromDialog(emode, edays, estrikes) {
+function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
   const data = state.cache[state.ticker];
   const body = $("#exportBody");
   const st = $("#expStatus");
@@ -3120,7 +3145,10 @@ function runExportFromDialog(emode, edays, estrikes) {
     }
   }
   const chosen = [];
-  if (body) {
+  if (forcedChosen && forcedChosen.length) {
+    // تصدير مباشر لعنصر محدد بدون الاعتماد على حالة الأزرار في النافذة
+    forcedChosen.forEach(function (e) { chosen.push(e); });
+  } else if (body) {
     body.querySelectorAll(".exp-date-chip.on").forEach(function (chip) {
       chosen.push(chip.getAttribute("data-exp"));
     });
@@ -3273,7 +3301,7 @@ function runExportFromDialog(emode, edays, estrikes) {
         a.click();
         URL.revokeObjectURL(a.href);
       }
-      if (st) st.textContent = "تم التصدير — المحدد: " + chosen.map(function (e) { return e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e; }).join("، ") + " (الأوراق: " + wb.worksheets.map(function (w) { return w.name + " [" + (typeof w.rowCount === "number" ? w.rowCount : "؟") + " صف]"; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "") + " — نسخة 16";
+      if (st) st.textContent = "تم التصدير — المحدد: " + chosen.map(function (e) { return e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e; }).join("، ") + " (الأوراق: " + wb.worksheets.map(function (w) { return w.name + " [" + (typeof w.rowCount === "number" ? w.rowCount : "؟") + " صف]"; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "") + " — نسخة 17";
       setStatus("تم التصدير", "ok");
     }).catch(function (err) {
       if (st) st.textContent = "خطأ: " + (err && err.message ? err.message : err);
