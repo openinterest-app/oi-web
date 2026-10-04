@@ -3002,7 +3002,7 @@ function openExportDialog() {
   html +=
     '<button type="button" class="btn exp-do-inline" id="expDaysOnlyBtn" title="يصدّر جدول الأيام وحده بغض النظر عن التحديد">جدول الأيام فقط</button>';
   html += "</div>";
-  html += '<p id="expStatus" class="exp-status">نسخة الكود: 17</p>';
+  html += '<p id="expStatus" class="exp-status"></p>';
 
   body.innerHTML = html;
   modal.classList.remove("hidden");
@@ -3118,7 +3118,7 @@ function openExportDialog() {
       var e = c.getAttribute("data-exp");
       names.push(e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e);
     });
-    st0.textContent = "المحدد الآن: " + (names.length ? names.join("، ") : "لا شيء") + " — نسخة 17";
+    st0.textContent = "المحدد الآن: " + (names.length ? names.join("، ") : "لا شيء");
   }
   body.querySelectorAll(".exp-date-chip").forEach(function (c) {
     c.addEventListener("click", function () { setTimeout(showSelNow, 0); });
@@ -3269,7 +3269,6 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         : twErr
         ? " — خطأ في جدول الأيام: " + twErr
         : " — تحذير: جدول الأيام بدون بيانات";
-      if (st) st.textContent = twNote.replace(/^ — /, "");
     }
 
     if (wb.worksheets.length === 0) {
@@ -3301,7 +3300,7 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         a.click();
         URL.revokeObjectURL(a.href);
       }
-      if (st) st.textContent = "تم التصدير — المحدد: " + chosen.map(function (e) { return e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e; }).join("، ") + " (الأوراق: " + wb.worksheets.map(function (w) { return w.name + " [" + (typeof w.rowCount === "number" ? w.rowCount : "؟") + " صف]"; }).join("، ") + ")" + (typeof twNote === "string" ? twNote : "") + " — نسخة 17";
+      if (st) st.textContent = hasTw && !twOk ? "تم التصدير — تنبيه: " + (twErr ? "خطأ في جدول الأيام: " + twErr : "جدول الأيام بدون بيانات") : "تم التصدير";
       setStatus("تم التصدير", "ok");
     }).catch(function (err) {
       if (st) st.textContent = "خطأ: " + (err && err.message ? err.message : err);
