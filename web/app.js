@@ -2769,7 +2769,14 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   var strikeCol = startCol + nCols;
   var endCol = strikeCol + nCols;
 
-  // title
+  // الشيت من اليمين لليسار: الأعمدة الأقل رقماً تظهر على اليمين.
+  // مثل الويب (CALL يسار — PUT يمين): PUT في الجهة التي تبدأ من startCol، وCALL بعد STRIKE.
+  var fontSide = function (argb) {
+    return { name: "Calibri", size: 12, bold: true, color: { argb: argb } };
+  };
+  var fontTitle = { name: "Calibri", size: 11, bold: true, color: { argb: "FF000000" } };
+
+  // صف العنوان: [PUT] [اسم المؤشر + جدول الأيام فوق STRIKE] [CALL]
   for (var c = startCol; c <= endCol; c++) {
     var cell = ws.getCell(rTitle, c);
     cell.border = border;
@@ -2777,9 +2784,24 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     cell.font = fontB;
     cell.alignment = alignC;
   }
-  ws.getCell(rTitle, startCol).value = (ticker || "") + " | جدول الأيام";
+  var putLab = ws.getCell(rTitle, startCol);
+  putLab.value = "PUT";
+  putLab.font = fontSide("FF6D28D9");
+  var callLab = ws.getCell(rTitle, strikeCol + 1);
+  callLab.value = "CALL";
+  callLab.font = fontSide("FF1D4ED8");
+  var titleCell = ws.getCell(rTitle, strikeCol);
+  titleCell.value = (ticker || "") + "\nجدول الأيام";
+  titleCell.font = fontTitle;
+  if (nCols > 1) {
+    try {
+      ws.mergeCells(rTitle, startCol, rTitle, strikeCol - 1);
+      ws.mergeCells(rTitle, strikeCol + 1, rTitle, endCol);
+    } catch (eMerge) {}
+  }
+  try { ws.getRow(rTitle).height = 34; } catch (eH) {}
 
-  // headers CALL reversed | STRIKE | PUT forward
+  // رؤوس التواريخ: جهة PUT معكوسة (الأبعد يميناً) | STRIKE | جهة CALL
   for (var i = 0; i < nCols; i++) {
     var fh = formatTawafuqHeader(cols[nCols - 1 - i].exp);
     var th = ws.getCell(rHead, startCol + i);
@@ -2805,7 +2827,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     th2.fill = kindFill(cols[j].kind);
   }
 
-  // max per col
+  // أعلى قيمة لكل عمود
   var callMax = [], putMax = [];
   for (var ci = 0; ci < nCols; ci++) {
     var mc = 0, mp = 0;
@@ -2819,21 +2841,21 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
 
   rows.forEach(function (r, ri) {
     var rowIdx = dataStart + ri;
-    // calls reversed
+    // PUT على جهة startCol (معكوس)
     for (var ic = 0; ic < nCols; ic++) {
       var srcI = nCols - 1 - ic;
       var cell = ws.getCell(rowIdx, startCol + ic);
       cell.border = border;
       cell.alignment = alignC;
       cell.fill = kindFill(cols[srcI].kind);
-      if (!r.present[srcI] || r.calls[srcI] == null || r.calls[srcI] === 0) {
+      if (!r.present[srcI] || r.puts[srcI] == null || r.puts[srcI] === 0) {
         cell.value = "";
         continue;
       }
-      var oi = r.calls[srcI];
-      var isMax = callMax[srcI] > 0 && oi === callMax[srcI];
-      if (showDelta && r.callDeltas[srcI] != null && r.callDeltas[srcI] > 0) {
-        cell.value = oi.toLocaleString() + "\n+" + r.callDeltas[srcI].toLocaleString();
+      var oi = r.puts[srcI];
+      var isMax = putMax[srcI] > 0 && oi === putMax[srcI];
+      if (showDelta && r.putDeltas[srcI] != null && r.putDeltas[srcI] > 0) {
+        cell.value = oi.toLocaleString() + "\n+" + r.putDeltas[srcI].toLocaleString();
         cell.font = isMax ? fontB : fontN;
       } else {
         cell.value = oi;
@@ -2847,20 +2869,20 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     strikeCell.font = fontB;
     strikeCell.alignment = alignC;
     strikeCell.border = border;
-    // puts
+    // CALL بعد STRIKE
     for (var ip = 0; ip < nCols; ip++) {
       var cellp = ws.getCell(rowIdx, strikeCol + 1 + ip);
       cellp.border = border;
       cellp.alignment = alignC;
       cellp.fill = kindFill(cols[ip].kind);
-      if (!r.present[ip] || r.puts[ip] == null || r.puts[ip] === 0) {
+      if (!r.present[ip] || r.calls[ip] == null || r.calls[ip] === 0) {
         cellp.value = "";
         continue;
       }
-      var oip = r.puts[ip];
-      var isMaxP = putMax[ip] > 0 && oip === putMax[ip];
-      if (showDelta && r.putDeltas[ip] != null && r.putDeltas[ip] > 0) {
-        cellp.value = oip.toLocaleString() + "\n+" + r.putDeltas[ip].toLocaleString();
+      var oip = r.calls[ip];
+      var isMaxP = callMax[ip] > 0 && oip === callMax[ip];
+      if (showDelta && r.callDeltas[ip] != null && r.callDeltas[ip] > 0) {
+        cellp.value = oip.toLocaleString() + "\n+" + r.callDeltas[ip].toLocaleString();
         cellp.font = isMaxP ? fontB : fontN;
       } else {
         cellp.value = oip;
@@ -2872,7 +2894,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   });
 
   for (var w = startCol; w <= endCol; w++) {
-    ws.getColumn(w).width = w === strikeCol ? 10 : 9;
+    ws.getColumn(w).width = w === strikeCol ? 14 : 9;
   }
   return endCol;
 }
@@ -2999,8 +3021,6 @@ function openExportDialog() {
     '<button type="button" class="chip" data-emode="multi">متعددة</button>';
   html +=
     '<button type="button" class="btn btn-teal exp-do-inline" id="expDoBtn">Excel</button>';
-  html +=
-    '<button type="button" class="btn exp-do-inline" id="expDaysOnlyBtn" title="يصدّر جدول الأيام وحده بغض النظر عن التحديد">جدول الأيام فقط</button>';
   html += "</div>";
   html += '<p id="expStatus" class="exp-status"></p>';
 
@@ -3101,12 +3121,6 @@ function openExportDialog() {
   if (doBtn) {
     doBtn.onclick = function () {
       runExportFromDialog(emode, edays, estrikes);
-    };
-  }
-  const daysOnlyBtn = $("#expDaysOnlyBtn");
-  if (daysOnlyBtn) {
-    daysOnlyBtn.onclick = function () {
-      runExportFromDialog(emode, edays, estrikes, ["__TAWAFUQ__"]);
     };
   }
   // سطر حي يعرض ما سيُصدَّر قبل الضغط على Excel
