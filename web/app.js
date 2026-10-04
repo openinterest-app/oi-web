@@ -5329,3 +5329,70 @@ async function submitFeedback(e) {
 })();
 
 document.addEventListener("DOMContentLoaded", init);
+
+/* ===== شريط التحكم — مؤشر الشرائح المنزلقة (تجميلي فقط، لا يغيّر منطق التطبيق) ===== */
+(function () {
+  function place(host) {
+    var on = host.querySelector(":scope > .chip.active, :scope > .series-btn.active");
+    var f = host.querySelector(".days-free-input");
+    if (f) {
+      [["width", "34px"], ["min-width", "34px"], ["max-width", "34px"], ["height", "28px"], ["min-height", "28px"], ["max-height", "28px"],
+       ["flex", "0 0 34px"], ["margin", "0 0 0 4px"], ["background", "#101a2e"], ["border", "1px solid #223153"], ["border-radius", "8px"],
+       ["font-size", "12px"], ["color", "#e8eefb"]].forEach(function (p) { f.style.setProperty(p[0], p[1], "important"); });
+    }
+    var ind = host.querySelector(":scope > .oi-ind");
+    if (!ind) {
+      ind = document.createElement("span");
+      ind.className = "oi-ind";
+      host.insertBefore(ind, host.firstChild);
+      var s = host.__oi || (on ? { l: on.offsetLeft, w: on.offsetWidth, v: true } : { l: 0, w: 0, v: false });
+      ind.style.transition = "none";
+      ind.style.left = s.l + "px";
+      ind.style.width = s.w + "px";
+      if (s.v) ind.classList.add("show");
+      void ind.offsetWidth;
+      ind.style.transition = "";
+    }
+    if (!on) {
+      ind.classList.remove("show");
+      if (host.__oi) host.__oi.v = false;
+      return;
+    }
+    var l = on.offsetLeft, w = on.offsetWidth;
+    ind.style.left = l + "px";
+    ind.style.width = w + "px";
+    ind.classList.add("show");
+    host.__oi = { l: l, w: w, v: true };
+  }
+  function setupSlide() {
+    var controls = document.querySelector(".controls");
+    if (!controls || controls.classList.contains("oi-slide")) return;
+    var sb = document.getElementById("seriesBtn"), tw = document.getElementById("tawafuqBtn");
+    if (sb && tw && sb.parentNode && sb.parentNode === tw.parentNode && !sb.parentNode.classList.contains("oi-seg")) {
+      var seg = document.createElement("div");
+      seg.className = "oi-seg";
+      sb.parentNode.insertBefore(seg, sb);
+      seg.appendChild(sb);
+      seg.appendChild(tw);
+    }
+    var hosts = [].slice.call(controls.querySelectorAll(".oi-seg, #daysRow, #strikesRow"));
+    hosts.forEach(function (host) {
+      var pending = false;
+      var mo = new MutationObserver(function () {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(function () { pending = false; place(host); mo.takeRecords(); });
+      });
+      mo.observe(host, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+      place(host);
+      mo.takeRecords();
+    });
+    controls.classList.add("oi-slide");
+    var all = function () { hosts.forEach(place); };
+    window.addEventListener("resize", all);
+    window.addEventListener("load", all);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { setTimeout(setupSlide, 0); });
+  else setTimeout(setupSlide, 0);
+})();
