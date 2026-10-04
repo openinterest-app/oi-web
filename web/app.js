@@ -5336,8 +5336,8 @@ document.addEventListener("DOMContentLoaded", init);
     var on = host.querySelector(":scope > .chip.active, :scope > .series-btn.active");
     var f = host.querySelector(".days-free-input");
     if (f) {
-      [["width", "34px"], ["min-width", "34px"], ["max-width", "34px"], ["height", "28px"], ["min-height", "28px"], ["max-height", "28px"],
-       ["flex", "0 0 34px"], ["margin", "0 0 0 4px"], ["background", "rgba(148,163,184,.08)"], ["border", "1px solid rgba(148,163,184,.18)"], ["border-radius", "8px"],
+      [["width", "36px"], ["min-width", "36px"], ["max-width", "36px"], ["height", "30px"], ["min-height", "30px"], ["max-height", "30px"],
+       ["flex", "0 0 36px"], ["margin", "0 0 0 4px"], ["background", "#1a2332"], ["border", "1px solid #2a3548"], ["border-radius", "8px"],
        ["font-size", "12px"], ["color", "#e8eefb"]].forEach(function (p) { f.style.setProperty(p[0], p[1], "important"); });
     }
     var ind = host.querySelector(":scope > .oi-ind");
