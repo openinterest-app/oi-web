@@ -887,6 +887,7 @@ function openCoinDialog() {
     var g = groups[key];
     html += '<div class="exp-month"><div class="exp-month-title">' + (g.label || key) + "</div>";
     html += '<div class="exp-month-dates">';
+    html += '<button type="button" class="exp-date-chip" data-coin-month-all="' + key + '"><span class="d">الكل</span><span class="s">' + g.items.length + " يوم</span></button>";
     g.items.forEach(function (it) {
       html +=
         '<button type="button" class="exp-date-chip" data-coin-exp="' + it.exp + '"><span class="d">' +
@@ -908,26 +909,32 @@ function openCoinDialog() {
       on.push(c.getAttribute("data-coin-exp"));
     });
     on.sort();
-    var out = "";
+    var rowsHtml = "";
     on.forEach(function (exp) {
+      var r = topDeltaCoincidence(data, exp);
+      if (!(r && r.hit)) return;
       var m = metaByExp[exp];
       var label = m.day + (m.monShort ? " " + m.monShort : "");
-      var r = topDeltaCoincidence(data, exp);
-      if (r && r.hit) {
-        out +=
-          '<div class="coin-row hit"><span class="coin-date">' + label + '</span>' +
-          '<span class="coin-msg">توافق عند <b>' + r.strikes.join(" · ") + '</b></span>' +
-          '<span class="coin-sub">Put +' + r.put.toLocaleString() + ' · Call +' + r.call.toLocaleString() + '</span></div>';
-      } else {
-        out +=
-          '<div class="coin-row"><span class="coin-date">' + label + '</span>' +
-          '<span class="coin-msg">لا توجد حالة</span></div>';
-      }
+      rowsHtml +=
+        '<div class="coin-line"><span class="coin-date">' + label + '</span>' +
+        '<span class="coin-strike">' + r.strikes.join(" · ") + '</span>' +
+        '<span class="coin-vals"><span>Call +' + r.call.toLocaleString() + '</span>' +
+        '<span>Put +' + r.put.toLocaleString() + '</span></span></div>';
     });
-    host.innerHTML = out;
+    host.innerHTML = rowsHtml ? '<div class="coin-box">' + rowsHtml + "</div>" : "";
   }
   body.querySelectorAll("[data-coin-exp]").forEach(function (btn) {
     btn.onclick = function () { btn.classList.toggle("on"); renderResults(); };
+  });
+  body.querySelectorAll("[data-coin-month-all]").forEach(function (btn) {
+    btn.onclick = function () {
+      var monthBox = btn.closest(".exp-month");
+      if (!monthBox) return;
+      var chips = monthBox.querySelectorAll("[data-coin-exp]");
+      var allOn = Array.prototype.every.call(chips, function (c) { return c.classList.contains("on"); });
+      chips.forEach(function (c) { c.classList.toggle("on", !allOn); });
+      renderResults();
+    };
   });
 }
 
@@ -2849,7 +2856,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, sh
   });
 
   for (let c = startCol; c <= headerEnd; c++) {
-    ws.getColumn(c).width = c === strikeCol ? 12 : 9;
+    ws.getColumn(c).width = c === strikeCol ? 12 : ((c === putDeltaCol || c === callDeltaCol) ? 11 : 9);
   }
   return headerEnd;
 }

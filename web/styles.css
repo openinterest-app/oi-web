@@ -4879,24 +4879,47 @@ html body .controls::before,
 html body .controls::after { content: none !important; display: none !important; }
 
 
-/* نجمة الأعلى تزايدًا — هادئة وغير مشتتة */
+/* نجمة الأعلى تزايدًا — هادئة، في زاوية الخلية حتى لا تُقصّ */
+table.oi td.delta { position: relative; }
 table.oi td.delta .dstar {
-  margin-inline-start: 3px;
+  position: absolute;
+  top: 2px;
+  inset-inline-end: 4px;
+  font-size: 12px;
+  line-height: 1;
   font-weight: 700;
   color: #8a6a1f;
-  opacity: .95;
 }
-html[data-theme="dark"] table.oi td.delta .dstar { color: #e3c77d; opacity: .9; }
+html[data-theme="dark"] table.oi td.delta .dstar { color: #e3c77d; }
 
-/* توافق الأعلى تزايدًا (مخفي) */
-.coin-results { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
-.coin-row {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 8px 12px; border-radius: 10px;
-  border: 1px solid rgba(128,128,128,.22);
-  font-size: 13px; opacity: .8;
+/* توسيط رمزي ΣΔ والدائرتين داخل الزر */
+html body .controls .sigma-btn,
+html body .controls #coinBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  min-width: 38px !important;
+  text-align: center !important;
+  line-height: 1 !important;
 }
-.coin-row.hit { opacity: 1; border-color: rgba(45,212,191,.55); background: rgba(45,212,191,.10); }
+html body .controls #sigmaBtn { width: 44px !important; }
+html body .controls #coinBtn { width: 38px !important; }
+html body .controls #coinBtn svg { display: block; margin: 0 auto; }
+
+/* توافق الأعلى تزايدًا (مخفي) — مربع واحد عند وجود حالة فقط */
+.coin-results { margin-top: 14px; }
+.coin-box {
+  border: 1px solid rgba(45,212,191,.55);
+  background: rgba(45,212,191,.10);
+  border-radius: 12px;
+  padding: 6px 12px;
+}
+.coin-line {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 8px 0; font-size: 13px;
+}
+.coin-line + .coin-line { border-top: 1px solid rgba(128,128,128,.2); }
 .coin-date { font-weight: 700; min-width: 64px; }
-.coin-sub { margin-inline-start: auto; font-size: 12px; opacity: .75; }
-.exp-date-chip.on { }
+.coin-strike { font-weight: 700; }
+.coin-vals { margin-inline-start: auto; display: flex; gap: 12px; font-size: 12px; opacity: .85; }
