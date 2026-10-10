@@ -584,8 +584,6 @@ function filterStrikes(rows, close, strikesLimit) {
     .sort(function (a, b) { return a.strike - b.strike; });
 }
 
-var DSTAR = '<span class="dstar">*</span>';
-
 function positiveDelta(last, prev) {
   const d = (last || 0) - (prev || 0);
   return d > 0 ? d : null;
@@ -909,19 +907,22 @@ function openCoinDialog() {
       on.push(c.getAttribute("data-coin-exp"));
     });
     on.sort();
-    var rowsHtml = "";
+    if (!on.length) { host.innerHTML = ""; return; }
+    var cards = "";
     on.forEach(function (exp) {
       var r = topDeltaCoincidence(data, exp);
       if (!(r && r.hit)) return;
       var m = metaByExp[exp];
       var label = m.day + (m.monShort ? " " + m.monShort : "");
-      rowsHtml +=
-        '<div class="coin-line"><span class="coin-date">' + label + '</span>' +
-        '<span class="coin-strike">' + r.strikes.join(" · ") + '</span>' +
-        '<span class="coin-vals"><span>Call +' + r.call.toLocaleString() + '</span>' +
-        '<span>Put +' + r.put.toLocaleString() + '</span></span></div>';
+      cards +=
+        '<div class="coin-card"><div class="coin-date">' + label + '</div>' +
+        '<div class="coin-strike">' + r.strikes.join(" · ") + '</div>' +
+        '<div class="coin-vals"><span>Call +' + r.call.toLocaleString() + '</span>' +
+        '<span>Put +' + r.put.toLocaleString() + '</span></div></div>';
     });
-    host.innerHTML = rowsHtml ? '<div class="coin-box">' + rowsHtml + "</div>" : "";
+    host.innerHTML = cards
+      ? '<div class="coin-grid">' + cards + "</div>"
+      : '<div class="coin-none">لا توجد حالة</div>';
   }
   body.querySelectorAll("[data-coin-exp]").forEach(function (btn) {
     btn.onclick = function () { btn.classList.toggle("on"); renderResults(); };
@@ -2177,6 +2178,16 @@ function renderTawafuqTable() {
     callMax[ci] = mc;
     putMax[ci] = mp;
   }
+  var dCallMax = [], dPutMax = [];
+  for (var di = 0; di < nCols; di++) {
+    var xc = 0, xp = 0;
+    rows.forEach(function (r) {
+      if (r.callDeltas[di] != null && r.callDeltas[di] > xc) xc = r.callDeltas[di];
+      if (r.putDeltas[di] != null && r.putDeltas[di] > xp) xp = r.putDeltas[di];
+    });
+    dCallMax[di] = xc;
+    dPutMax[di] = xp;
+  }
 
   var barDone = false;
   rows.forEach(function (r, ri) {
@@ -2202,7 +2213,8 @@ function renderTawafuqTable() {
         cols[ic].kind,
         callMax[ic],
         canDelta,
-        peakCall
+        peakCall,
+        dCallMax[ic] > 0 && r.callDeltas[ic] === dCallMax[ic]
       );
     }
     html += '<td class="strike">' + r.strike + "</td>";
@@ -2214,7 +2226,8 @@ function renderTawafuqTable() {
         cols[ip].kind,
         putMax[ip],
         canDelta,
-        floorPut
+        floorPut,
+        dPutMax[ip] > 0 && r.putDeltas[ip] === dPutMax[ip]
       );
     }
     html += "</tr>";
@@ -2235,7 +2248,7 @@ function tawafuqColStyle(kind) {
   return "background-color:rgba(15,23,42,0.55)!important;";
 }
 
-function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax) {
+function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topDelta) {
   var kcls = kind ? " tw-" + kind : "";
   var st = tawafuqColStyle(kind);
   if (!present || oi == null || oi === 0) {
@@ -2263,10 +2276,11 @@ function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax) {
     else if (dlt >= 100) op = 0.32;
     else if (dlt >= 40) op = 0.22;
     inner +=
-      '<div class="tw-delta" style="display:block;font-size:10px;font-weight:600;color:#5eead4;margin-top:2px;line-height:1.1;opacity:' +
-      op +
-      '">+' +
+      '<div class="tw-delta" style="display:block;font-size:10px;font-weight:600;color:#5eead4;margin-top:2px;line-height:1.1;">' +
+      '<span style="opacity:' + op + '">+' +
       Number(dlt).toLocaleString() +
+      "</span>" +
+      (topDelta ? '<span class="tw-star">*</span>' : "") +
       "</div>";
   }
   inner += "</div>";
@@ -2415,7 +2429,7 @@ function renderTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() + (maxCls ? DSTAR : "") : "") +
+        (d != null ? d.toLocaleString() : "") +
         "</td>";
     }
     for (let i = pullDates.length - 1; i >= 0; i--) {
@@ -2452,7 +2466,7 @@ function renderTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() + (maxCls ? DSTAR : "") : "") +
+        (d != null ? d.toLocaleString() : "") +
         "</td>";
     }
     if (canSigma) {
@@ -2534,7 +2548,7 @@ function getViewRowsFor(data, expiration, daysLimit, strikesLimit) {
 
 
 /** يكتب جدول انتهاء بنفس تنسيق الديسكتوب (B2، pad=2، تواريخ 13-8، هيدر ناعم) */
-function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, showStar) {
+function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
   const arabicMonths = {
     1: "يناير", 2: "فبراير", 3: "مارس", 4: "أبريل",
     5: "مايو", 6: "يونيو", 7: "يوليو", 8: "أغسطس",
@@ -2564,7 +2578,6 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, sh
   const fillMax = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEEECE1" } };
   const fontB = { name: "Calibri", size: 11, bold: true, color: { argb: "FF000000" } };
   const fontN = { name: "Calibri", size: 11, color: { argb: "FF000000" } };
-  const fontStar = { name: "Calibri", size: 11, bold: true, color: { argb: "FF7A5A1E" } };
   const alignC = { horizontal: "center", vertical: "middle" };
   const border = {
     top: { style: "thin", color: { argb: "FFD9D9D9" } },
@@ -2785,10 +2798,6 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, sh
       cell.border = border;
       if (dlt != null && putDeltaMax > 0 && dlt === putDeltaMax) {
         cell.fill = fillMax;
-        if (showStar) {
-          cell.numFmt = '#,##0" *"';
-          cell.font = fontStar;
-        }
       } else cell.fill = fillDelta;
     }
     putDateCols.forEach(function (x) {
@@ -2833,10 +2842,6 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, sh
       cell.border = border;
       if (dlt != null && callDeltaMax > 0 && dlt === callDeltaMax) {
         cell.fill = fillMax;
-        if (showStar) {
-          cell.numFmt = '#,##0" *"';
-          cell.font = fontStar;
-        }
       } else cell.fill = fillDelta;
     }
     if (hasSigma && callSigmaCol) {
@@ -2856,7 +2861,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, sh
   });
 
   for (let c = startCol; c <= headerEnd; c++) {
-    ws.getColumn(c).width = c === strikeCol ? 12 : ((c === putDeltaCol || c === callDeltaCol) ? 11 : 9);
+    ws.getColumn(c).width = c === strikeCol ? 12 : 9;
   }
   return headerEnd;
 }
@@ -2997,6 +3002,26 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     putMax[ci] = mp;
   }
 
+  var dCallMaxX = [], dPutMaxX = [];
+  for (var dx = 0; dx < nCols; dx++) {
+    var xc = 0, xp = 0;
+    rows.forEach(function (r) {
+      if (r.callDeltas[dx] != null && r.callDeltas[dx] > xc) xc = r.callDeltas[dx];
+      if (r.putDeltas[dx] != null && r.putDeltas[dx] > xp) xp = r.putDeltas[dx];
+    });
+    dCallMaxX[dx] = xc;
+    dPutMaxX[dx] = xp;
+  }
+  function withStar(oiTxt, dTxt, isBold) {
+    var base = { name: "Calibri", size: 11, bold: !!isBold, color: { argb: "FF000000" } };
+    return {
+      richText: [
+        { text: oiTxt + "\n+" + dTxt, font: base },
+        { text: " *", font: { name: "Calibri", size: 13, bold: true, color: { argb: "FFB8860B" } } },
+      ],
+    };
+  }
+
   rows.forEach(function (r, ri) {
     var rowIdx = dataStart + ri;
     // PUT على جهة startCol (معكوس)
@@ -3013,7 +3038,11 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
       var oi = r.puts[srcI];
       var isMax = putMax[srcI] > 0 && oi === putMax[srcI];
       if (showDelta && r.putDeltas[srcI] != null && r.putDeltas[srcI] > 0) {
-        cell.value = oi.toLocaleString() + "\n+" + r.putDeltas[srcI].toLocaleString();
+        if (dPutMaxX[srcI] > 0 && r.putDeltas[srcI] === dPutMaxX[srcI]) {
+          cell.value = withStar(oi.toLocaleString(), r.putDeltas[srcI].toLocaleString(), isMax);
+        } else {
+          cell.value = oi.toLocaleString() + "\n+" + r.putDeltas[srcI].toLocaleString();
+        }
         cell.font = isMax ? fontB : fontN;
       } else {
         cell.value = oi;
@@ -3040,7 +3069,11 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
       var oip = r.calls[ip];
       var isMaxP = callMax[ip] > 0 && oip === callMax[ip];
       if (showDelta && r.callDeltas[ip] != null && r.callDeltas[ip] > 0) {
-        cellp.value = oip.toLocaleString() + "\n+" + r.callDeltas[ip].toLocaleString();
+        if (dCallMaxX[ip] > 0 && r.callDeltas[ip] === dCallMaxX[ip]) {
+          cellp.value = withStar(oip.toLocaleString(), r.callDeltas[ip].toLocaleString(), isMaxP);
+        } else {
+          cellp.value = oip.toLocaleString() + "\n+" + r.callDeltas[ip].toLocaleString();
+        }
         cellp.font = isMaxP ? fontB : fontN;
       } else {
         cellp.value = oip;
@@ -3410,7 +3443,7 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         var wsS2 = wb.addWorksheet("Series", {
           views: [{ rightToLeft: true }],
         });
-        writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta, true);
+        writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta);
       }
     }
 
@@ -3422,14 +3455,14 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         var wsM = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true }],
         });
-        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta, true);
+        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta);
       });
     } else if (normals.length && wsMain) {
       var col = mainCol;
       normals.forEach(function (exp) {
         var viewN = getViewRowsFor(data, exp, edays, estrikes);
         if (!viewN) return;
-        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta, true);
+        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta);
         col = (typeof last === "number" ? last : col) + 1 + GAP;
       });
     }
