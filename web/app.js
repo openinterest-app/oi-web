@@ -3756,6 +3756,10 @@ function getArchiveWeekBounds(data) {
     d = dataSessionCutoffDate(data);
   }
   d.setHours(12, 0, 0, 0);
+  // المدى من الاثنين إلى الاثنين: أرشيف الأسبوع يبقى ظاهرًا حتى نهاية يوم الاثنين،
+  // وبعد انتهاء الاثنين (جلسة الثلاثاء فصاعدًا) يبدأ أرشيف الأسبوع الجديد.
+  // لذلك إذا كانت جلسة البيانات يوم اثنين نرجع يومًا للخلف لنبقى على الأسبوع السابق.
+  if (d.getDay() === 1) d.setDate(d.getDate() - 1);
   var day = d.getDay(); // 0 Sun .. 5 Fri
   var toMon = day === 0 ? -6 : 1 - day;
   var mon = new Date(d);
