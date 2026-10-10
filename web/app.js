@@ -2276,12 +2276,11 @@ function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topD
     else if (dlt >= 100) op = 0.32;
     else if (dlt >= 40) op = 0.22;
     inner +=
-      '<div class="tw-delta" style="display:block;font-size:10px;font-weight:600;color:#5eead4;margin-top:2px;line-height:1.1;">' +
+      '<div class="tw-delta" style="display:block;direction:ltr;font-size:10px;font-weight:600;color:#5eead4;margin-top:2px;line-height:1.1;">' +
+      (topDelta ? '<span class="tw-star">★</span>' : "") +
       '<span style="opacity:' + op + '">+' +
       Number(dlt).toLocaleString() +
-      "</span>" +
-      (topDelta ? '<span class="tw-star">*</span>' : "") +
-      "</div>";
+      "</span></div>";
   }
   inner += "</div>";
   return (
@@ -3016,8 +3015,9 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     var base = { name: "Calibri", size: 11, bold: !!isBold, color: { argb: "FF000000" } };
     return {
       richText: [
-        { text: oiTxt + "\n+" + dTxt, font: base },
-        { text: " *", font: { name: "Calibri", size: 13, bold: true, color: { argb: "FFB8860B" } } },
+        { text: oiTxt + "\n", font: base },
+        { text: "\u2605 ", font: { name: "Segoe UI Symbol", size: 12, bold: true, color: { argb: "FFF5B301" } } },
+        { text: "+" + dTxt, font: base },
       ],
     };
   }

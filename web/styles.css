@@ -4881,14 +4881,13 @@ html body .controls::after { content: none !important; display: none !important;
 
 /* نجمة الأعلى تزايدًا — جدول الأيام فقط */
 .tw-star {
-  margin-inline-start: 3px;
-  font-size: 14px;
-  font-weight: 800;
+  display: inline-block;
+  margin-inline-end: 4px;
+  font-size: 13px;
   line-height: 1;
-  color: #b8860b;
+  color: #f5b301;
   vertical-align: -1px;
 }
-html[data-theme="dark"] .tw-star { color: #f0cf7a; }
 
 /* توسيط رمزي ΣΔ والدائرتين داخل الزر */
 html body .controls .sigma-btn,
@@ -4906,16 +4905,16 @@ html body .controls #coinBtn { width: 38px !important; }
 html body .controls #coinBtn svg { display: block; margin: 0 auto; }
 
 /* توافق الأعلى تزايدًا (مخفي) */
-.coin-results { margin-top: 14px; }
-.coin-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.coin-results { margin-top: 12px; }
+.coin-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .coin-card {
-  min-width: 120px; text-align: center; padding: 10px 14px; border-radius: 12px;
+  min-width: 84px; text-align: center; padding: 6px 10px; border-radius: 10px;
   border: 1px solid rgba(45,212,191,.55); background: rgba(45,212,191,.10);
 }
-.coin-card .coin-date { font-weight: 700; font-size: 13px; opacity: .85; }
-.coin-card .coin-strike { font-weight: 800; font-size: 20px; margin: 4px 0; }
-.coin-card .coin-vals { display: flex; flex-direction: column; gap: 2px; font-size: 12px; opacity: .85; }
+.coin-card .coin-date { font-weight: 700; font-size: 11px; opacity: .85; }
+.coin-card .coin-strike { font-weight: 800; font-size: 15px; margin: 2px 0; }
+.coin-card .coin-vals { display: flex; flex-direction: column; gap: 1px; font-size: 11px; opacity: .85; }
 .coin-none {
-  text-align: center; padding: 12px; border-radius: 12px; font-size: 13px;
+  text-align: center; padding: 8px; border-radius: 10px; font-size: 12px;
   border: 1px solid rgba(128,128,128,.28); opacity: .8;
 }
