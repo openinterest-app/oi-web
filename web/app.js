@@ -584,6 +584,8 @@ function filterStrikes(rows, close, strikesLimit) {
     .sort(function (a, b) { return a.strike - b.strike; });
 }
 
+var DSTAR = '<span class="dstar">*</span>';
+
 function positiveDelta(last, prev) {
   const d = (last || 0) - (prev || 0);
   return d > 0 ? d : null;
@@ -810,10 +812,147 @@ function openSigmaDialog() {
   }
 }
 
+
+/* ===== توافق الأعلى تزايدًا (Put = Call على نفس الـ strike) — للمخفي فقط ===== */
+function topDeltaCoincidence(data, exp) {
+  var view = null;
+  try { view = getViewRowsFor(data, exp, "ALL", "ALL"); } catch (e) { return null; }
+  if (!view || !view.pullDates || view.pullDates.length < 2) return null;
+  var lastI = view.pullDates.length - 1, prevI = lastI - 1;
+  var maxP = 0, maxC = 0;
+  var ds = view.rows.map(function (r) {
+    var dp = positiveDelta(r.puts[lastI], r.puts[prevI]);
+    var dc = positiveDelta(r.calls[lastI], r.calls[prevI]);
+    if (dp != null && dp > maxP) maxP = dp;
+    if (dc != null && dc > maxC) maxC = dc;
+    return { strike: r.strike, dp: dp, dc: dc };
+  });
+  if (maxP <= 0 || maxC <= 0) return null;
+  var hits = ds.filter(function (x) { return x.dp === maxP && x.dc === maxC; });
+  if (!hits.length) return { hit: false };
+  return { hit: true, strikes: hits.map(function (h) { return h.strike; }), put: maxP, call: maxC };
+}
+
+function ensureCoinModal() {
+  if ($("#coinModal")) return;
+  var div = document.createElement("div");
+  div.id = "coinModal";
+  div.className = "map-modal hidden";
+  div.setAttribute("role", "dialog");
+  div.setAttribute("aria-modal", "true");
+  div.innerHTML =
+    '<div class="map-panel export-panel">' +
+    '<div class="map-head"><div><h3>توافق الأعلى تزايدًا</h3></div>' +
+    '<button id="coinClose" class="btn" type="button">إغلاق</button></div>' +
+    '<div id="coinBody" class="map-body export-body"></div></div>';
+  document.body.appendChild(div);
+  div.addEventListener("click", function (e) {
+    if (e.target.id === "coinModal") closeCoinDialog();
+  });
+  setTimeout(function () {
+    var cl = $("#coinClose");
+    if (cl) cl.onclick = function () { closeCoinDialog(); };
+  }, 0);
+}
+
+function closeCoinDialog() {
+  var modal = $("#coinModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function openCoinDialog() {
+  if (!isSigmaUnlocked()) return;
+  var data = state.cache[state.ticker];
+  if (!data) { setStatus("لا بيانات — اختر مؤشرًا أولًا", "err"); return; }
+  ensureCoinModal();
+  var modal = $("#coinModal");
+  var body = $("#coinBody");
+  if (!modal || !body) return;
+  var allExps = Object.keys(data.by_expiration || {}).sort();
+  var exps = typeof futureExpirations === "function" ? futureExpirations(allExps) : allExps;
+  if (!exps.length) { setStatus("لا تواريخ انتهاء من اليوم فصاعدًا", "err"); return; }
+  var groups = {}, order = [], metaByExp = {};
+  exps.forEach(function (exp) {
+    var meta = formatExpExportChip(exp);
+    metaByExp[exp] = meta;
+    if (!groups[meta.monthKey]) {
+      groups[meta.monthKey] = { label: meta.monthLabel, items: [] };
+      order.push(meta.monthKey);
+    }
+    groups[meta.monthKey].items.push({ exp: exp, meta: meta });
+  });
+  var html = '<p class="map-sub" style="text-align:center;margin:0 0 10px">اختر تاريخًا</p>';
+  html += '<div class="exp-month-list">';
+  order.forEach(function (key) {
+    var g = groups[key];
+    html += '<div class="exp-month"><div class="exp-month-title">' + (g.label || key) + "</div>";
+    html += '<div class="exp-month-dates">';
+    g.items.forEach(function (it) {
+      html +=
+        '<button type="button" class="exp-date-chip" data-coin-exp="' + it.exp + '"><span class="d">' +
+        it.meta.day + (it.meta.monShort ? " " + it.meta.monShort : "") +
+        '</span><span class="s">' + it.meta.sub + "</span></button>";
+    });
+    html += "</div></div>";
+  });
+  html += "</div>";
+  html += '<div id="coinResults" class="coin-results"></div>';
+  body.innerHTML = html;
+  modal.classList.remove("hidden");
+
+  function renderResults() {
+    var host = $("#coinResults");
+    if (!host) return;
+    var on = [];
+    body.querySelectorAll(".exp-date-chip.on[data-coin-exp]").forEach(function (c) {
+      on.push(c.getAttribute("data-coin-exp"));
+    });
+    on.sort();
+    var out = "";
+    on.forEach(function (exp) {
+      var m = metaByExp[exp];
+      var label = m.day + (m.monShort ? " " + m.monShort : "");
+      var r = topDeltaCoincidence(data, exp);
+      if (r && r.hit) {
+        out +=
+          '<div class="coin-row hit"><span class="coin-date">' + label + '</span>' +
+          '<span class="coin-msg">توافق عند <b>' + r.strikes.join(" · ") + '</b></span>' +
+          '<span class="coin-sub">Put +' + r.put.toLocaleString() + ' · Call +' + r.call.toLocaleString() + '</span></div>';
+      } else {
+        out +=
+          '<div class="coin-row"><span class="coin-date">' + label + '</span>' +
+          '<span class="coin-msg">لا توجد حالة</span></div>';
+      }
+    });
+    host.innerHTML = out;
+  }
+  body.querySelectorAll("[data-coin-exp]").forEach(function (btn) {
+    btn.onclick = function () { btn.classList.toggle("on"); renderResults(); };
+  });
+}
+
+function injectCoinButtonIfUnlocked() {
+  if (!isSigmaUnlocked() || $("#coinBtn")) return;
+  var anchor = $("#sigmaBtn") || $("#deltaBtn");
+  if (!anchor || !anchor.parentNode) return;
+  var btn = document.createElement("button");
+  btn.id = "coinBtn";
+  btn.type = "button";
+  btn.className = "delta-btn sigma-btn coin-btn";
+  btn.title = "توافق الأعلى تزايدًا";
+  btn.setAttribute("aria-label", "توافق الأعلى تزايدًا");
+  btn.innerHTML =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>';
+  if (anchor.nextSibling) anchor.parentNode.insertBefore(btn, anchor.nextSibling);
+  else anchor.parentNode.appendChild(btn);
+  btn.onclick = function () { openCoinDialog(); };
+}
+
 function injectSigmaButtonIfUnlocked() {
   if (!isSigmaUnlocked()) return;
   if ($("#sigmaBtn")) {
     $("#sigmaBtn").classList.toggle("active", !!state.showSigma);
+    injectCoinButtonIfUnlocked();
     return;
   }
   var delta = $("#deltaBtn");
@@ -835,6 +974,7 @@ function injectSigmaButtonIfUnlocked() {
     }
     openSigmaDialog();
   };
+  injectCoinButtonIfUnlocked();
 }
 
 
@@ -2268,7 +2408,7 @@ function renderTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() : "") +
+        (d != null ? d.toLocaleString() + (maxCls ? DSTAR : "") : "") +
         "</td>";
     }
     for (let i = pullDates.length - 1; i >= 0; i--) {
@@ -2305,7 +2445,7 @@ function renderTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() : "") +
+        (d != null ? d.toLocaleString() + (maxCls ? DSTAR : "") : "") +
         "</td>";
     }
     if (canSigma) {
@@ -2387,7 +2527,7 @@ function getViewRowsFor(data, expiration, daysLimit, strikesLimit) {
 
 
 /** يكتب جدول انتهاء بنفس تنسيق الديسكتوب (B2، pad=2، تواريخ 13-8، هيدر ناعم) */
-function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
+function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, showStar) {
   const arabicMonths = {
     1: "يناير", 2: "فبراير", 3: "مارس", 4: "أبريل",
     5: "مايو", 6: "يونيو", 7: "يوليو", 8: "أغسطس",
@@ -2417,6 +2557,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
   const fillMax = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEEECE1" } };
   const fontB = { name: "Calibri", size: 11, bold: true, color: { argb: "FF000000" } };
   const fontN = { name: "Calibri", size: 11, color: { argb: "FF000000" } };
+  const fontStar = { name: "Calibri", size: 11, bold: true, color: { argb: "FF7A5A1E" } };
   const alignC = { horizontal: "center", vertical: "middle" };
   const border = {
     top: { style: "thin", color: { argb: "FFD9D9D9" } },
@@ -2635,8 +2776,13 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
       cell.font = fontN;
       cell.alignment = alignC;
       cell.border = border;
-      if (dlt != null && putDeltaMax > 0 && dlt === putDeltaMax) cell.fill = fillMax;
-      else cell.fill = fillDelta;
+      if (dlt != null && putDeltaMax > 0 && dlt === putDeltaMax) {
+        cell.fill = fillMax;
+        if (showStar) {
+          cell.numFmt = '#,##0" *"';
+          cell.font = fontStar;
+        }
+      } else cell.fill = fillDelta;
     }
     putDateCols.forEach(function (x) {
       const val = r.puts[x.idx] || 0;
@@ -2678,8 +2824,13 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
       cell.font = fontN;
       cell.alignment = alignC;
       cell.border = border;
-      if (dlt != null && callDeltaMax > 0 && dlt === callDeltaMax) cell.fill = fillMax;
-      else cell.fill = fillDelta;
+      if (dlt != null && callDeltaMax > 0 && dlt === callDeltaMax) {
+        cell.fill = fillMax;
+        if (showStar) {
+          cell.numFmt = '#,##0" *"';
+          cell.font = fontStar;
+        }
+      } else cell.fill = fillDelta;
     }
     if (hasSigma && callSigmaCol) {
       const sv =
@@ -3252,7 +3403,7 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         var wsS2 = wb.addWorksheet("Series", {
           views: [{ rightToLeft: true }],
         });
-        writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta);
+        writeOiTableToSheet(wsS2, 2, 2, sv2, state.ticker, showDelta, true);
       }
     }
 
@@ -3264,14 +3415,14 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         var wsM = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true }],
         });
-        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta);
+        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta, true);
       });
     } else if (normals.length && wsMain) {
       var col = mainCol;
       normals.forEach(function (exp) {
         var viewN = getViewRowsFor(data, exp, edays, estrikes);
         if (!viewN) return;
-        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta);
+        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta, true);
         col = (typeof last === "number" ? last : col) + 1 + GAP;
       });
     }

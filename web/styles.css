@@ -4877,3 +4877,26 @@ html body .controls::-webkit-scrollbar { display: none !important; width: 0 !imp
 html body .controls > * { flex: 0 0 auto !important; }
 html body .controls::before,
 html body .controls::after { content: none !important; display: none !important; }
+
+
+/* نجمة الأعلى تزايدًا — هادئة وغير مشتتة */
+table.oi td.delta .dstar {
+  margin-inline-start: 3px;
+  font-weight: 700;
+  color: #8a6a1f;
+  opacity: .95;
+}
+html[data-theme="dark"] table.oi td.delta .dstar { color: #e3c77d; opacity: .9; }
+
+/* توافق الأعلى تزايدًا (مخفي) */
+.coin-results { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.coin-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 12px; border-radius: 10px;
+  border: 1px solid rgba(128,128,128,.22);
+  font-size: 13px; opacity: .8;
+}
+.coin-row.hit { opacity: 1; border-color: rgba(45,212,191,.55); background: rgba(45,212,191,.10); }
+.coin-date { font-weight: 700; min-width: 64px; }
+.coin-sub { margin-inline-start: auto; font-size: 12px; opacity: .75; }
+.exp-date-chip.on { }
