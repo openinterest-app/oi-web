@@ -4999,3 +4999,18 @@ table.oi td.sigma .rk {
 
 /* شريحة «الكل» لكل شهر في نافذة Excel */
 #exportModal .exp-date-chip.exp-month-all .d { letter-spacing: 0; }
+
+/* دمج المظلل المتجاور — كل الجداول */
+html body table.oi td.mg-l { border-left-style: hidden !important; }
+html body table.oi td.mg-r { border-right-style: hidden !important; }
+html body table.oi td.mg-t { border-top-style: hidden !important; }
+html body table.oi td.mg-b { border-bottom-style: hidden !important; }
+
+/* سطر توضيح النجمة تحت الإغلاق في جدول الأيام */
+.tw-legend {
+  text-align: center;
+  font-size: 11px;
+  color: var(--gray);
+  margin: 4px 0 8px;
+}
+.tw-legend .tw-star { font-size: 12px; margin-inline-end: 4px; }

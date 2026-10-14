@@ -2146,6 +2146,51 @@ function twMoveText(diff) {
   return (diff > 0 ? "\u25B2 " : "\u25BC ") + String(Math.round(a * 100) / 100);
 }
 
+/** دمج الخلايا المظللة (max-oi) المتجاورة بلا فواصل — لكل الجداول (يُستدعى تلقائيًا بعد أي رسم) */
+function mergeShadedInTable(tb) {
+  if (!tb || tb.getAttribute("data-mg")) return;
+  tb.setAttribute("data-mg", "1");
+  if (tb.classList.contains("tawafuq-oi")) return; // جدول الأيام يدمج داخليًا
+  var trs = Array.prototype.slice.call(tb.querySelectorAll("tbody tr"));
+  var grid = trs.map(function (tr) {
+    var cells = Array.prototype.slice.call(tr.children);
+    var plain = cells.every(function (c) { return !c.getAttribute("colspan"); });
+    return { cells: cells, plain: plain };
+  });
+  function sh(c) { return c && c.classList && c.classList.contains("max-oi"); }
+  grid.forEach(function (row, ri) {
+    if (!row.plain) return;
+    row.cells.forEach(function (c, d) {
+      if (!sh(c)) return;
+      if (d > 0 && sh(row.cells[d - 1])) c.classList.add("mg-l");
+      if (sh(row.cells[d + 1])) c.classList.add("mg-r");
+      var up = grid[ri - 1], dn = grid[ri + 1];
+      if (up && up.plain && up.cells.length === row.cells.length && sh(up.cells[d])) c.classList.add("mg-t");
+      if (dn && dn.plain && dn.cells.length === row.cells.length && sh(dn.cells[d])) c.classList.add("mg-b");
+    });
+  });
+}
+(function () {
+  var pending = false;
+  function run() {
+    pending = false;
+    try {
+      document.querySelectorAll("table.oi:not([data-mg])").forEach(mergeShadedInTable);
+    } catch (e) {}
+  }
+  function start() {
+    if (typeof MutationObserver === "undefined" || !document.body) return;
+    new MutationObserver(function () {
+      if (pending) return;
+      pending = true;
+      (window.requestAnimationFrame || setTimeout)(run);
+    }).observe(document.body, { childList: true, subtree: true });
+    run();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();
+
 function renderTawafuqTable() {
   var data = state.cache[state.ticker];
   var host = $("#tableHost");
@@ -2179,6 +2224,9 @@ function renderTawafuqTable() {
       "</div>";
   }
   html += '</div>';
+  if (canDelta) {
+    html += '<div class="tw-legend"><span class="tw-star">\u2605</span> \u0627\u0644\u0623\u0643\u062b\u0631 \u062a\u0632\u0627\u064a\u062f\u064b\u0627</div>';
+  }
 
   html +=
     '<div class="table-scroll tawafuq-wrap"><table class="oi tawafuq-oi" style="width:auto;max-width:none"><thead>';
@@ -2994,6 +3042,29 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, wi
       else cell.fill = fillSigma;
     }
   });
+
+  // دمج المظلل المتجاور بلا فواصل (حدود بنفس لون التظليل)
+  (function () {
+    var MAXARGB = "FFEEECE1";
+    var lastRow = dataStart + rows.length - 1;
+    function isSh(r, c) {
+      if (r < dataStart || r > lastRow || c === strikeCol || c < startCol + pad || c > contentEnd) return false;
+      var f = ws.getCell(r, c).fill;
+      return !!(f && f.fgColor && f.fgColor.argb === MAXARGB);
+    }
+    var same = { style: "thin", color: { argb: MAXARGB } };
+    for (var r = dataStart; r <= lastRow; r++) {
+      for (var c = startCol + pad; c <= contentEnd; c++) {
+        if (!isSh(r, c)) continue;
+        var b = { top: border.top, bottom: border.bottom, left: border.left, right: border.right };
+        if (isSh(r, c - 1)) b.left = same;
+        if (isSh(r, c + 1)) b.right = same;
+        if (isSh(r - 1, c)) b.top = same;
+        if (isSh(r + 1, c)) b.bottom = same;
+        ws.getCell(r, c).border = b;
+      }
+    }
+  })();
 
   for (let c = startCol; c <= headerEnd; c++) {
     ws.getColumn(c).width = c === strikeCol ? 12 : 9;
