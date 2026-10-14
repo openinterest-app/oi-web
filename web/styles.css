@@ -5008,6 +5008,8 @@ html body table.oi td.mg-b { border-bottom-style: hidden !important; }
 
 /* سطر توضيح النجمة تحت الإغلاق في جدول الأيام */
 .tw-legend {
+  direction: rtl;
+  unicode-bidi: isolate;
   text-align: center;
   font-size: 11px;
   color: var(--gray);
