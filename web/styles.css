@@ -4621,8 +4621,6 @@ table.oi.tawafuq-oi td .tw-delta {
 }
 table.oi.tawafuq-oi td.max-oi,
 table.oi.tawafuq-oi td.tw-wall {
-  background: #3730a3 !important;
-  color: #e0e7ff !important;
   font-weight: 700 !important;
   box-shadow: none !important;
 }
@@ -4918,3 +4916,86 @@ html body .controls #coinBtn svg { display: block; margin: 0 auto; }
   text-align: center; padding: 8px; border-radius: 10px; font-size: 12px;
   border: 1px solid rgba(128,128,128,.28); opacity: .8;
 }
+
+
+/* =========================================================
+   ألوان هادئة وخفيفة على العين — القمم/القيعان + الأكثر تزايدًا
+   (كل الجداول ما عدا ×3 الذي يبقى كما هو)
+   ========================================================= */
+html body table.oi:not(.x3-table) td.max-oi {
+  background: #34405f !important;
+  color: #e3e8f6 !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+html body table.oi:not(.x3-table) td.delta.max-oi,
+html body table.oi:not(.x3-table) td.sigma.max-oi {
+  background: #2f4947 !important;
+  color: #d6efe9 !important;
+}
+html[data-theme="light"] body table.oi:not(.x3-table) td.max-oi,
+html[data-theme="light"] table.oi:not(.x3-table) td.max-oi {
+  background: #dde3f3 !important;
+  color: #26304f !important;
+}
+html[data-theme="light"] body table.oi:not(.x3-table) td.delta.max-oi,
+html[data-theme="light"] body table.oi:not(.x3-table) td.sigma.max-oi,
+html[data-theme="light"] table.oi:not(.x3-table) td.delta.max-oi,
+html[data-theme="light"] table.oi:not(.x3-table) td.sigma.max-oi {
+  background: #d8ede9 !important;
+  color: #1f4a44 !important;
+}
+/* جدول الأيام: نفس لون القمم/القيعان الهادئ */
+html body table.oi.tawafuq-oi td.max-oi,
+html body table.oi.tawafuq-oi td.tw-wall {
+  background: #34405f !important;
+  color: #e3e8f6 !important;
+}
+html[data-theme="light"] body table.oi.tawafuq-oi td.max-oi,
+html[data-theme="light"] body table.oi.tawafuq-oi td.tw-wall,
+html[data-theme="light"] table.oi.tawafuq-oi td.max-oi,
+html[data-theme="light"] table.oi.tawafuq-oi td.tw-wall {
+  background: #dde3f3 !important;
+  color: #26304f !important;
+}
+/* إطار 5K+ يتوافق مع اللون الهادئ */
+table.oi td.hi5k.max-oi::before,
+table.oi td.hi5k.max-oi::after { border-color: #9fb1e8; }
+
+/* دمج الخلايا المظللة المتجاورة (قمم/قيعان) بلا فواصل */
+table.oi.tawafuq-oi td.mg-l { border-left-style: hidden !important; }
+table.oi.tawafuq-oi td.mg-r { border-right-style: hidden !important; }
+table.oi.tawafuq-oi td.mg-t { border-top-style: hidden !important; }
+table.oi.tawafuq-oi td.mg-b { border-bottom-style: hidden !important; }
+
+/* حركة القمة/القاع: ▲ أخضر عند الصعود، ▼ أحمر عند النزول (الثبات = لا شيء) */
+table.oi.tawafuq-oi td .tw-mv {
+  display: block;
+  direction: ltr;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 2px;
+}
+table.oi.tawafuq-oi td .tw-mv.up { color: #5fd49a !important; }
+table.oi.tawafuq-oi td .tw-mv.dn { color: #f28b8b !important; }
+html[data-theme="light"] table.oi.tawafuq-oi td .tw-mv.up { color: #15803d !important; }
+html[data-theme="light"] table.oi.tawafuq-oi td .tw-mv.dn { color: #b91c1c !important; }
+
+/* ترتيب التزايد بين قوسين */
+table.oi.tawafuq-oi td .tw-rk {
+  font-size: 9px;
+  font-weight: 600;
+  color: #94a3b8;
+  opacity: 0.9;
+}
+table.oi td.delta .rk,
+table.oi td.sigma .rk {
+  font-size: 0.82em;
+  font-weight: 600;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* شريحة «الكل» لكل شهر في نافذة Excel */
+#exportModal .exp-date-chip.exp-month-all .d { letter-spacing: 0; }

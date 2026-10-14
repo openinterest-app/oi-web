@@ -589,6 +589,23 @@ function positiveDelta(last, prev) {
   return d > 0 ? d : null;
 }
 
+/** ترتيب القيم (الأكبر = 1، بدون تكرار للأرقام المتساوية) — يعيد دالة value → رتبة (0 إن لا قيمة) */
+function rankMap(vals) {
+  var u = {};
+  (vals || []).forEach(function (v) {
+    if (v != null && v > 0) u[v] = true;
+  });
+  var arr = Object.keys(u).map(Number).sort(function (a, b) { return b - a; });
+  return function (v) {
+    if (v == null || !(v > 0)) return 0;
+    return arr.indexOf(v) + 1;
+  };
+}
+/** ترتيب 1-4 بين قوسين بجانب رقم التزايد (HTML) */
+function rankTag(n) {
+  return n >= 1 && n <= 4 ? ' <span class="rk">(' + n + ")</span>" : "";
+}
+
 
 
 /* SPX ≥5000 — تمييز عمود اليوم فقط */
@@ -1996,6 +2013,8 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
         p: p,
         dc: dc,
         dp: dp,
+        pc: prevIdx >= 0 ? (r.calls && r.calls[prevIdx]) || 0 : null,
+        pp: prevIdx >= 0 ? (r.puts && r.puts[prevIdx]) || 0 : null,
         strike: r.strike,
         present: true,
       };
@@ -2028,6 +2047,8 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
     var puts = [];
     var callDeltas = [];
     var putDeltas = [];
+    var prevCalls = [];
+    var prevPuts = [];
     var present = [];
     columns.forEach(function (col) {
       var cell = col.strikeMap[String(s)];
@@ -2036,12 +2057,16 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
         puts.push(cell.p);
         callDeltas.push(cell.dc);
         putDeltas.push(cell.dp);
+        prevCalls.push(cell.pc);
+        prevPuts.push(cell.pp);
         present.push(true);
       } else {
         calls.push(null);
         puts.push(null);
         callDeltas.push(null);
         putDeltas.push(null);
+        prevCalls.push(null);
+        prevPuts.push(null);
         present.push(false);
       }
     });
@@ -2051,6 +2076,8 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
       puts: puts,
       callDeltas: callDeltas,
       putDeltas: putDeltas,
+      prevCalls: prevCalls,
+      prevPuts: prevPuts,
       present: present,
     };
   });
@@ -2084,6 +2111,39 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
     close: close,
     fromIso: fromIso,
   };
+}
+
+/** هل الخلية مظللة (قمة/قاع) في جدول الأيام */
+function twIsShaded(oi, present, colMax, wallMax) {
+  if (!present || oi == null || oi === 0) return false;
+  return (colMax > 0 && oi === colMax) || (wallMax > 0 && oi === wallMax);
+}
+
+/** حركة القمة (كول) والقاع (بوت) لكل عمود مقارنة بالسحب السابق لنفس الانتهاء.
+ *  القيمة: null (ثابت/لا مقارنة) أو {strike, diff} — diff موجب = صعدت، سالب = نزلت */
+function twWallMoves(rows, nCols) {
+  var out = { call: [], put: [] };
+  [["call", "calls", "prevCalls"], ["put", "puts", "prevPuts"]].forEach(function (sd) {
+    for (var ci = 0; ci < nCols; ci++) {
+      var curS = null, curV = 0, prvS = null, prvV = 0;
+      rows.forEach(function (r) {
+        var v = r[sd[1]][ci];
+        var pv = r[sd[2]][ci];
+        if (v != null && v > curV) { curV = v; curS = r.strike; }
+        if (pv != null && pv > prvV) { prvV = pv; prvS = r.strike; }
+      });
+      out[sd[0]][ci] =
+        curS != null && prvS != null && curS !== prvS
+          ? { strike: curS, diff: curS - prvS }
+          : null;
+    }
+  });
+  return out;
+}
+
+function twMoveText(diff) {
+  var a = Math.abs(diff);
+  return (diff > 0 ? "\u25B2 " : "\u25BC ") + String(Math.round(a * 100) / 100);
 }
 
 function renderTawafuqTable() {
@@ -2189,6 +2249,46 @@ function renderTawafuqTable() {
     dPutMax[di] = xp;
   }
 
+  // ترتيب التزايد (1 = نجمة، 2-4 بين قوسين) + حركة القمم والقيعان + دمج المظلل المتجاور
+  var rkCall = [], rkPut = [];
+  for (var rk0 = 0; rk0 < nCols; rk0++) {
+    rkCall[rk0] = rankMap(rows.map(function (r) { return r.callDeltas[rk0]; }));
+    rkPut[rk0] = rankMap(rows.map(function (r) { return r.putDeltas[rk0]; }));
+  }
+  var moves = twWallMoves(rows, nCols);
+  var isSpx = String(state.ticker || "").toUpperCase() === "SPX";
+  var barIdx = rows.length;
+  if (close != null) {
+    for (var bi = 0; bi < rows.length; bi++) {
+      if (rows[bi].strike > close) { barIdx = bi; break; }
+    }
+  }
+  // شبكة التظليل بترتيب الظهور (يسار → يمين) لكل جهة
+  var shCall = rows.map(function (r) {
+    var a = [];
+    for (var d1 = 0; d1 < nCols; d1++) {
+      var q = nCols - 1 - d1;
+      a.push(twIsShaded(r.calls[q], r.present[q], callMax[q], peakCall));
+    }
+    return a;
+  });
+  var shPut = rows.map(function (r) {
+    var a = [];
+    for (var d2 = 0; d2 < nCols; d2++) {
+      a.push(twIsShaded(r.puts[d2], r.present[d2], putMax[d2], floorPut));
+    }
+    return a;
+  });
+  function mgCls(sh, ri, d) {
+    if (!sh[ri][d]) return "";
+    var c = "";
+    if (d > 0 && sh[ri][d - 1]) c += " mg-l";
+    if (d < nCols - 1 && sh[ri][d + 1]) c += " mg-r";
+    if (ri > 0 && ri !== barIdx && sh[ri - 1][d]) c += " mg-t";
+    if (ri < rows.length - 1 && ri + 1 !== barIdx && sh[ri + 1][d]) c += " mg-b";
+    return c;
+  }
+
   var barDone = false;
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
@@ -2206,6 +2306,7 @@ function renderTawafuqTable() {
     html += '<tr class="' + zebra + '">';
 
     for (var ic = nCols - 1; ic >= 0; ic--) {
+      var mvC = moves.call[ic];
       html += tawafuqCellHtml(
         r.calls[ic],
         r.callDeltas[ic],
@@ -2214,11 +2315,18 @@ function renderTawafuqTable() {
         callMax[ic],
         canDelta,
         peakCall,
-        dCallMax[ic] > 0 && r.callDeltas[ic] === dCallMax[ic]
+        dCallMax[ic] > 0 && r.callDeltas[ic] === dCallMax[ic],
+        {
+          rank: rkCall[ic](r.callDeltas[ic]),
+          move: mvC && mvC.strike === r.strike ? mvC.diff : null,
+          hi5: isSpx && state.spx5k && r.calls[ic] >= 5000 ? " hi5k" : "",
+          mg: mgCls(shCall, ri, nCols - 1 - ic),
+        }
       );
     }
     html += '<td class="strike">' + r.strike + "</td>";
     for (var ip = 0; ip < nCols; ip++) {
+      var mvP = moves.put[ip];
       html += tawafuqCellHtml(
         r.puts[ip],
         r.putDeltas[ip],
@@ -2227,7 +2335,13 @@ function renderTawafuqTable() {
         putMax[ip],
         canDelta,
         floorPut,
-        dPutMax[ip] > 0 && r.putDeltas[ip] === dPutMax[ip]
+        dPutMax[ip] > 0 && r.putDeltas[ip] === dPutMax[ip],
+        {
+          rank: rkPut[ip](r.putDeltas[ip]),
+          move: mvP && mvP.strike === r.strike ? mvP.diff : null,
+          hi5: isSpx && state.spx5k && r.puts[ip] >= 5000 ? " hi5k" : "",
+          mg: mgCls(shPut, ri, ip),
+        }
       );
     }
     html += "</tr>";
@@ -2248,7 +2362,8 @@ function tawafuqColStyle(kind) {
   return "background-color:rgba(15,23,42,0.55)!important;";
 }
 
-function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topDelta) {
+function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topDelta, ex) {
+  ex = ex || {};
   var kcls = kind ? " tw-" + kind : "";
   var st = tawafuqColStyle(kind);
   if (!present || oi == null || oi === 0) {
@@ -2258,12 +2373,8 @@ function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topD
   var isWall = wallMax > 0 && oi === wallMax;
   var maxCls = isColMax ? " max-oi" : "";
   if (isWall) maxCls += " tw-wall";
-  // خلفية التحديد inline حتى لا يغطيها تلوين العمود
-  // لون هادئ مثل الشاشة الثلاثية — بدون إطار
-  if (isWall || isColMax) {
-    st =
-      "background-color:#3730a3!important;color:#e0e7ff!important;font-weight:700!important;box-shadow:none!important;";
-  }
+  // لون القمة/القاع يأتي من الـCSS (هادئ) — بلا خلفية inline حتى يتحكم به الثيم
+  if (isWall || isColMax) st = "";
   var inner =
     '<div class="tw-stack"><div class="tw-oi">' +
     Number(oi).toLocaleString() +
@@ -2275,16 +2386,25 @@ function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topD
     else if (dlt >= 300) op = 0.48;
     else if (dlt >= 100) op = 0.32;
     else if (dlt >= 40) op = 0.22;
+    var rk = ex.rank || 0;
     inner +=
       '<div class="tw-delta" style="display:block;direction:ltr;font-size:10px;font-weight:600;color:#5eead4;margin-top:2px;line-height:1.1;">' +
-      (topDelta ? '<span class="tw-star">★</span>' : "") +
+      (rk === 1 || (rk === 0 && topDelta) ? '<span class="tw-star">\u2605</span>' : "") +
       '<span style="opacity:' + op + '">+' +
       Number(dlt).toLocaleString() +
-      "</span></div>";
+      "</span>" +
+      (rk >= 2 && rk <= 4 ? ' <span class="tw-rk">(' + rk + ")</span>" : "") +
+      "</div>";
+  }
+  if (ex.move != null && ex.move !== 0) {
+    inner +=
+      '<div class="tw-mv ' + (ex.move > 0 ? "up" : "dn") + '">' +
+      twMoveText(ex.move) +
+      "</div>";
   }
   inner += "</div>";
   return (
-    '<td class="' + kcls + maxCls + '" style="' + st + '">' + inner + "</td>"
+    '<td class="' + kcls + maxCls + (ex.hi5 || "") + (ex.mg || "") + '" style="' + st + '">' + inner + "</td>"
   );
 }
 
@@ -2396,6 +2516,12 @@ function renderTable() {
     });
   }
 
+  // ترتيب 1-4 بجانب رقم التزايد (والمجموع المخفي) — لكل جهة على حدة
+  const rkDC = rankMap(rows.map(function (r) { return canDelta ? positiveDelta(r.calls[lastI], r.calls[prevI]) : null; }));
+  const rkDP = rankMap(rows.map(function (r) { return canDelta ? positiveDelta(r.puts[lastI], r.puts[prevI]) : null; }));
+  const rkSC = rankMap(rows.map(function (r) { return canSigma ? sumSigmaAcrossExps(data, r.strike, "call", state.sigmaExps) : null; }));
+  const rkSP = rankMap(rows.map(function (r) { return canSigma ? sumSigmaAcrossExps(data, r.strike, "put", state.sigmaExps) : null; }));
+
   let barDone = false;
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
@@ -2418,7 +2544,7 @@ function renderTable() {
         (maxCls
           ? '<td class="sigma max-oi">'
           : '<td class="sigma" style="background:rgba(45,212,191,0.12)!important;color:inherit">') +
-        (s != null ? s.toLocaleString() : "") +
+        (s != null ? s.toLocaleString() + rankTag(rkSC(s)) : "") +
         "</td>";
     }
     if (canDelta) {
@@ -2428,7 +2554,7 @@ function renderTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() : "") +
+        (d != null ? d.toLocaleString() + rankTag(rkDC(d)) : "") +
         "</td>";
     }
     for (let i = pullDates.length - 1; i >= 0; i--) {
@@ -2465,7 +2591,7 @@ function renderTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() : "") +
+        (d != null ? d.toLocaleString() + rankTag(rkDP(d)) : "") +
         "</td>";
     }
     if (canSigma) {
@@ -2475,7 +2601,7 @@ function renderTable() {
         (maxCls
           ? '<td class="sigma max-oi">'
           : '<td class="sigma" style="background:rgba(45,212,191,0.12)!important;color:inherit">') +
-        (s != null ? s.toLocaleString() : "") +
+        (s != null ? s.toLocaleString() + rankTag(rkSP(s)) : "") +
         "</td>";
     }
     html += "</tr>";
@@ -2547,7 +2673,7 @@ function getViewRowsFor(data, expiration, daysLimit, strikesLimit) {
 
 
 /** يكتب جدول انتهاء بنفس تنسيق الديسكتوب (B2، pad=2، تواريخ 13-8، هيدر ناعم) */
-function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
+function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta, withRank) {
   const arabicMonths = {
     1: "يناير", 2: "فبراير", 3: "مارس", 4: "أبريل",
     5: "مايو", 6: "يونيو", 7: "يوليو", 8: "أغسطس",
@@ -2771,6 +2897,16 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
     });
   }
 
+  // ترتيب 1-4 بجانب رقم التزايد/المجموع عبر تنسيق الرقم (القيمة تبقى رقمًا)
+  const rkFmt = function (n) {
+    return withRank && n >= 1 && n <= 4 ? '#,##0" (' + n + ')"' : "#,##0";
+  };
+  const exData = state.cache[state.ticker];
+  const xDP = rankMap(rows.map(function (r) { return hasDelta ? positiveDelta(r.puts[lastI], r.puts[prevI]) : null; }));
+  const xDC = rankMap(rows.map(function (r) { return hasDelta ? positiveDelta(r.calls[lastI], r.calls[prevI]) : null; }));
+  const xSP = rankMap(rows.map(function (r) { return hasSigma ? sumSigmaAcrossExps(exData, r.strike, "put", state.sigmaExps) : null; }));
+  const xSC = rankMap(rows.map(function (r) { return hasSigma ? sumSigmaAcrossExps(exData, r.strike, "call", state.sigmaExps) : null; }));
+
   rows.forEach(function (r, ri) {
     const rowIdx = dataStart + ri;
     if (hasSigma && putSigmaCol) {
@@ -2780,7 +2916,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
           : null;
       const cell = ws.getCell(rowIdx, putSigmaCol);
       cell.value = sv != null ? sv : "";
-      cell.numFmt = "#,##0";
+      cell.numFmt = rkFmt(xSP(sv));
       cell.font = fontN;
       cell.alignment = alignC;
       cell.border = border;
@@ -2791,7 +2927,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
       const dlt = positiveDelta(r.puts[lastI], r.puts[prevI]);
       const cell = ws.getCell(rowIdx, putDeltaCol);
       cell.value = dlt != null ? dlt : "";
-      cell.numFmt = "#,##0";
+      cell.numFmt = rkFmt(xDP(dlt));
       cell.font = fontN;
       cell.alignment = alignC;
       cell.border = border;
@@ -2835,7 +2971,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
       const dlt = positiveDelta(r.calls[lastI], r.calls[prevI]);
       const cell = ws.getCell(rowIdx, callDeltaCol);
       cell.value = dlt != null ? dlt : "";
-      cell.numFmt = "#,##0";
+      cell.numFmt = rkFmt(xDC(dlt));
       cell.font = fontN;
       cell.alignment = alignC;
       cell.border = border;
@@ -2850,7 +2986,7 @@ function writeOiTableToSheet(ws, startRow, startCol, view, ticker, showDelta) {
           : null;
       const cell = ws.getCell(rowIdx, callSigmaCol);
       cell.value = sv != null ? sv : "";
-      cell.numFmt = "#,##0";
+      cell.numFmt = rkFmt(xSC(sv));
       cell.font = fontN;
       cell.alignment = alignC;
       cell.border = border;
@@ -3001,25 +3137,73 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     putMax[ci] = mp;
   }
 
-  var dCallMaxX = [], dPutMaxX = [];
-  for (var dx = 0; dx < nCols; dx++) {
-    var xc = 0, xp = 0;
-    rows.forEach(function (r) {
-      if (r.callDeltas[dx] != null && r.callDeltas[dx] > xc) xc = r.callDeltas[dx];
-      if (r.putDeltas[dx] != null && r.putDeltas[dx] > xp) xp = r.putDeltas[dx];
-    });
-    dCallMaxX[dx] = xc;
-    dPutMaxX[dx] = xp;
+  // ترتيب التزايد لكل عمود (1 = نجمة، 2-4 بين قوسين) + حركة القمم والقيعان
+  var rkCallX = [], rkPutX = [];
+  for (var rx = 0; rx < nCols; rx++) {
+    rkCallX[rx] = rankMap(rows.map(function (r) { return r.callDeltas[rx]; }));
+    rkPutX[rx] = rankMap(rows.map(function (r) { return r.putDeltas[rx]; }));
   }
-  function withStar(oiTxt, dTxt, isBold) {
-    var base = { name: "Calibri", size: 11, bold: !!isBold, color: { argb: "FF000000" } };
-    return {
-      richText: [
-        { text: oiTxt + "\n", font: base },
-        { text: "\u2605 ", font: { name: "Segoe UI Symbol", size: 12, bold: true, color: { argb: "FFF5B301" } } },
-        { text: "+" + dTxt, font: base },
-      ],
+  var movesX = twWallMoves(rows, nCols);
+
+  // لون هادئ للقمم/القيعان + دمج المظلل المتجاور بلا فواصل
+  var wallArgb = "FFDDE3F3";
+  var fillWall = { type: "pattern", pattern: "solid", fgColor: { argb: wallArgb } };
+  var shPutX = rows.map(function (r) {
+    var a = [];
+    for (var u = 0; u < nCols; u++) {
+      var q = nCols - 1 - u; // العمود u على شيت PUT = المصدر المعكوس
+      a.push(!!(r.present[q] && putMax[q] > 0 && r.puts[q] === putMax[q]));
+    }
+    return a;
+  });
+  var shCallX = rows.map(function (r) {
+    var a = [];
+    for (var u2 = 0; u2 < nCols; u2++) {
+      a.push(!!(r.present[u2] && callMax[u2] > 0 && r.calls[u2] === callMax[u2]));
+    }
+    return a;
+  });
+  function mergedBorder(sh, ri, d) {
+    var same = { style: "thin", color: { argb: wallArgb } };
+    var b = {
+      top: border.top, bottom: border.bottom, left: border.left, right: border.right,
     };
+    if (!sh[ri][d]) return b;
+    if (d > 0 && sh[ri][d - 1]) b.left = same;
+    if (d < nCols - 1 && sh[ri][d + 1]) b.right = same;
+    if (ri > 0 && sh[ri - 1][d]) b.top = same;
+    if (ri < rows.length - 1 && sh[ri + 1][d]) b.bottom = same;
+    return b;
+  }
+
+  // يبني قيمة الخلية: رقم عادي، أو نص منسّق (OI + تزايد + نجمة/ترتيب + سهم الحركة)
+  function buildCellValue(oi, dlt, rk, move, isBold) {
+    var hasDlt = showDelta && dlt != null && dlt > 0;
+    var hasMove = move != null && move !== 0;
+    if (!hasDlt && !hasMove) return { plain: true };
+    var base = { name: "Calibri", size: 11, bold: !!isBold, color: { argb: "FF000000" } };
+    var parts = [{ text: oi.toLocaleString(), font: base }];
+    if (hasDlt) {
+      parts.push({ text: "\n", font: base });
+      if (rk === 1) {
+        parts.push({ text: "\u2605 ", font: { name: "Segoe UI Symbol", size: 11, bold: true, color: { argb: "FFD9A21B" } } });
+      }
+      parts.push({ text: "+" + dlt.toLocaleString(), font: base });
+      if (rk >= 2 && rk <= 4) {
+        parts.push({ text: " (" + rk + ")", font: { name: "Calibri", size: 10, color: { argb: "FF64748B" } } });
+      }
+    }
+    if (hasMove) {
+      parts.push({ text: "\n", font: base });
+      parts.push({
+        text: twMoveText(move),
+        font: {
+          name: "Segoe UI Symbol", size: 10, bold: true,
+          color: { argb: move > 0 ? "FF16A34A" : "FFDC2626" },
+        },
+      });
+    }
+    return { plain: false, value: { richText: parts } };
   }
 
   rows.forEach(function (r, ri) {
@@ -3028,28 +3212,28 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     for (var ic = 0; ic < nCols; ic++) {
       var srcI = nCols - 1 - ic;
       var cell = ws.getCell(rowIdx, startCol + ic);
-      cell.border = border;
       cell.alignment = alignC;
       cell.fill = kindFill(cols[srcI].kind);
+      cell.border = mergedBorder(shPutX, ri, ic);
       if (!r.present[srcI] || r.puts[srcI] == null || r.puts[srcI] === 0) {
         cell.value = "";
         continue;
       }
       var oi = r.puts[srcI];
       var isMax = putMax[srcI] > 0 && oi === putMax[srcI];
-      if (showDelta && r.putDeltas[srcI] != null && r.putDeltas[srcI] > 0) {
-        if (dPutMaxX[srcI] > 0 && r.putDeltas[srcI] === dPutMaxX[srcI]) {
-          cell.value = withStar(oi.toLocaleString(), r.putDeltas[srcI].toLocaleString(), isMax);
-        } else {
-          cell.value = oi.toLocaleString() + "\n+" + r.putDeltas[srcI].toLocaleString();
-        }
-        cell.font = isMax ? fontB : fontN;
-      } else {
+      var mvp = movesX.put[srcI];
+      var cv = buildCellValue(
+        oi, r.putDeltas[srcI], rkPutX[srcI](r.putDeltas[srcI]),
+        isMax && mvp && mvp.strike === r.strike ? mvp.diff : null, isMax
+      );
+      if (cv.plain) {
         cell.value = oi;
         cell.numFmt = "#,##0";
-        cell.font = isMax ? fontB : fontN;
+      } else {
+        cell.value = cv.value;
       }
-      if (isMax) cell.fill = fillMax;
+      cell.font = isMax ? fontB : fontN;
+      if (isMax) cell.fill = fillWall;
     }
     var strikeCell = ws.getCell(rowIdx, strikeCol);
     strikeCell.value = r.strike;
@@ -3059,28 +3243,28 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     // CALL بعد STRIKE
     for (var ip = 0; ip < nCols; ip++) {
       var cellp = ws.getCell(rowIdx, strikeCol + 1 + ip);
-      cellp.border = border;
       cellp.alignment = alignC;
       cellp.fill = kindFill(cols[ip].kind);
+      cellp.border = mergedBorder(shCallX, ri, ip);
       if (!r.present[ip] || r.calls[ip] == null || r.calls[ip] === 0) {
         cellp.value = "";
         continue;
       }
       var oip = r.calls[ip];
       var isMaxP = callMax[ip] > 0 && oip === callMax[ip];
-      if (showDelta && r.callDeltas[ip] != null && r.callDeltas[ip] > 0) {
-        if (dCallMaxX[ip] > 0 && r.callDeltas[ip] === dCallMaxX[ip]) {
-          cellp.value = withStar(oip.toLocaleString(), r.callDeltas[ip].toLocaleString(), isMaxP);
-        } else {
-          cellp.value = oip.toLocaleString() + "\n+" + r.callDeltas[ip].toLocaleString();
-        }
-        cellp.font = isMaxP ? fontB : fontN;
-      } else {
+      var mvc = movesX.call[ip];
+      var cvp = buildCellValue(
+        oip, r.callDeltas[ip], rkCallX[ip](r.callDeltas[ip]),
+        isMaxP && mvc && mvc.strike === r.strike ? mvc.diff : null, isMaxP
+      );
+      if (cvp.plain) {
         cellp.value = oip;
         cellp.numFmt = "#,##0";
-        cellp.font = isMaxP ? fontB : fontN;
+      } else {
+        cellp.value = cvp.value;
       }
-      if (isMaxP) cellp.fill = fillMax;
+      cellp.font = isMaxP ? fontB : fontN;
+      if (isMaxP) cellp.fill = fillWall;
     }
   });
 
@@ -3153,6 +3337,11 @@ function openExportDialog() {
     html += '<div class="exp-month">';
     html += '<div class="exp-month-title">' + (g.label || key) + "</div>";
     html += '<div class="exp-month-dates">';
+    // شريحة «الكل» لتحديد كل تواريخ هذا الشهر (بدون نص تحتها)
+    html +=
+      '<button type="button" class="exp-date-chip exp-month-all" data-monthall="' +
+      key +
+      '"><span class="d">الكل</span><span class="s">&nbsp;</span></button>';
     g.items.forEach(function (it) {
       const on = it.exp === curExp ? " on" : "";
       html +=
@@ -3239,7 +3428,33 @@ function openExportDialog() {
   // التاريخ الحالي يكون محدداً تلقائياً؛ إذا اخترت «جدول الأيام» أو «اليوم بالسابق» دون أن تلمس
   // أي تاريخ بنفسك، نلغي التحديد التلقائي حتى لا يُصدَّر جدول إضافي لم تطلبه
   var touchedDates = false;
-  body.querySelectorAll(".exp-date-chip").forEach(function (btn) {
+  // مزامنة شريحة «الكل» لكل شهر: تضيء عندما تكون كل تواريخ الشهر محددة
+  function syncMonthAll() {
+    body.querySelectorAll(".exp-month-all").forEach(function (allBtn) {
+      var box = allBtn.parentNode;
+      var items = box.querySelectorAll(".exp-date-chip[data-exp]");
+      var allOn = items.length > 0 && Array.prototype.every.call(items, function (c) {
+        return c.classList.contains("on");
+      });
+      allBtn.classList.toggle("on", allOn);
+    });
+  }
+  body.querySelectorAll(".exp-month-all").forEach(function (allBtn) {
+    allBtn.onclick = function () {
+      var box = allBtn.parentNode;
+      var items = box.querySelectorAll(".exp-date-chip[data-exp]");
+      var allOn = items.length > 0 && Array.prototype.every.call(items, function (c) {
+        return c.classList.contains("on");
+      });
+      items.forEach(function (c) {
+        c.classList.toggle("on", !allOn);
+      });
+      touchedDates = true;
+      syncMonthAll();
+      setTimeout(showSelNow, 0);
+    };
+  });
+  body.querySelectorAll(".exp-date-chip[data-exp]").forEach(function (btn) {
     btn.onclick = function () {
       var special = btn.classList.contains("exp-series-chip");
       var turningOn = !btn.classList.contains("on");
@@ -3250,6 +3465,7 @@ function openExportDialog() {
           if (!c.classList.contains("exp-series-chip")) c.classList.remove("on");
         });
       }
+      syncMonthAll();
     };
   });
 
@@ -3298,13 +3514,14 @@ function openExportDialog() {
   const selAll = $("#expSelectAll");
   if (selAll) {
     selAll.onclick = function () {
-      const chips = body.querySelectorAll(".exp-date-chip");
+      const chips = body.querySelectorAll(".exp-date-chip[data-exp]");
       const allOn = Array.prototype.every.call(chips, function (c) {
         return c.classList.contains("on");
       });
       chips.forEach(function (c) {
         c.classList.toggle("on", !allOn);
       });
+      syncMonthAll();
     };
   }
 
@@ -3319,18 +3536,19 @@ function openExportDialog() {
     var st0 = $("#expStatus");
     if (!st0) return;
     var names = [];
-    body.querySelectorAll(".exp-date-chip.on").forEach(function (c) {
+    body.querySelectorAll(".exp-date-chip.on[data-exp]").forEach(function (c) {
       var e = c.getAttribute("data-exp");
       names.push(e === "__TAWAFUQ__" ? "جدول الأيام" : e === "__SERIES_PREV__" ? "اليوم بالسابق" : e);
     });
     st0.textContent = "المحدد الآن: " + (names.length ? names.join("، ") : "لا شيء");
   }
-  body.querySelectorAll(".exp-date-chip").forEach(function (c) {
+  body.querySelectorAll(".exp-date-chip[data-exp]").forEach(function (c) {
     c.addEventListener("click", function () { setTimeout(showSelNow, 0); });
   });
   var selAllBtn = $("#expSelectAll");
   if (selAllBtn) selAllBtn.addEventListener("click", function () { setTimeout(showSelNow, 0); });
   showSelNow();
+  syncMonthAll();
 }
 
 function closeExportDialog() {
@@ -3354,7 +3572,7 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
     // تصدير مباشر لعنصر محدد بدون الاعتماد على حالة الأزرار في النافذة
     forcedChosen.forEach(function (e) { chosen.push(e); });
   } else if (body) {
-    body.querySelectorAll(".exp-date-chip.on").forEach(function (chip) {
+    body.querySelectorAll(".exp-date-chip.on[data-exp]").forEach(function (chip) {
       chosen.push(chip.getAttribute("data-exp"));
     });
     // توافق قديم إن وُجدت checkboxes
@@ -3455,14 +3673,14 @@ function runExportFromDialog(emode, edays, estrikes, forcedChosen) {
         var wsM = wb.addWorksheet(sheetNameFor(exp), {
           views: [{ rightToLeft: true }],
         });
-        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta);
+        writeOiTableToSheet(wsM, 2, 2, viewM, state.ticker, showDelta, true);
       });
     } else if (normals.length && wsMain) {
       var col = mainCol;
       normals.forEach(function (exp) {
         var viewN = getViewRowsFor(data, exp, edays, estrikes);
         if (!viewN) return;
-        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta);
+        var last = writeOiTableToSheet(wsMain, 2, col, viewN, state.ticker, showDelta, true);
         col = (typeof last === "number" ? last : col) + 1 + GAP;
       });
     }
