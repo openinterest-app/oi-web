@@ -1003,6 +1003,67 @@ function injectSigmaButtonIfUnlocked() {
 }
 
 
+/* ===== مجموع الأوبن — جدول الأيام فقط (النسخة المخفية) ===== */
+var OPENSUM_ICON =
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true">' +
+  '<line x1="6" y1="11" x2="6" y2="18"/><line x1="12" y1="5" x2="12" y2="18"/><line x1="18" y1="9" x2="18" y2="18"/></svg>';
+
+/** هل مجموع الأوبن مفعّل الآن (نسخة مخفية + جدول الأيام + الزر مضغوط) */
+function isOpenSumOn() {
+  return !!(isSigmaUnlocked() && state.tawafuqMode && state.showOpenSum);
+}
+
+/** مجموع رقم الأوبن فقط (بدون تزايد/سترايك) لكل صف على الأعمدة الظاهرة حاليًا — كول وبوت كلٌّ على حدة،
+ *  ثم ترتيب 1-4 حسب الأكبر لكل جهة. يُحسب من الـ view الحالي فيتجدد مع تغيير Days. */
+function twOpenSums(rows) {
+  function sumSide(arr, present) {
+    var t = 0, any = false;
+    for (var i = 0; i < (arr || []).length; i++) {
+      var v = arr[i];
+      if (present && present[i] === false) continue;
+      if (v != null && v > 0) { t += v; any = true; }
+    }
+    return any ? t : null;
+  }
+  var call = rows.map(function (r) { return sumSide(r.calls, r.present); });
+  var put = rows.map(function (r) { return sumSide(r.puts, r.present); });
+  return { call: call, put: put, rkCall: rankMap(call), rkPut: rankMap(put) };
+}
+
+/** يضيف/يخفي زر مجموع الأوبن: يظهر فقط داخل جدول الأيام وفي النسخة المخفية، بجانب زر التزايد Δ */
+function syncOpenSumBtn() {
+  var btn = $("#openSumBtn");
+  var show = !!(isSigmaUnlocked() && state.tawafuqMode);
+  if (!show) {
+    if (state.showOpenSum) state.showOpenSum = false; // يخرج من الوضع ← يرجع مخفيًا
+    if (btn) btn.style.display = "none";
+    return;
+  }
+  if (!btn) {
+    var delta = $("#deltaBtn");
+    if (!delta || !delta.parentNode) return;
+    btn = document.createElement("button");
+    btn.id = "openSumBtn";
+    btn.type = "button";
+    btn.className = "delta-btn opensum-btn";
+    btn.title = "مجموع الأوبن";
+    btn.setAttribute("aria-label", "مجموع الأوبن");
+    btn.innerHTML = OPENSUM_ICON;
+    if (delta.nextSibling) delta.parentNode.insertBefore(btn, delta.nextSibling);
+    else delta.parentNode.appendChild(btn);
+    btn.onclick = function () {
+      state.showOpenSum = !state.showOpenSum;
+      btn.classList.toggle("active", !!state.showOpenSum);
+      btn.setAttribute("aria-pressed", state.showOpenSum ? "true" : "false");
+      renderTable();
+    };
+  }
+  btn.style.display = "";
+  btn.classList.toggle("active", !!state.showOpenSum);
+  btn.setAttribute("aria-pressed", state.showOpenSum ? "true" : "false");
+}
+
+
 function setStatus(msg, cls) {
   const el = $("#status");
   el.textContent = msg;
@@ -2209,6 +2270,8 @@ function renderTawafuqTable() {
   var rows = view.rows;
   var close = view.close;
   var canDelta = !!state.showDelta;
+  var canSum = isOpenSumOn();
+  var osm = canSum ? twOpenSums(rows) : null;
   var nCols = cols.length;
 
   var html =
@@ -2231,10 +2294,14 @@ function renderTawafuqTable() {
   html +=
     '<div class="table-scroll tawafuq-wrap"><table class="oi tawafuq-oi" style="width:auto;max-width:none"><thead>';
   html += '<tr class="side-label-row">';
+  if (canSum) html += '<th class="opensum side-pad"></th>';
   html += '<th class="side-label call-side" colspan="' + nCols + '">CALL</th>';
   html += '<th class="strike side-mid"></th>';
   html += '<th class="side-label put-side" colspan="' + nCols + '">PUT</th>';
+  if (canSum) html += '<th class="opensum side-pad"></th>';
   html += "</tr><tr>";
+  var osHead = '<th class="opensum os-head" title="مجموع الأوبن">' + OPENSUM_ICON + "</th>";
+  if (canSum) html += osHead;
 
   for (var i = nCols - 1; i >= 0; i--) {
     var fh = formatTawafuqHeader(cols[i].exp);
@@ -2265,6 +2332,7 @@ function renderTawafuqTable() {
       (fh2.sub || "&nbsp;") +
       "</span></th>";
   }
+  if (canSum) html += osHead;
   html += "</tr></thead><tbody>";
 
   // max per column + قمة (أعلى كول إجمالي) وقاع (أعلى بوت إجمالي)
@@ -2341,7 +2409,7 @@ function renderTawafuqTable() {
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
       if (typeof greenBarRow === "function") {
-        html += greenBarRow(false, nCols, close);
+        html += greenBarRow(false, nCols, close, canSum);
       } else {
         html +=
           '<tr class="close-bar-row"><td colspan="99"><div class="close-bar-line">' +
@@ -2352,6 +2420,7 @@ function renderTawafuqTable() {
     }
     var zebra = ri % 2 === 1 ? " zebra" : "";
     html += '<tr class="' + zebra + '">';
+    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]));
 
     for (var ic = nCols - 1; ic >= 0; ic--) {
       var mvC = moves.call[ic];
@@ -2392,13 +2461,27 @@ function renderTawafuqTable() {
         }
       );
     }
+    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]));
     html += "</tr>";
   });
   if (close != null && !barDone && typeof greenBarRow === "function") {
-    html += greenBarRow(false, nCols, close);
+    html += greenBarRow(false, nCols, close, canSum);
   }
   html += "</tbody></table></div>";
   host.innerHTML = html;
+}
+
+/** خلية مجموع الأوبن (ويب): الرقم + دائرة الترتيب 1-4 */
+function twOpenSumCell(v, rk) {
+  if (v == null) return '<td class="opensum os-empty"></td>';
+  var top = rk === 1 ? " os-top" : "";
+  return (
+    '<td class="opensum' + top + '"><div class="os-stack"><div class="os-n">' +
+    Number(v).toLocaleString() +
+    "</div>" +
+    (rk >= 1 && rk <= 4 ? '<span class="os-rk os-rk' + rk + '">' + rk + "</span>" : "") +
+    "</div></td>"
+  );
 }
 
 function tawafuqColStyle(kind) {
@@ -2461,6 +2544,7 @@ function tawafuqCellHtml(oi, dlt, present, kind, colMax, canDelta, wallMax, topD
 function renderTable() {
   const data = state.cache[state.ticker];
   const host = $("#tableHost");
+  try { syncOpenSumBtn(); } catch (eOs) {}
   if (state.x3Mode) {
     renderX3();
     return;
@@ -3108,6 +3192,9 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   var rows = view.rows;
   var nCols = cols.length;
   var showDelta = !!state.showDelta;
+  var showSum = isOpenSumOn();
+  var pOff = showSum ? 1 : 0; // عمود مجموع PUT يحجز أول عمود (الطرف الخارجي)
+  var osm = showSum ? twOpenSums(rows) : null;
   var fontB = { name: "Calibri", size: 11, bold: true, color: { argb: "FF000000" } };
   var fontN = { name: "Calibri", size: 11, color: { argb: "FF000000" } };
   var fontD = { name: "Calibri", size: 9, bold: true, color: { argb: "FF0D9488" } };
@@ -3135,8 +3222,8 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   var rTitle = startRow;
   var rHead = startRow + 1;
   var dataStart = startRow + 2;
-  var strikeCol = startCol + nCols;
-  var endCol = strikeCol + nCols;
+  var strikeCol = startCol + pOff + nCols;
+  var endCol = strikeCol + nCols + pOff; // + عمود مجموع CALL في الطرف الخارجي
 
   // الشيت من اليمين لليسار: الأعمدة الأقل رقماً تظهر على اليمين.
   // مثل الويب (CALL يسار — PUT يمين): PUT في الجهة التي تبدأ من startCol، وCALL بعد STRIKE.
@@ -3173,7 +3260,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   // رؤوس التواريخ: جهة PUT معكوسة (الأبعد يميناً) | STRIKE | جهة CALL
   for (var i = 0; i < nCols; i++) {
     var fh = formatTawafuqHeader(cols[nCols - 1 - i].exp);
-    var th = ws.getCell(rHead, startCol + i);
+    var th = ws.getCell(rHead, startCol + pOff + i);
     th.value = fh.top + (fh.sub ? "\n" + fh.sub : "");
     th.font = fontB;
     th.alignment = alignC;
@@ -3194,6 +3281,48 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     th2.alignment = alignC;
     th2.border = border;
     th2.fill = kindFill(cols[j].kind);
+  }
+
+  // مجموع الأوبن: رأس العمودين (PUT عند startCol — CALL عند endCol)
+  var osBorder = {
+    top: { style: "thin", color: { argb: "FF8EA9DB" } },
+    bottom: { style: "thin", color: { argb: "FF8EA9DB" } },
+    left: { style: "thin", color: { argb: "FF8EA9DB" } },
+    right: { style: "thin", color: { argb: "FF8EA9DB" } },
+  };
+  var osFill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFDDEBF7" } };
+  var osFillTop = { type: "pattern", pattern: "solid", fgColor: { argb: "FFBDD7EE" } };
+  var osFillHead = { type: "pattern", pattern: "solid", fgColor: { argb: "FFB4C6E7" } };
+  var osInk = "FF1F3864";
+  if (showSum) {
+    [startCol, endCol].forEach(function (cc) {
+      var oh = ws.getCell(rHead, cc);
+      oh.value = "مجموع الأوبن";
+      oh.font = { name: "Calibri", size: 11, bold: true, color: { argb: osInk } };
+      oh.alignment = alignC;
+      oh.border = osBorder;
+      oh.fill = osFillHead;
+    });
+  }
+  function writeOsCell(cell, v, rk) {
+    cell.alignment = alignC;
+    cell.border = osBorder;
+    cell.fill = rk === 1 ? osFillTop : osFill;
+    if (v == null) { cell.value = ""; return; }
+    var bold = rk === 1;
+    var base = { name: "Calibri", size: 11, bold: bold, color: { argb: osInk } };
+    if (rk >= 1 && rk <= 4) {
+      cell.value = {
+        richText: [
+          { text: Number(v).toLocaleString("en-US"), font: base },
+          { text: "\n(" + rk + ")", font: { name: "Calibri", size: 10, bold: true, color: { argb: "FF2563EB" } } },
+        ],
+      };
+    } else {
+      cell.value = v;
+      cell.numFmt = "#,##0";
+      cell.font = base;
+    }
   }
 
   // أعلى قيمة لكل عمود
@@ -3282,7 +3411,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
     // PUT على جهة startCol (معكوس)
     for (var ic = 0; ic < nCols; ic++) {
       var srcI = nCols - 1 - ic;
-      var cell = ws.getCell(rowIdx, startCol + ic);
+      var cell = ws.getCell(rowIdx, startCol + pOff + ic);
       cell.alignment = alignC;
       cell.fill = kindFill(cols[srcI].kind);
       cell.border = mergedBorder(shPutX, ri, ic);
@@ -3337,10 +3466,18 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
       cellp.font = isMaxP ? fontB : fontN;
       if (isMaxP) cellp.fill = fillWall;
     }
+    if (showSum) {
+      writeOsCell(ws.getCell(rowIdx, startCol), osm.put[ri], osm.rkPut(osm.put[ri]));
+      writeOsCell(ws.getCell(rowIdx, endCol), osm.call[ri], osm.rkCall(osm.call[ri]));
+    }
   });
 
   for (var w = startCol; w <= endCol; w++) {
     ws.getColumn(w).width = w === strikeCol ? 14 : 9;
+  }
+  if (showSum) {
+    ws.getColumn(startCol).width = 15;
+    ws.getColumn(endCol).width = 15;
   }
   return endCol;
 }

@@ -5016,3 +5016,50 @@ html body table.oi td.mg-b { border-bottom-style: hidden !important; }
   margin: 4px 0 8px;
 }
 .tw-legend .tw-star { font-size: 12px; margin-inline-end: 4px; }
+
+
+/* ===== مجموع الأوبن — جدول الأيام (النسخة المخفية) ===== */
+html body .controls .opensum-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  min-width: 38px !important;
+  line-height: 1 !important;
+}
+html body .controls .opensum-btn.active {
+  color: #f1f5ff !important;
+  background: rgba(59,130,246,.22) !important;
+  border: 1px solid rgba(96,165,250,.75) !important;
+}
+table.oi.tawafuq-oi th.opensum,
+table.oi.tawafuq-oi td.opensum {
+  min-width: 78px;
+  background: rgba(59,130,246,.14) !important;
+  color: inherit;
+  text-align: center;
+  font-weight: 700;
+}
+table.oi.tawafuq-oi th.opensum.side-pad { background: transparent !important; border-color: transparent !important; }
+table.oi.tawafuq-oi th.opensum.os-head {
+  background: rgba(59,130,246,.30) !important;
+  color: #cfe0ff;
+  vertical-align: middle;
+}
+table.oi.tawafuq-oi th.opensum.os-head svg { display: block; margin: 0 auto; }
+table.oi.tawafuq-oi td.opensum.os-top { background: rgba(59,130,246,.26) !important; }
+table.oi.tawafuq-oi td.opensum .os-stack {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; line-height: 1.1;
+}
+table.oi.tawafuq-oi td.opensum .os-n { font-variant-numeric: tabular-nums; }
+table.oi.tawafuq-oi td.opensum .os-rk {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 50%;
+  font-size: 10px; font-weight: 800; line-height: 1;
+  background: #dbeafe; color: #1e3a8a;
+}
+table.oi.tawafuq-oi td.opensum .os-rk1 { background: #f5b301; color: #3b2a00; }
+table.oi.tawafuq-oi td.opensum .os-rk2 { background: #cbd5e1; color: #1e293b; }
+table.oi.tawafuq-oi td.opensum .os-rk3 { background: #93c5fd; color: #1e3a8a; }
+table.oi.tawafuq-oi td.opensum .os-rk4 { background: #bfdbfe; color: #1e3a8a; }
+html[data-theme="light"] table.oi.tawafuq-oi th.opensum.os-head { color: #1e3a8a; background: rgba(59,130,246,.22) !important; }
