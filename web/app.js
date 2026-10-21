@@ -1036,7 +1036,7 @@ function syncOpenSumBtn() {
   var show = !!(isSigmaUnlocked() && state.tawafuqMode);
   if (!show) {
     if (state.showOpenSum) state.showOpenSum = false; // يخرج من الوضع ← يرجع مخفيًا
-    if (btn) btn.style.display = "none";
+    if (btn) btn.style.setProperty("display", "none", "important");
     return;
   }
   if (!btn) {
@@ -1058,7 +1058,7 @@ function syncOpenSumBtn() {
       renderTable();
     };
   }
-  btn.style.display = "";
+  btn.style.removeProperty("display");
   btn.classList.toggle("active", !!state.showOpenSum);
   btn.setAttribute("aria-pressed", state.showOpenSum ? "true" : "false");
 }
@@ -1238,14 +1238,38 @@ function renderChips(rowId, options, key) {
     var known = options.map(String);
     var cur = String(state.days || "");
     free.value = known.indexOf(cur) >= 0 ? "" : cur && cur !== "ALL" ? cur : "";
+    // تطبيق فوري بدون إعادة بناء الحقل (حتى لا يفقد التركيز ويعمل التمرير/الأسهم متتابعًا)
+    function applyFree(v) {
+      state.days = String(v);
+      Array.prototype.forEach.call(row.querySelectorAll("button.chip"), function (b) {
+        b.classList.toggle("active", b.textContent === state.days);
+      });
+      renderTable();
+    }
+    free.addEventListener("input", function () {
+      var v = parseInt(free.value, 10);
+      if (isFinite(v) && v >= 1) applyFree(v);
+    });
     free.addEventListener("change", function () {
       var v = parseInt(free.value, 10);
-      if (isFinite(v) && v >= 1) {
-        state.days = String(v);
-        renderChips(rowId, options, key);
-        renderTable();
-      }
+      if (isFinite(v) && v >= 1 && String(v) !== state.days) applyFree(v);
     });
+    free.addEventListener(
+      "wheel",
+      function (e) {
+        e.preventDefault();
+        var base = parseInt(free.value, 10);
+        if (!isFinite(base)) {
+          var sd = parseInt(state.days, 10);
+          base = isFinite(sd) ? sd : 1;
+        }
+        var next = base + (e.deltaY < 0 ? 1 : -1);
+        if (next < 1) next = 1;
+        free.value = String(next);
+        applyFree(next);
+      },
+      { passive: false }
+    );
     free.addEventListener("keydown", function (e) {
       if (e.key === "Enter") free.blur();
     });
@@ -1852,6 +1876,10 @@ function renderSeriesTable() {
     });
   }
 
+  // ترتيب التزايد 1-4 لكل جهة
+  const rkDCs = rankMap(rows.map(function (r) { return canDelta ? positiveDelta(r.calls[lastI], r.calls[prevI]) : null; }));
+  const rkDPs = rankMap(rows.map(function (r) { return canDelta ? positiveDelta(r.puts[lastI], r.puts[prevI]) : null; }));
+
   let barDone = false;
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
@@ -1882,7 +1910,7 @@ function renderSeriesTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() : "") +
+        (d != null ? d.toLocaleString() + rankTag(rkDCs(d)) : "") +
         "</td>";
     }
     var bodyPos = 0;
@@ -1917,7 +1945,7 @@ function renderSeriesTable() {
         '<td class="delta' +
         maxCls +
         '">' +
-        (d != null ? d.toLocaleString() : "") +
+        (d != null ? d.toLocaleString() + rankTag(rkDPs(d)) : "") +
         "</td>";
     }
     html += "</tr>";
@@ -1938,13 +1966,16 @@ function isFridayExp(exp) {
   }
 }
 
+/** انتهاء شهري = آخر يوم عمل (إثنين–جمعة) في الشهر، فإذا وافق جمعة يُعامل كشهري (أخضر) لا كجمعة */
 function isMonthEndExp(exp) {
   try {
     var d = new Date(String(exp) + "T12:00:00");
     if (isNaN(d.getTime())) return false;
-    var n = new Date(d.getTime());
-    n.setDate(d.getDate() + 1);
-    return n.getMonth() !== d.getMonth();
+    var wd = d.getDay();
+    if (wd === 0 || wd === 6) return false;
+    var last = new Date(d.getFullYear(), d.getMonth() + 1, 0, 12, 0, 0);
+    while (last.getDay() === 0 || last.getDay() === 6) last.setDate(last.getDate() - 1);
+    return last.getDate() === d.getDate();
   } catch (e) {
     return false;
   }
