@@ -1,71 +1,67 @@
 {
-  "updated_at": "2026-10-20T11:10:50.293516Z",
+  "updated_at": "2026-10-21T01:17:13.743576Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
-      "close": 766.47998046875,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 769.05,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
-        "exp": "2026-10-20",
-        "pull_date": "20-10",
-        "support": 731.0,
-        "resistance": 775.0,
-        "prev_support": 731.0,
-        "prev_resistance": 775.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-21",
+        "pull_date": "21-10",
+        "support": 620.0,
+        "resistance": 773.0,
+        "prev_support": 620.0,
+        "prev_resistance": 778.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 620.0,
-        "resistance": 778.0,
-        "prev_support": 620.0,
-        "prev_resistance": 810.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-22",
+        "pull_date": "21-10",
+        "support": 740.0,
+        "resistance": 784.0,
+        "prev_support": 740.0,
+        "prev_resistance": 780.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 745.0,
         "resistance": 790.0,
         "prev_support": 745.0,
         "prev_resistance": 790.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 500.0,
         "resistance": 800.0,
         "prev_support": 500.0,
         "prev_resistance": 800.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 480.0,
         "resistance": 810.0,
         "prev_support": 480.0,
         "prev_resistance": 810.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 762.4000244140625
-        },
         {
           "date": "10-9",
           "close": 757.8300170898438
@@ -180,75 +176,75 @@
         },
         {
           "date": "20-10",
-          "close": 766.47998046875
+          "close": 769.05
+        },
+        {
+          "date": "21-10",
+          "close": 769.05
         }
       ]
     },
     "QQQ": {
       "ticker": "QQQ",
-      "close": 718.3599853515625,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 717.63,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
-        "exp": "2026-10-20",
-        "pull_date": "20-10",
-        "support": 600.0,
-        "resistance": 725.0,
-        "prev_support": 625.0,
-        "prev_resistance": 749.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-21",
+        "pull_date": "21-10",
+        "support": 700.0,
+        "resistance": 730.0,
+        "prev_support": 700.0,
+        "prev_resistance": 720.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 700.0,
-        "resistance": 720.0,
-        "prev_support": 700.0,
-        "prev_resistance": 740.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-22",
+        "pull_date": "21-10",
+        "support": 540.0,
+        "resistance": 736.0,
+        "prev_support": 695.0,
+        "prev_resistance": 746.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
-        "support": 711.0,
+        "pull_date": "21-10",
+        "support": 710.0,
         "resistance": 735.0,
         "prev_support": 711.0,
         "prev_resistance": 735.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 700.0,
         "resistance": 775.0,
         "prev_support": 700.0,
         "prev_resistance": 775.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 700.0,
         "resistance": 800.0,
         "prev_support": 700.0,
         "prev_resistance": 800.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 716.3099975585938
-        },
         {
           "date": "10-9",
           "close": 708.6900024414062
@@ -363,75 +359,75 @@
         },
         {
           "date": "20-10",
-          "close": 718.3599853515625
+          "close": 717.63
+        },
+        {
+          "date": "21-10",
+          "close": 717.63
         }
       ]
     },
     "IWM": {
       "ticker": "IWM",
-      "close": 271.2799987792969,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 275.78,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
-        "exp": "2026-10-20",
-        "pull_date": "20-10",
-        "support": 263.0,
-        "resistance": 275.0,
-        "prev_support": 270.0,
-        "prev_resistance": 276.0,
-        "prev_as_of": "19-10"
-      },
-      "tomorrow": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 260.0,
         "resistance": 277.0,
         "prev_support": 260.0,
+        "prev_resistance": 277.0,
+        "prev_as_of": "20-10"
+      },
+      "tomorrow": {
+        "exp": "2026-10-22",
+        "pull_date": "21-10",
+        "support": 267.0,
+        "resistance": 282.0,
+        "prev_support": 267.0,
         "prev_resistance": 275.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 267.0,
-        "resistance": 281.0,
-        "prev_support": 277.0,
+        "resistance": 280.0,
+        "prev_support": 267.0,
         "prev_resistance": 281.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 270.0,
         "resistance": 290.0,
         "prev_support": 270.0,
         "prev_resistance": 290.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 260.0,
         "resistance": 300.0,
         "prev_support": 260.0,
         "prev_resistance": 300.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 290.6400146484375
-        },
         {
           "date": "10-9",
           "close": 287.70001220703125
@@ -546,75 +542,75 @@
         },
         {
           "date": "20-10",
-          "close": 271.2799987792969
+          "close": 275.78
+        },
+        {
+          "date": "21-10",
+          "close": 275.78
         }
       ]
     },
     "GLD": {
       "ticker": "GLD",
-      "close": 379.69000244140625,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 377.65,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
-        "exp": "2026-10-20",
-        "pull_date": "20-10",
-        "support": 375.0,
-        "resistance": 385.0,
-        "prev_support": 375.0,
-        "prev_resistance": 394.0,
-        "prev_as_of": "19-10"
-      },
-      "tomorrow": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 370.0,
         "resistance": 390.0,
         "prev_support": 370.0,
         "prev_resistance": 390.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "tomorrow": {
+        "exp": "2026-10-22",
+        "pull_date": "21-10",
+        "support": 375.0,
+        "resistance": 392.0,
+        "prev_support": 375.0,
+        "prev_resistance": 392.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 360.0,
         "resistance": 395.0,
         "prev_support": 360.0,
         "prev_resistance": 395.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 345.0,
         "resistance": 460.0,
         "prev_support": 345.0,
         "prev_resistance": 460.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 380.0,
         "resistance": 450.0,
         "prev_support": 380.0,
         "prev_resistance": 450.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 403.3500061035156
-        },
         {
           "date": "10-9",
           "close": 396.3599853515625
@@ -729,75 +725,75 @@
         },
         {
           "date": "20-10",
-          "close": 379.69000244140625
+          "close": 377.65
+        },
+        {
+          "date": "21-10",
+          "close": 377.65
         }
       ]
     },
     "SPX": {
       "ticker": "SPX",
-      "close": 7690.72998046875,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 7712.56982421875,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
-        "exp": "2026-10-20",
-        "pull_date": "20-10",
-        "support": 7450.0,
-        "resistance": 7950.0,
-        "prev_support": 7550.0,
-        "prev_resistance": 7825.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-21",
+        "pull_date": "21-10",
+        "support": 7425.0,
+        "resistance": 8000.0,
+        "prev_support": 5600.0,
+        "prev_resistance": 8000.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 5600.0,
-        "resistance": 8000.0,
-        "prev_support": 7625.0,
-        "prev_resistance": 8000.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-22",
+        "pull_date": "21-10",
+        "support": 6600.0,
+        "resistance": 7800.0,
+        "prev_support": 6600.0,
+        "prev_resistance": 7800.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 6300.0,
-        "resistance": 7800.0,
+        "resistance": 7850.0,
         "prev_support": 6300.0,
         "prev_resistance": 7800.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 7000.0,
         "resistance": 8000.0,
         "prev_support": 7000.0,
         "prev_resistance": 8000.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 7000.0,
         "resistance": 7000.0,
         "prev_support": 7000.0,
         "prev_resistance": 7000.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 7636.35986328125
-        },
         {
           "date": "10-9",
           "close": 7591.7001953125
@@ -912,75 +908,75 @@
         },
         {
           "date": "20-10",
-          "close": 7690.72998046875
+          "close": 7712.56982421875
+        },
+        {
+          "date": "21-10",
+          "close": 7712.56982421875
         }
       ]
     },
     "NDX": {
       "ticker": "NDX",
-      "close": 29529.349609375,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 29490.283203125,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
-        "exp": "2026-10-20",
-        "pull_date": "20-10",
-        "support": 28300.0,
-        "resistance": 29860.0,
-        "prev_support": 18000.0,
-        "prev_resistance": 29750.0,
-        "prev_as_of": "19-10"
-      },
-      "tomorrow": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 22000.0,
-        "resistance": 29200.0,
+        "resistance": 29875.0,
         "prev_support": 22000.0,
         "prev_resistance": 29200.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "tomorrow": {
+        "exp": "2026-10-22",
+        "pull_date": "21-10",
+        "support": 29100.0,
+        "resistance": 29500.0,
+        "prev_support": 29100.0,
+        "prev_resistance": 29500.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 28250.0,
         "resistance": 29600.0,
-        "prev_support": 29100.0,
+        "prev_support": 28250.0,
         "prev_resistance": 29600.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 20000.0,
         "resistance": 29675.0,
         "prev_support": 20000.0,
         "prev_resistance": 29675.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
-        "support": 27000.0,
+        "pull_date": "21-10",
+        "support": 29000.0,
         "resistance": 45000.0,
         "prev_support": 27000.0,
         "prev_resistance": 45000.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 29421.55078125
-        },
         {
           "date": "10-9",
           "close": 29103.509765625
@@ -1095,75 +1091,75 @@
         },
         {
           "date": "20-10",
-          "close": 29529.349609375
+          "close": 29490.283203125
+        },
+        {
+          "date": "21-10",
+          "close": 29490.283203125
         }
       ]
     },
     "AAPL": {
       "ticker": "AAPL",
-      "close": 342.94000244140625,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 339.5,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 335.0,
         "resistance": 355.0,
         "prev_support": 335.0,
         "prev_resistance": 355.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 335.0,
-        "resistance": 355.0,
-        "prev_support": 335.0,
-        "prev_resistance": 355.0,
-        "prev_as_of": "19-10"
-      },
-      "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 195.0,
         "resistance": 350.0,
         "prev_support": 195.0,
         "prev_resistance": 350.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "weekly": {
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 195.0,
+        "resistance": 350.0,
+        "prev_support": 195.0,
+        "prev_resistance": 350.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 300.0,
         "resistance": 400.0,
         "prev_support": 300.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 250.0,
         "resistance": 350.0,
         "prev_support": 250.0,
         "prev_resistance": 350.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 315.3399963378906
-        },
         {
           "date": "10-9",
           "close": 326.57000732421875
@@ -1278,75 +1274,75 @@
         },
         {
           "date": "20-10",
-          "close": 342.94000244140625
+          "close": 339.5
+        },
+        {
+          "date": "21-10",
+          "close": 339.5
         }
       ]
     },
     "MSFT": {
       "ticker": "MSFT",
-      "close": 533.52001953125,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 531.87,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 522.5,
+        "pull_date": "21-10",
+        "support": 527.5,
         "resistance": 540.0,
-        "prev_support": 500.0,
-        "prev_resistance": 545.0,
-        "prev_as_of": "19-10"
+        "prev_support": 522.5,
+        "prev_resistance": 540.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 522.5,
-        "resistance": 540.0,
-        "prev_support": 500.0,
-        "prev_resistance": 545.0,
-        "prev_as_of": "19-10"
-      },
-      "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 540.0,
         "resistance": 570.0,
         "prev_support": 540.0,
         "prev_resistance": 570.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "weekly": {
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 540.0,
+        "resistance": 570.0,
+        "prev_support": 540.0,
+        "prev_resistance": 570.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 500.0,
         "resistance": 420.0,
         "prev_support": 500.0,
         "prev_resistance": 420.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 475.0,
         "resistance": 575.0,
         "prev_support": 475.0,
         "prev_resistance": 575.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 491.6499938964844
-        },
         {
           "date": "10-9",
           "close": 492.44000244140625
@@ -1461,75 +1457,75 @@
         },
         {
           "date": "20-10",
-          "close": 533.52001953125
+          "close": 531.87
+        },
+        {
+          "date": "21-10",
+          "close": 531.87
         }
       ]
     },
     "NVDA": {
       "ticker": "NVDA",
-      "close": 217.08999633789062,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 216.47,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 200.0,
+        "pull_date": "21-10",
+        "support": 190.0,
         "resistance": 222.5,
         "prev_support": 200.0,
-        "prev_resistance": 230.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 222.5,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 200.0,
-        "resistance": 222.5,
-        "prev_support": 200.0,
-        "prev_resistance": 230.0,
-        "prev_as_of": "19-10"
-      },
-      "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 125.0,
         "resistance": 240.0,
         "prev_support": 125.0,
         "prev_resistance": 240.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "weekly": {
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 125.0,
+        "resistance": 240.0,
+        "prev_support": 125.0,
+        "prev_resistance": 240.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 190.0,
         "resistance": 230.0,
         "prev_support": 190.0,
         "prev_resistance": 230.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 200.0,
         "resistance": 190.0,
         "prev_support": 200.0,
         "prev_resistance": 190.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 223.6699981689453
-        },
         {
           "date": "10-9",
           "close": 218.36000061035156
@@ -1644,75 +1640,75 @@
         },
         {
           "date": "20-10",
-          "close": 217.08999633789062
+          "close": 216.47
+        },
+        {
+          "date": "21-10",
+          "close": 216.47
         }
       ]
     },
     "TSLA": {
       "ticker": "TSLA",
-      "close": 368.05999755859375,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 373.71,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 130.0,
         "resistance": 400.0,
         "prev_support": 130.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 130.0,
         "resistance": 400.0,
         "prev_support": 130.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 130.0,
         "resistance": 400.0,
         "prev_support": 130.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 250.0,
         "resistance": 700.0,
         "prev_support": 250.0,
         "prev_resistance": 700.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 10.0,
         "resistance": 990.0,
         "prev_support": 10.0,
         "prev_resistance": 990.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 367.80999755859375
-        },
         {
           "date": "10-9",
           "close": 363.55999755859375
@@ -1827,75 +1823,75 @@
         },
         {
           "date": "20-10",
-          "close": 368.05999755859375
+          "close": 373.71
+        },
+        {
+          "date": "21-10",
+          "close": 373.71
         }
       ]
     },
     "AMZN": {
       "ticker": "AMZN",
-      "close": 262.45001220703125,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 262.63,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 262.5,
-        "resistance": 275.0,
-        "prev_support": 245.0,
-        "prev_resistance": 260.0,
-        "prev_as_of": "19-10"
+        "pull_date": "21-10",
+        "support": 255.0,
+        "resistance": 270.0,
+        "prev_support": 262.5,
+        "prev_resistance": 275.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 262.5,
-        "resistance": 275.0,
-        "prev_support": 245.0,
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 240.0,
+        "resistance": 270.0,
+        "prev_support": 240.0,
         "prev_resistance": 260.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 240.0,
-        "resistance": 260.0,
+        "resistance": 270.0,
         "prev_support": 240.0,
         "prev_resistance": 260.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 250.0,
         "resistance": 290.0,
         "prev_support": 250.0,
-        "prev_resistance": 270.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 290.0,
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 200.0,
         "resistance": 300.0,
         "prev_support": 200.0,
         "prev_resistance": 300.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 252.39999389648438
-        },
         {
           "date": "10-9",
           "close": 251.88999938964844
@@ -2010,75 +2006,75 @@
         },
         {
           "date": "20-10",
-          "close": 262.45001220703125
+          "close": 262.63
+        },
+        {
+          "date": "21-10",
+          "close": 262.63
         }
       ]
     },
     "META": {
       "ticker": "META",
-      "close": 705.4400024414062,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 694.25,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 700.0,
         "resistance": 820.0,
         "prev_support": 700.0,
         "prev_resistance": 820.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 700.0,
-        "resistance": 820.0,
-        "prev_support": 700.0,
-        "prev_resistance": 820.0,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 750.0,
+        "resistance": 800.0,
+        "prev_support": 750.0,
+        "prev_resistance": 780.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 750.0,
-        "resistance": 780.0,
+        "resistance": 800.0,
         "prev_support": 750.0,
-        "prev_resistance": 800.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 780.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 585.0,
         "resistance": 800.0,
         "prev_support": 585.0,
         "prev_resistance": 800.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 800.0,
         "resistance": 800.0,
-        "prev_support": 500.0,
+        "prev_support": 800.0,
         "prev_resistance": 800.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 653.6900024414062
-        },
         {
           "date": "10-9",
           "close": 644.3800048828125
@@ -2193,75 +2189,75 @@
         },
         {
           "date": "20-10",
-          "close": 705.4400024414062
+          "close": 694.25
+        },
+        {
+          "date": "21-10",
+          "close": 694.25
         }
       ]
     },
     "GOOGL": {
       "ticker": "GOOGL",
-      "close": 344.17999267578125,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 340.275,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 325.0,
-        "resistance": 352.5,
+        "pull_date": "21-10",
+        "support": 330.0,
+        "resistance": 350.0,
         "prev_support": 325.0,
         "prev_resistance": 352.5,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 325.0,
-        "resistance": 352.5,
-        "prev_support": 325.0,
-        "prev_resistance": 352.5,
-        "prev_as_of": "19-10"
-      },
-      "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 310.0,
         "resistance": 352.5,
         "prev_support": 310.0,
         "prev_resistance": 352.5,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "weekly": {
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 310.0,
+        "resistance": 352.5,
+        "prev_support": 310.0,
+        "prev_resistance": 352.5,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 290.0,
         "resistance": 380.0,
         "prev_support": 290.0,
         "prev_resistance": 380.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 300.0,
         "resistance": 300.0,
         "prev_support": 300.0,
         "prev_resistance": 300.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 330.6499938964844
-        },
         {
           "date": "10-9",
           "close": 332.6000061035156
@@ -2376,75 +2372,75 @@
         },
         {
           "date": "20-10",
-          "close": 344.17999267578125
+          "close": 340.275
+        },
+        {
+          "date": "21-10",
+          "close": 340.275
         }
       ]
     },
     "AVGO": {
       "ticker": "AVGO",
-      "close": 334.5899963378906,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 334.37,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 317.5,
-        "resistance": 352.5,
-        "prev_support": 325.0,
+        "pull_date": "21-10",
+        "support": 325.0,
+        "resistance": 350.0,
+        "prev_support": 317.5,
         "prev_resistance": 352.5,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 317.5,
-        "resistance": 352.5,
-        "prev_support": 325.0,
-        "prev_resistance": 352.5,
-        "prev_as_of": "19-10"
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 320.0,
+        "resistance": 345.0,
+        "prev_support": 320.0,
+        "prev_resistance": 345.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 320.0,
         "resistance": 345.0,
-        "prev_support": 330.0,
-        "prev_resistance": 370.0,
-        "prev_as_of": "19-10"
+        "prev_support": 320.0,
+        "prev_resistance": 345.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 300.0,
         "resistance": 400.0,
         "prev_support": 300.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 300.0,
         "resistance": 400.0,
         "prev_support": 300.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 364.3800048828125
-        },
         {
           "date": "10-9",
           "close": 360.8299865722656
@@ -2559,75 +2555,75 @@
         },
         {
           "date": "20-10",
-          "close": 334.5899963378906
+          "close": 334.37
+        },
+        {
+          "date": "21-10",
+          "close": 334.37
         }
       ]
     },
     "MSTR": {
       "ticker": "MSTR",
-      "close": 136.02000427246094,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 142.72,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 100.0,
         "resistance": 155.0,
         "prev_support": 100.0,
         "prev_resistance": 155.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 100.0,
         "resistance": 155.0,
         "prev_support": 100.0,
         "prev_resistance": 155.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 100.0,
         "resistance": 155.0,
         "prev_support": 100.0,
         "prev_resistance": 155.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 120.0,
         "resistance": 135.0,
         "prev_support": 120.0,
         "prev_resistance": 135.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 5.0,
         "resistance": 1080.0,
         "prev_support": 5.0,
         "prev_resistance": 1080.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 132.6999969482422
-        },
         {
           "date": "10-9",
           "close": 128.55999755859375
@@ -2742,75 +2738,75 @@
         },
         {
           "date": "20-10",
-          "close": 136.02000427246094
+          "close": 142.72
+        },
+        {
+          "date": "21-10",
+          "close": 142.72
         }
       ]
     },
     "AMD": {
       "ticker": "AMD",
-      "close": 538.0499877929688,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 534.74,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 490.0,
-        "resistance": 600.0,
-        "prev_support": 545.0,
-        "prev_resistance": 595.0,
-        "prev_as_of": "19-10"
+        "pull_date": "21-10",
+        "support": 500.0,
+        "resistance": 550.0,
+        "prev_support": 490.0,
+        "prev_resistance": 600.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 490.0,
-        "resistance": 600.0,
-        "prev_support": 545.0,
-        "prev_resistance": 595.0,
-        "prev_as_of": "19-10"
-      },
-      "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 140.0,
         "resistance": 600.0,
         "prev_support": 140.0,
-        "prev_resistance": 620.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 600.0,
+        "prev_as_of": "20-10"
+      },
+      "weekly": {
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 140.0,
+        "resistance": 600.0,
+        "prev_support": 140.0,
+        "prev_resistance": 600.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 440.0,
         "resistance": 240.0,
         "prev_support": 440.0,
         "prev_resistance": 240.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 100.0,
         "resistance": 600.0,
         "prev_support": 100.0,
         "prev_resistance": 600.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 521.0999755859375
-        },
         {
           "date": "10-9",
           "close": 503.6000061035156
@@ -2925,75 +2921,75 @@
         },
         {
           "date": "20-10",
-          "close": 538.0499877929688
+          "close": 534.74
+        },
+        {
+          "date": "21-10",
+          "close": 534.74
         }
       ]
     },
     "MU": {
       "ticker": "MU",
-      "close": 904.9000244140625,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 896.07,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-21",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 850.0,
-        "resistance": 980.0,
-        "prev_support": 800.0,
-        "prev_resistance": 1080.0,
-        "prev_as_of": "19-10"
+        "resistance": 950.0,
+        "prev_support": 850.0,
+        "prev_resistance": 980.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
-        "exp": "2026-10-21",
-        "pull_date": "20-10",
-        "support": 850.0,
-        "resistance": 980.0,
-        "prev_support": 800.0,
-        "prev_resistance": 1080.0,
-        "prev_as_of": "19-10"
-      },
-      "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 550.0,
         "resistance": 1000.0,
         "prev_support": 550.0,
         "prev_resistance": 1000.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
+      },
+      "weekly": {
+        "exp": "2026-10-23",
+        "pull_date": "21-10",
+        "support": 550.0,
+        "resistance": 1000.0,
+        "prev_support": 550.0,
+        "prev_resistance": 1000.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 750.0,
         "resistance": 1150.0,
         "prev_support": 750.0,
         "prev_resistance": 1150.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 360.0,
         "resistance": 1200.0,
         "prev_support": 360.0,
         "prev_resistance": 1200.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 1027.77001953125
-        },
         {
           "date": "10-9",
           "close": 977.4099731445312
@@ -3108,75 +3104,75 @@
         },
         {
           "date": "20-10",
-          "close": 904.9000244140625
+          "close": 896.07
+        },
+        {
+          "date": "21-10",
+          "close": 896.07
         }
       ]
     },
     "COHR": {
       "ticker": "COHR",
-      "close": 232.02000427246094,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 231.8,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 260.0,
         "resistance": 265.0,
         "prev_support": 260.0,
-        "prev_resistance": 275.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 265.0,
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 260.0,
         "resistance": 265.0,
         "prev_support": 260.0,
-        "prev_resistance": 275.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 265.0,
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 260.0,
         "resistance": 265.0,
         "prev_support": 260.0,
-        "prev_resistance": 275.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 265.0,
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 160.0,
         "resistance": 400.0,
         "prev_support": 160.0,
         "prev_resistance": 400.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 230.0,
         "resistance": 250.0,
         "prev_support": 230.0,
         "prev_resistance": 250.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 303.4800109863281
-        },
         {
           "date": "10-9",
           "close": 293.1700134277344
@@ -3291,75 +3287,75 @@
         },
         {
           "date": "20-10",
-          "close": 232.02000427246094
+          "close": 231.8
+        },
+        {
+          "date": "21-10",
+          "close": 231.8
         }
       ]
     },
     "SNDK": {
       "ticker": "SNDK",
-      "close": 1371.1199951171875,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 1365.38,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 700.0,
         "resistance": 1500.0,
         "prev_support": 700.0,
         "prev_resistance": 1500.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 700.0,
         "resistance": 1500.0,
         "prev_support": 700.0,
         "prev_resistance": 1500.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 700.0,
         "resistance": 1500.0,
         "prev_support": 700.0,
         "prev_resistance": 1500.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 1000.0,
         "resistance": 1500.0,
         "prev_support": 1000.0,
         "prev_resistance": 1500.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 210.0,
         "resistance": 80.0,
         "prev_support": 210.0,
         "prev_resistance": 80.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 1764.1700439453125
-        },
         {
           "date": "10-9",
           "close": 1692.5899658203125
@@ -3474,75 +3470,75 @@
         },
         {
           "date": "20-10",
-          "close": 1371.1199951171875
+          "close": 1365.38
+        },
+        {
+          "date": "21-10",
+          "close": 1365.38
         }
       ]
     },
     "VOO": {
       "ticker": "VOO",
-      "close": 704.5999755859375,
-      "as_of": "20-10",
-      "updated_at": "2026-10-20T01:46:11Z",
+      "close": 706.8,
+      "as_of": "21-10",
+      "updated_at": "2026-10-21T01:16:09Z",
       "daily": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 695.0,
         "resistance": 715.0,
         "prev_support": 695.0,
         "prev_resistance": 715.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "tomorrow": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 695.0,
         "resistance": 715.0,
         "prev_support": 695.0,
         "prev_resistance": 715.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "weekly": {
         "exp": "2026-10-23",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 695.0,
         "resistance": 715.0,
         "prev_support": 695.0,
         "prev_resistance": 715.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "opx": {
         "exp": "2026-11-20",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 570.0,
-        "resistance": 750.0,
-        "prev_support": 705.0,
+        "resistance": 730.0,
+        "prev_support": 570.0,
         "prev_resistance": 750.0,
-        "prev_as_of": "19-10"
+        "prev_as_of": "20-10"
       },
       "next_opx": {
         "exp": "2026-12-18",
-        "pull_date": "20-10",
+        "pull_date": "21-10",
         "support": 660.0,
-        "resistance": 700.0,
+        "resistance": 750.0,
         "prev_support": 660.0,
-        "prev_resistance": 750.0,
-        "prev_as_of": "19-10"
+        "prev_resistance": 700.0,
+        "prev_as_of": "20-10"
       },
       "meta": {
-        "today": "2026-10-20",
-        "daily_ref": "2026-10-20",
-        "tomorrow_cal": "2026-10-21",
-        "tomorrow_session": "2026-10-21",
+        "today": "2026-10-21",
+        "daily_ref": "2026-10-21",
+        "tomorrow_cal": "2026-10-22",
+        "tomorrow_session": "2026-10-22",
         "weekly_friday": "2026-10-23",
         "today_is_weekly": false,
         "tomorrow_merged_weekly": false,
         "weekly_is_next_week": false
       },
       "path": [
-        {
-          "date": "9-9",
-          "close": 700.8699951171875
-        },
         {
           "date": "10-9",
           "close": 696.6500244140625
@@ -3657,7 +3653,11 @@
         },
         {
           "date": "20-10",
-          "close": 704.5999755859375
+          "close": 706.8
+        },
+        {
+          "date": "21-10",
+          "close": 706.8
         }
       ]
     }
