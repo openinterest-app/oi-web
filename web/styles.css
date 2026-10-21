@@ -5028,38 +5028,40 @@ html body .controls .opensum-btn {
   line-height: 1 !important;
 }
 html body .controls .opensum-btn.active {
-  color: #f1f5ff !important;
-  background: rgba(59,130,246,.22) !important;
-  border: 1px solid rgba(96,165,250,.75) !important;
+  color: #e6e0f7 !important;
+  background: rgba(150,132,200,.16) !important;
+  border: 1px solid rgba(150,132,200,.55) !important;
 }
 table.oi.tawafuq-oi th.opensum,
 table.oi.tawafuq-oi td.opensum {
   min-width: 78px;
-  background: rgba(59,130,246,.14) !important;
+  background: rgba(150,132,200,.11) !important;
   color: inherit;
   text-align: center;
-  font-weight: 700;
+  font-weight: 600;
 }
-table.oi.tawafuq-oi th.opensum.side-pad { background: transparent !important; border-color: transparent !important; }
 table.oi.tawafuq-oi th.opensum.os-head {
-  background: rgba(59,130,246,.30) !important;
-  color: #cfe0ff;
+  background: rgba(150,132,200,.20) !important;
+  color: #d9d0f2;
   vertical-align: middle;
 }
-table.oi.tawafuq-oi th.opensum.os-head svg { display: block; margin: 0 auto; }
-table.oi.tawafuq-oi td.opensum.os-top { background: rgba(59,130,246,.26) !important; }
+table.oi.tawafuq-oi th.opensum.os-head svg { display: block; margin: 0 auto; opacity: .9; }
+table.oi.tawafuq-oi td.opensum.os-top { background: rgba(150,132,200,.19) !important; }
 table.oi.tawafuq-oi td.opensum .os-stack {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; line-height: 1.1;
 }
 table.oi.tawafuq-oi td.opensum .os-n { font-variant-numeric: tabular-nums; }
+/* دوائر الترتيب: نفس اللون، والفرق بالشفافية فقط */
 table.oi.tawafuq-oi td.opensum .os-rk {
   display: inline-flex; align-items: center; justify-content: center;
   width: 16px; height: 16px; border-radius: 50%;
-  font-size: 10px; font-weight: 800; line-height: 1;
-  background: #dbeafe; color: #1e3a8a;
+  font-size: 10px; font-weight: 700; line-height: 1;
+  color: #e6e0f7;
+  background: rgba(150,132,200,var(--a, .3));
 }
-table.oi.tawafuq-oi td.opensum .os-rk1 { background: #f5b301; color: #3b2a00; }
-table.oi.tawafuq-oi td.opensum .os-rk2 { background: #cbd5e1; color: #1e293b; }
-table.oi.tawafuq-oi td.opensum .os-rk3 { background: #93c5fd; color: #1e3a8a; }
-table.oi.tawafuq-oi td.opensum .os-rk4 { background: #bfdbfe; color: #1e3a8a; }
-html[data-theme="light"] table.oi.tawafuq-oi th.opensum.os-head { color: #1e3a8a; background: rgba(59,130,246,.22) !important; }
+table.oi.tawafuq-oi td.opensum .os-rk1 { --a: .62; }
+table.oi.tawafuq-oi td.opensum .os-rk2 { --a: .48; }
+table.oi.tawafuq-oi td.opensum .os-rk3 { --a: .36; }
+table.oi.tawafuq-oi td.opensum .os-rk4 { --a: .26; }
+html[data-theme="light"] table.oi.tawafuq-oi th.opensum.os-head { color: #4c3d80; }
+html[data-theme="light"] table.oi.tawafuq-oi td.opensum .os-rk { color: #3b2f66; }

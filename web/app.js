@@ -2294,11 +2294,10 @@ function renderTawafuqTable() {
   html +=
     '<div class="table-scroll tawafuq-wrap"><table class="oi tawafuq-oi" style="width:auto;max-width:none"><thead>';
   html += '<tr class="side-label-row">';
-  if (canSum) html += '<th class="opensum side-pad"></th>';
-  html += '<th class="side-label call-side" colspan="' + nCols + '">CALL</th>';
+  var sideSpan = nCols + (canSum ? 1 : 0); // الإطار يشمل عمود مجموع الأوبن
+  html += '<th class="side-label call-side" colspan="' + sideSpan + '">CALL</th>';
   html += '<th class="strike side-mid"></th>';
-  html += '<th class="side-label put-side" colspan="' + nCols + '">PUT</th>';
-  if (canSum) html += '<th class="opensum side-pad"></th>';
+  html += '<th class="side-label put-side" colspan="' + sideSpan + '">PUT</th>';
   html += "</tr><tr>";
   var osHead = '<th class="opensum os-head" title="مجموع الأوبن">' + OPENSUM_ICON + "</th>";
   if (canSum) html += osHead;
