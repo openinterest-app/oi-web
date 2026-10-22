@@ -36,7 +36,6 @@
           <h2>المؤشرات</h2>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button id="tvBtn" class="btn btn-tv" type="button" title="مؤشر Oi Levels على TradingView"><span id="tvBtnIco" aria-hidden="true"></span><span>TradingView</span></button>
           <button id="exportBtn" class="btn btn-excel" type="button">Excel</button>
           <button id="mapBtn" class="btn btn-map" type="button">Map</button>
           <button id="archiveBtn" class="btn btn-archive" type="button" title="أرشيف الأسبوع" aria-label="أرشيف">
@@ -143,17 +142,6 @@
     </div>
   </div>
   <script src="app.js?v=31"></script>
-  <script>window.OITV_CONFIG = { hideIcon: true };</script>
-  <script src="oi-tradingview.js?v=3"></script>
-  <script>
-    (function () {
-      var b = document.getElementById("tvBtn");
-      if (!b || !window.OITV) return;
-      var ico = document.getElementById("tvBtnIco");
-      if (ico && OITV.icon) ico.innerHTML = OITV.icon;
-      b.addEventListener("click", function () { OITV.open(); });
-    })();
-  </script>
   <!-- Cloudflare Web Analytics -->
   <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3b1b9ffbbd74d1d902173c2f92ce3a7"}'></script>
   <!-- End Cloudflare Web Analytics -->
