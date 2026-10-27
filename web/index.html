@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1200" />
-  <title>Oi | BY GEE</title>
+  <title>Oi | BY ME</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=30" />
+  <link rel="stylesheet" href="styles.css?v=20261027d" />
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 </head>
-<body data-data-base="../data">
+<body data-data-base="data">
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">
-        <div class="logo">
-          <span class="logo-dot" aria-hidden="true"></span>
+            <div class="brand" style="display:flex;flex-direction:column;align-items:flex-start;gap:12px;width:100%;box-sizing:border-box;padding:6px 10px 10px 6px;">
+        <div class="brand-top" style="display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:10px;width:100%;">
+          <div class="brand-left" style="display:flex;flex-direction:column;gap:1px;min-width:0;">
+            <div class="brand-oi">Oi</div>
+            <div class="brand-sub">Open Interest</div>
+          </div>
         </div>
-        <span class="brand-divider brand-divider-light"></span>
-        <div class="brand-left">
-          <div class="brand-oi">Oi</div>
-          <div class="brand-sub">Open Interest</div>
+        <div class="brand-sign-badge" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid rgba(107,140,255,0.35);background:rgba(37,99,235,0.12);font-family:Montserrat,system-ui,sans-serif;font-size:8px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#93c5fd;white-space:nowrap;line-height:1.2;">
+          <span class="brand-sign-dot" style="width:5px;height:5px;border-radius:50%;background:#6B8CFF;box-shadow:0 0 8px rgba(107,140,255,0.7);flex-shrink:0;display:inline-block;"></span>BY ME
         </div>
-        <span class="brand-sign">BY GEE</span>
       </div>
       <div class="meta">
         <div id="updatedAt">—</div>
@@ -36,14 +36,13 @@
           <h2>المؤشرات</h2>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button id="tvBtn" class="btn btn-tv" type="button" title="مؤشر Oi Levels على TradingView"><span id="tvBtnIco" aria-hidden="true"></span><span>TradingView</span></button>
           <button id="exportBtn" class="btn btn-excel" type="button">Excel</button>
+          <button id="reportsBtn" class="btn btn-reports" type="button" title="Reports">Reports</button>
           <button id="mapBtn" class="btn btn-map" type="button">Map</button>
           <button id="archiveBtn" class="btn btn-archive" type="button" title="أرشيف الأسبوع" aria-label="أرشيف">
             <svg class="arch-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
           </button>
-          <button id="feedbackBtn" class="btn btn-feedback" type="button" title="تعليق خاص">💬</button>
-        </div>
+</div>
       </div>
       <div class="tickers-wrap">
         <div id="tickers" class="tickers"></div>
@@ -51,8 +50,11 @@
       <div class="controls">
         <div class="select select-exp-series">
           <div class="exp-series-row">
-            <button id="seriesBtn" class="series-btn" type="button" title="اليوم بالسابق">اليوم بالسابق</button>
-            <label for="expSelect" class="exp-label">الانتهاء</label>
+            <div class="series-pill">
+              <button id="seriesBtn" class="series-btn" type="button" title="اليوم بالسابق">اليوم بالسابق</button>
+              <button id="tawafuqBtn" class="series-btn tawafuq-btn" type="button" title="جدول الأيام">جدول الأيام</button>
+              <button id="beforeAfterBtn" class="series-btn tawafuq-btn" type="button" title="قبل وبعد — أرقام يوم انتهى قبل التحديث وبعده">قبل وبعد</button>
+            </div>
             <select id="expSelect"></select>
           </div>
         </div>
@@ -60,8 +62,14 @@
         <div id="daysRow" class="chip-row"></div>
         <label>Strikes</label>
         <div id="strikesRow" class="chip-row"></div>
-        <button id="deltaBtn" class="delta-btn" type="button" title="التزايد">Δ</button>
-        <button id="spx5kBtn" class="spx5k-btn" type="button" title="تمييز ≥5000 في عمود اليوم (SPX فقط)" style="display:none">5K+</button>
+        <button id="deltaBtn" class="delta-btn" type="button" title="التزايد (آخر يومين)">Δ</button>
+        <button id="spx5kBtn" class="spx5k-btn" type="button" title="تمييز ≥5000 عمود اليوم (SPX)" style="display:none">5K+</button>
+        <button id="growthBtn" class="delta-btn growth-btn" type="button" title="النمو — مقارنة بعدة أيام">G</button>
+        <button id="sigmaBtn" class="delta-btn sigma-btn" type="button" title="المجموع — مجموع التزايد على تواريخ مختارة"><span class="sum-ico" style="width:18px;height:18px;vertical-align:middle"></span></button>
+        <button id="oiTotBtn" class="delta-btn oitot-btn active" type="button" title="مجموع الأوبن — عمود في جدول الأيام (يُظهر/يُخفي)"><span class="oi-ico" style="width:18px;height:18px;vertical-align:middle"></span></button>
+        <button id="mapHeatBtn" class="delta-btn mapheat-btn" type="button" title="Map Heat — أعمدة التزايد حسب التواريخ">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        </button>
         <div id="stocksRow" class="stocks-inline"></div>
         <button id="x3Btn" class="x3-btn" type="button" title="عرض ثلاثي">×3</button>
       </div>
@@ -94,7 +102,17 @@
       <div id="exportBody" class="map-body export-body"></div>
     </div>
   </div>
-
+  <div id="sigmaModal" class="map-modal hidden" role="dialog" aria-modal="true">
+    <div class="map-panel export-panel">
+      <div class="map-head">
+        <div>
+          <h3><span class="sum-ico"></span> المجموع · مجموع التزايد</h3>
+        </div>
+        <button id="sigmaClose" class="btn" type="button">إغلاق</button>
+      </div>
+      <div id="sigmaBody" class="map-body export-body"></div>
+    </div>
+  </div>
   <div id="archiveModal" class="map-modal hidden" role="dialog" aria-modal="true">
     <div class="map-panel archive-panel archive-export-only">
       <button id="archiveClose" class="arch-close-x" type="button" aria-label="إغلاق">×</button>
@@ -111,9 +129,11 @@
         <span class="arch-lab">Strikes</span>
         <div id="archStrikesRow" class="chip-row"></div>
         <button id="archDeltaBtn" class="delta-btn" type="button" title="التزايد">Δ</button>
+        <button id="archGrowthBtn" class="delta-btn" type="button" title="النمو (للجمعات والأوبكسات ونهاية الشهر)">G</button>
         <select id="archExportMode" class="arch-select" title="وضع التصدير">
           <option value="single">صفحة واحدة</option>
           <option value="multi">صفحات متعددة</option>
+          <option value="ba">قبل وبعد</option>
         </select>
         <button id="archExportBtn" class="btn btn-teal" type="button">Excel</button>
       </div>
@@ -142,20 +162,20 @@
       </form>
     </div>
   </div>
-  <script src="app.js?v=32"></script>
-  <script>window.OITV_CONFIG = { hideIcon: true };</script>
-  <script src="oi-tradingview.js?v=5"></script>
-  <script>
-    (function () {
-      var b = document.getElementById("tvBtn");
-      if (!b || !window.OITV) return;
-      var ico = document.getElementById("tvBtnIco");
-      if (ico && OITV.icon) ico.innerHTML = OITV.icon;
-      b.addEventListener("click", function () { OITV.open(); });
-    })();
-  </script>
-  <!-- Cloudflare Web Analytics -->
-  <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b3b1b9ffbbd74d1d902173c2f92ce3a7"}'></script>
-  <!-- End Cloudflare Web Analytics -->
+  
+  <div id="reportsModal" class="map-modal hidden" role="dialog" aria-modal="true">
+    <div class="map-panel reports-panel">
+      <div class="map-head">
+        <div>
+          <h3>Reports</h3>
+          <p class="map-sub" id="reportsSub">—</p>
+        </div>
+        <button id="reportsClose" class="btn" type="button">إغلاق</button>
+      </div>
+      <div id="reportsBody" class="map-body reports-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js?v=20261027d"></script>
 </body>
 </html>
