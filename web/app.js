@@ -573,15 +573,24 @@ function lastN(arr, n) {
   return arr.slice(Math.max(0, arr.length - k));
 }
 
+// يختار n سترايك عند/تحت الإغلاق و n فوقه (وليس أقرب 2n بالمسافة — لأن السترايكات غير متماثلة)
+function nearStrikesSplit(items, close, n, getS) {
+  var c = Number(close);
+  var below = items
+    .filter(function (x) { return getS(x) <= c; })
+    .sort(function (a, b) { return getS(b) - getS(a); })
+    .slice(0, n);
+  var above = items
+    .filter(function (x) { return getS(x) > c; })
+    .sort(function (a, b) { return getS(a) - getS(b); })
+    .slice(0, n);
+  return below.concat(above).sort(function (a, b) { return getS(a) - getS(b); });
+}
+
 function filterStrikes(rows, close, strikesLimit) {
   if (!strikesLimit || strikesLimit === "ALL" || close == null) return rows.slice();
   const n = parseInt(strikesLimit, 10);
-  return rows
-    .map(function (r) { return { r: r, dist: Math.abs(r.strike - close) }; })
-    .sort(function (a, b) { return a.dist - b.dist; })
-    .slice(0, n * 2)
-    .map(function (x) { return x.r; })
-    .sort(function (a, b) { return a.strike - b.strike; });
+  return nearStrikesSplit(rows, close, n, function (r) { return r.strike; });
 }
 
 function positiveDelta(last, prev) {
@@ -2177,20 +2186,7 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
   if (strikesLimit && strikesLimit !== "ALL" && close != null) {
     var n = parseInt(strikesLimit, 10);
     if (isFinite(n) && n > 0) {
-      rows = rows
-        .map(function (r) {
-          return { r: r, dist: Math.abs(r.strike - close) };
-        })
-        .sort(function (a, b) {
-          return a.dist - b.dist;
-        })
-        .slice(0, n * 2)
-        .map(function (x) {
-          return x.r;
-        })
-        .sort(function (a, b) {
-          return a.strike - b.strike;
-        });
+      rows = nearStrikesSplit(rows, close, n, function (r) { return r.strike; });
     }
   }
 
@@ -5809,12 +5805,7 @@ function maxOiNearClose(data, exp, close, nEach, dateIdx) {
   });
   if (close != null && !isNaN(Number(close)) && nEach != null) {
     var cnum = Number(close);
-    rows = rows
-      .map(function (r) { return { r: r, dist: Math.abs(r.strike - cnum) }; })
-      .sort(function (a, b) { return a.dist - b.dist; })
-      .slice(0, nEach * 2)
-      .map(function (x) { return x.r; })
-      .sort(function (a, b) { return a.strike - b.strike; });
+    rows = nearStrikesSplit(rows, cnum, nEach, function (r) { return r.strike; });
   } else {
     rows.sort(function (a, b) { return a.strike - b.strike; });
   }
