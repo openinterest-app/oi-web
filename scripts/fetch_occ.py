@@ -62,6 +62,10 @@ def mirror_to_web_data() -> None:
     WEB_DATA_DIR.mkdir(parents=True, exist_ok=True)
     count = 0
     for src in DATA_DIR.glob("*.json"):
+        # *_history.json مخزن داخلي للسكربت (SPX ~25MB قريب من حد Cloudflare)
+        # الموقع لا يقرأها، فلا تُنسخ إلى web/data وتبقى فقط في data/
+        if src.name.endswith("_history.json"):
+            continue
         dst = WEB_DATA_DIR / src.name
         dst.write_bytes(src.read_bytes())
         count += 1
