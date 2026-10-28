@@ -45,8 +45,33 @@ def _json_sanitize(obj: Any) -> Any:
     return obj
 
 
+# حقول وقتية تتغير في كل تشغيل حتى لو الأرقام نفسها — تُتجاهل عند المقارنة
+_VOLATILE_KEYS = ("updated_at", "generated_at", "data_captured_at")
+
+
+def _strip_volatile(o: Any) -> Any:
+    if isinstance(o, dict):
+        return {k: v for k, v in o.items() if k not in _VOLATILE_KEYS}
+    return o
+
+
+def _same_content(path: Path, obj: Any) -> bool:
+    """True إذا الملف الموجود مطابق للمحتوى الجديد (بدون الحقول الوقتية)."""
+    try:
+        if not path.exists():
+            return False
+        old = json.loads(path.read_text(encoding="utf-8"))
+        return _strip_volatile(old) == _strip_volatile(obj)
+    except Exception:
+        return False
+
+
 def _write_json(path: Path, obj: Any, *, indent: int | None = None) -> None:
     obj = _json_sanitize(obj)
+    # لا نعيد كتابة ملف مطابق: يمنع commit فارغ ونمو المستودع بلا داعٍ
+    if _same_content(path, obj):
+        print(f"[unchanged] {path.name} — لا تغيير فعلي، لم يُكتب")
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         if indent is None:
