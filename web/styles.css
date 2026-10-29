@@ -1,3 +1,7 @@
+/* مربع الأيام/السترايكات الحر: لون علامة + (المقاس لم يتغير) */
+.days-free-input::placeholder { color: #64748b; font-weight: 600; opacity: 1; }
+.days-free-input::-webkit-outer-spin-button, .days-free-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
 /* ===== شريط التحكم: نفس تنسيق الويب الخاص (حجم/خط/لون) — مربع الأيام الحر لم يُغيَّر =====
    موضوعة في أعلى الملف: نهاية styles.css فيها قاعدة غير مغلقة تبتلع ما بعدها. */
 html body div.controls { padding: 10px 14px !important; gap: 9px !important; border-radius: 18px !important; background-image: none !important; box-shadow: none !important; justify-content: flex-start !important; }

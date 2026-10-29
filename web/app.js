@@ -22,6 +22,7 @@ const STOCKS_TICKERS = [
   { symbol: "COHR", name: "Coherent", color: "#00A3E0" },
   { symbol: "SNDK", name: "SanDisk", color: "#6366F1" },
   { symbol: "VOO", name: "Vanguard S&P 500", color: "#C41230" },
+  { symbol: "SQQQ", name: "ProShares Short QQQ", color: "#DC2626" },
 ];
 
 /** كل الرموز للبحث/العرض */
@@ -1226,13 +1227,13 @@ function renderChips(rowId, options, key) {
     };
     row.appendChild(b);
   });
-  if (key === "days") {
+  if (key === "days" || key === "strikes") {
     var free = document.createElement("input");
     free.type = "number";
     free.min = "1";
     free.className = "days-free-input";
-    free.placeholder = "";
-    free.title = "عدد مخصص";
+    free.placeholder = "+";
+    free.title = key === "strikes" ? "عدد سترايكات مخصص (فوق وتحت الإغلاق)" : "عدد مخصص";
     free.setAttribute("aria-label", "عدد مخصص");
     free.setAttribute(
       "style",
@@ -1245,13 +1246,13 @@ function renderChips(rowId, options, key) {
         "box-sizing:border-box!important;-webkit-appearance:none!important;appearance:none!important;"
     );
     var known = options.map(String);
-    var cur = String(state.days || "");
+    var cur = String(state[key] || "");
     free.value = known.indexOf(cur) >= 0 ? "" : cur && cur !== "ALL" ? cur : "";
     // تطبيق فوري بدون إعادة بناء الحقل (حتى لا يفقد التركيز ويعمل التمرير/الأسهم متتابعًا)
     function applyFree(v) {
-      state.days = String(v);
+      state[key] = String(v);
       Array.prototype.forEach.call(row.querySelectorAll("button.chip"), function (b) {
-        b.classList.toggle("active", b.textContent === state.days);
+        b.classList.toggle("active", b.textContent === state[key]);
       });
       renderTable();
     }
@@ -1261,7 +1262,7 @@ function renderChips(rowId, options, key) {
     });
     free.addEventListener("change", function () {
       var v = parseInt(free.value, 10);
-      if (isFinite(v) && v >= 1 && String(v) !== state.days) applyFree(v);
+      if (isFinite(v) && v >= 1 && String(v) !== state[key]) applyFree(v);
     });
     free.addEventListener(
       "wheel",
@@ -1269,8 +1270,8 @@ function renderChips(rowId, options, key) {
         e.preventDefault();
         var base = parseInt(free.value, 10);
         if (!isFinite(base)) {
-          var sd = parseInt(state.days, 10);
-          base = isFinite(sd) ? sd : 1;
+          var sd = parseInt(state[key], 10);
+          base = isFinite(sd) ? sd : (key === "strikes" ? 30 : 1);
         }
         var next = base + (e.deltaY < 0 ? 1 : -1);
         if (next < 1) next = 1;
@@ -3618,7 +3619,7 @@ function openExportDialog() {
     const curS =
       ["50", "100", "ALL"].indexOf(String(state.strikes)) >= 0
         ? String(state.strikes)
-        : "50";
+        : (parseInt(state.strikes, 10) > 0 ? String(parseInt(state.strikes, 10)) : "50");
     const on = curS === s ? " on" : "";
     html +=
       '<button type="button" class="chip' +
@@ -3657,7 +3658,7 @@ function openExportDialog() {
   let estrikes =
     ["50", "100", "ALL"].indexOf(String(state.strikes)) >= 0
       ? String(state.strikes)
-      : "50";
+      : (parseInt(state.strikes, 10) > 0 ? String(parseInt(state.strikes, 10)) : "50");
 
   // التاريخ الحالي يكون محدداً تلقائياً؛ إذا اخترت «جدول الأيام» أو «اليوم بالسابق» دون أن تلمس
   // أي تاريخ بنفسك، نلغي التحديد التلقائي حتى لا يُصدَّر جدول إضافي لم تطلبه
