@@ -117,6 +117,7 @@ TICKER_URLS = {
     "COHR": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=cohr",
     "SNDK": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=sndk",
     "VOO": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=voo",
+    "SQQQ": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=sqqq",
 }
 
 HEADERS = {
