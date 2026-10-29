@@ -1,3 +1,26 @@
+/* ===== شريط التحكم: نفس تنسيق الويب الخاص (حجم/خط/لون) — مربع الأيام الحر لم يُغيَّر =====
+   موضوعة في أعلى الملف: نهاية styles.css فيها قاعدة غير مغلقة تبتلع ما بعدها. */
+html body div.controls { padding: 10px 14px !important; gap: 9px !important; border-radius: 18px !important; background-image: none !important; box-shadow: none !important; justify-content: flex-start !important; }
+html body div.controls .oi-seg, html body div.controls .chip-row { height: 34px !important; padding: 0 4px !important; border-radius: 10px !important; }
+html body div.controls .chip-row { gap: 1px !important; }
+html body div.controls .oi-seg .series-btn { height: 28px !important; padding: 0 9px !important; letter-spacing: normal !important; border-radius: 8px !important; font-family: "Segoe UI", system-ui, -apple-system, sans-serif !important; }
+html body div.controls .chip-row .chip { height: 28px !important; padding: 0 8px !important; font-size: 12.5px !important; border-radius: 7px !important; }
+html body div.controls .chip-row .chip.active { font-weight: 700 !important; }
+html body div.controls .oi-ind { bottom: 5px !important; }
+html body div.controls > label, html body div.controls .stocks-label { font-family: Montserrat, system-ui, sans-serif !important; font-size: 10px !important; letter-spacing: 1.1px !important; }
+html body div.controls .exp-dd { min-width: 150px !important; width: 150px !important; }
+html body div.controls .exp-dd-btn { height: 34px !important; min-height: 0 !important; min-width: 0 !important; padding-left: 12px !important; padding-right: 30px !important; font-size: 12.5px !important; font-weight: 500 !important; color: #f1f5f9 !important; border-radius: 10px !important; line-height: 16.25px !important; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237c89a6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important; background-position: right 11px 50% !important; background-size: auto !important; background-repeat: no-repeat !important; }
+html body div.controls #seriesBtn, html body div.controls #tawafuqBtn { height: 28px !important; padding: 0 9px !important; letter-spacing: normal !important; border-radius: 8px !important; font-family: "Segoe UI", system-ui, -apple-system, sans-serif !important; }
+html body div.controls .chip-row .chip { min-width: 28px !important; }
+html body div.controls .exp-dd { height: 34px !important; }
+html body div.controls .stocks-inline, html body div.controls #stocksRow { height: 34px !important; min-width: 0 !important; }
+html body div.controls button#x3Btn.x3-btn { height: 34px !important; min-width: 40px !important; padding: 0 10px !important; font-size: 12.5px !important; margin-left: 4px !important; border-radius: 10px !important; }
+html body div.controls { margin-bottom: 14px !important; }
+html body div.controls .delta-btn { display: flex !important; align-items: center !important; justify-content: center !important; width: 34px !important; min-width: 34px !important; height: 34px !important; padding: 0 !important; margin-left: 0 !important; border-radius: 10px !important; }
+html body div.controls .spx5k-btn { align-items: center !important; justify-content: center !important; height: 34px !important; min-width: 34px !important; padding: 0 12px !important; letter-spacing: .26px !important; border-radius: 10px !important; }
+html body div.controls .stocks-dd { width: 118px !important; min-width: 118px !important; flex: 0 0 118px !important; }
+html body div.controls .stocks-dd-btn { height: 34px !important; min-height: 0 !important; min-width: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; font-size: 12.5px !important; font-weight: 500 !important; border-radius: 10px !important; }
+
 :root {
   --bg: #f8fafc;
   --card: #ffffff;
