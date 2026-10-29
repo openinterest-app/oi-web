@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T04:17:22.922855Z",
+  "updated_at": "2026-10-29T21:46:35.517737Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
@@ -3638,6 +3638,76 @@
         {
           "date": "29-10",
           "close": 709.9000244140625
+        }
+      ]
+    },
+    "SQQQ": {
+      "ticker": "SQQQ",
+      "close": 36.279998779296875,
+      "as_of": "29-10",
+      "updated_at": "2026-10-29T21:45:48Z",
+      "daily": {
+        "exp": "2026-10-30",
+        "pull_date": "29-10",
+        "support": 30.0,
+        "resistance": 40.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": null,
+        "support": null,
+        "resistance": null,
+        "merged_into": "weekly",
+        "prev_support": null,
+        "prev_resistance": null
+      },
+      "weekly": {
+        "exp": "2026-10-30",
+        "pull_date": "29-10",
+        "support": 30.0,
+        "resistance": 40.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "29-10",
+        "support": 35.0,
+        "resistance": 40.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "29-10",
+        "support": 30.0,
+        "resistance": 35.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-10-29",
+        "daily_ref": "2026-10-29",
+        "tomorrow_cal": "2026-10-30",
+        "tomorrow_session": "2026-10-30",
+        "weekly_friday": "2026-10-30",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": true,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "28-10",
+          "close": 36.279998779296875
+        },
+        {
+          "date": "29-10",
+          "close": 36.279998779296875
         }
       ]
     }
