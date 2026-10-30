@@ -3,7 +3,7 @@ html body .main > .top { display: grid !important; grid-template-columns: 1fr au
 html body .main > .top > :first-child { width: auto !important; }
 html body .main > .top > :nth-child(2) { justify-self: center !important; text-align: center !important; }
 html body .main > .top > :nth-child(3) { justify-self: end !important; }
-html body table.oi:not(.x3-table) th.delta, html body table.oi:not(.x3-table) td.delta { width: 92px !important; min-width: 92px !important; max-width: 120px !important; padding-left: 4px !important; padding-right: 4px !important; }
+html body table.oi:not(.x3-table) th.delta, html body table.oi:not(.x3-table) td.delta { width: 1% !important; min-width: 52px !important; max-width: none !important; white-space: nowrap !important; padding-left: 6px !important; padding-right: 6px !important; }
 html body table.oi td.delta .rk { font-size: 0.78em !important; }
 
 /* ===== منع ومضة الواجهة غير المكتملة أثناء التحميل ===== */
