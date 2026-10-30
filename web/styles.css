@@ -1,3 +1,16 @@
+/* ===== العام: العنوان في المنتصف تمامًا + عمود التزايد يتسع للرقم والترتيب داخل حدوده ===== */
+html body .main > .top { display: grid !important; grid-template-columns: 1fr auto 1fr !important; align-items: center !important; }
+html body .main > .top > :first-child { width: auto !important; }
+html body .main > .top > :nth-child(2) { justify-self: center !important; text-align: center !important; }
+html body .main > .top > :nth-child(3) { justify-self: end !important; }
+html body table.oi:not(.x3-table) th.delta, html body table.oi:not(.x3-table) td.delta { width: 92px !important; min-width: 92px !important; max-width: 120px !important; padding-left: 4px !important; padding-right: 4px !important; }
+html body table.oi td.delta .rk { font-size: 0.78em !important; }
+
+/* ===== منع ومضة الواجهة غير المكتملة أثناء التحميل ===== */
+html.oi-loading .main { opacity: 0; animation: oiRevealFallback .01s linear 7s forwards; }
+html .main { transition: opacity .22s ease; }
+@keyframes oiRevealFallback { to { opacity: 1; } }
+
 /* مربع الأيام/السترايكات الحر: لون علامة + (المقاس لم يتغير) */
 .days-free-input::placeholder { color: #64748b; font-weight: 600; opacity: 1; }
 .days-free-input::-webkit-outer-spin-button, .days-free-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

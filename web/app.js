@@ -1186,6 +1186,7 @@ function renderStocksDropdown() {
       state.ticker = v;
       state.expiration = null;
       state.livePrice = null;
+      state.sessionClose = null;
       var lab = $("#stocksDdLabel");
       if (lab) lab.textContent = v;
       renderTickers();
@@ -1387,11 +1388,15 @@ async function refresh() {
     renderTable();
     setStatus("جاهز", "ok");
     // حدّث إغلاق آخر جلسة مكتملة من Yahoo (لا يعتمد على JSON القديم)
-    fetchSessionClose(state.ticker).then(function (px) {
+    var tkSC = state.ticker;
+    fetchSessionClose(tkSC).then(function (px) {
       if (px != null) {
-        state.sessionClose = px;
-        if (state.cache[state.ticker]) state.cache[state.ticker].close = px;
-        renderTable();
+        if (state.cache[tkSC]) state.cache[tkSC].close = px;
+        if (state.ticker === tkSC) {
+          state.sessionClose = px;
+          state.sessionCloseTicker = tkSC;
+          renderTable();
+        }
       }
     });
   } catch (e) {
@@ -4140,7 +4145,7 @@ function effectiveClose(data) {
   if (state.livePrice != null && !isNaN(Number(state.livePrice))) {
     return Number(state.livePrice);
   }
-  if (state.sessionClose != null && !isNaN(Number(state.sessionClose))) {
+  if (state.sessionClose != null && state.sessionCloseTicker === state.ticker && !isNaN(Number(state.sessionClose))) {
     return Number(state.sessionClose);
   }
   if (data && data.close != null && !isNaN(Number(data.close)) && Number(data.close) > 0) {
@@ -4165,8 +4170,9 @@ async function refreshLivePrice() {
     state.livePrice = null;
     return;
   }
-  const p = await fetchLivePrice(state.ticker);
-  if (p != null) {
+  const tkLP = state.ticker;
+  const p = await fetchLivePrice(tkLP);
+  if (p != null && state.ticker === tkLP) {
     state.livePrice = p;
     renderTable();
   }
@@ -6038,4 +6044,15 @@ document.addEventListener("DOMContentLoaded", init);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { setTimeout(setupSlide, 0); });
   else setTimeout(setupSlide, 0);
+})();
+
+/* إظهار الواجهة بعد بنائها فقط: يمنع ومضة الواجهة غير المكتملة أثناء التحميل (احتياطي CSS يظهرها بعد 7 ثوانٍ) */
+(function () {
+  function reveal() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { document.documentElement.classList.remove("oi-loading"); });
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", reveal);
+  else reveal();
 })();
