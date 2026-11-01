@@ -5105,3 +5105,10 @@ table.oi.tawafuq-oi td.opensum .os-rk3 { --a: .36; }
 table.oi.tawafuq-oi td.opensum .os-rk4 { --a: .26; }
 html[data-theme="light"] table.oi.tawafuq-oi th.opensum.os-head { color: #4c3d80; }
 html[data-theme="light"] table.oi.tawafuq-oi td.opensum .os-rk { color: #3b2f66; }
+
+/* ===== المجموع ككل (النسخة المخفية الثانية): زر حذف العمود + ألوان التزايد في الثيم الفاتح ===== */
+.tw-rkp { font-size: .8em; }
+html[data-theme="light"] table.oi .sum-dl { color: #0f766e !important; }
+html[data-theme="light"] table.oi .sum-dl-top { background: rgba(15,118,110,.12) !important; color: #0f766e !important; }
+html body .controls .oi-seg #totTabBtn { order: 3 !important; }
+.exp-series-row #totTabBtn { order: 2 !important; }
