@@ -118,6 +118,20 @@ TICKER_URLS = {
     "SNDK": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=sndk",
     "VOO": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=voo",
     "SQQQ": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=sqqq",
+    # قطاعات السوق (11 SPDR) + SMH + IGV
+    "XLK": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlk",
+    "XLF": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlf",
+    "XLV": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlv",
+    "XLY": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xly",
+    "XLP": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlp",
+    "XLE": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xle",
+    "XLI": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xli",
+    "XLB": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlb",
+    "XLU": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlu",
+    "XLRE": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlre",
+    "XLC": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlc",
+    "SMH": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=smh",
+    "IGV": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=igv",
 }
 
 HEADERS = {
