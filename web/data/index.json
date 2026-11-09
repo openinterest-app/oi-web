@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T01:16:19Z",
+  "generated_at": "2026-11-09T18:35:52Z",
   "session_pull_date": "9-11",
   "tickers": [
     "SPY",
@@ -22,6 +22,19 @@
     "COHR",
     "SNDK",
     "VOO",
-    "SQQQ"
+    "SQQQ",
+    "XLK",
+    "XLF",
+    "XLV",
+    "XLY",
+    "XLP",
+    "XLE",
+    "XLI",
+    "XLB",
+    "XLU",
+    "XLRE",
+    "XLC",
+    "SMH",
+    "IGV"
   ]
 }

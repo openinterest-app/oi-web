@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T01:17:24.203450Z",
+  "updated_at": "2026-11-09T18:36:56.506622Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
@@ -3753,6 +3753,929 @@
         {
           "date": "9-11",
           "close": 47.70000076293945
+        }
+      ]
+    },
+    "XLK": {
+      "ticker": "XLK",
+      "close": 164.74000549316406,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 115.0,
+        "resistance": 170.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 115.0,
+        "resistance": 170.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 115.0,
+        "resistance": 170.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 180.0,
+        "resistance": 200.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 87.5,
+        "resistance": 200.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 164.74000549316406
+        },
+        {
+          "date": "9-11",
+          "close": 164.74000549316406
+        }
+      ]
+    },
+    "XLF": {
+      "ticker": "XLF",
+      "close": 57.15999984741211,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-09",
+        "pull_date": "9-11",
+        "support": 54.0,
+        "resistance": 59.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-11",
+        "pull_date": "9-11",
+        "support": 53.0,
+        "resistance": 60.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 55.0,
+        "resistance": 60.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 54.0,
+        "resistance": 56.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 50.0,
+        "resistance": 75.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 57.15999984741211
+        },
+        {
+          "date": "9-11",
+          "close": 57.15999984741211
+        }
+      ]
+    },
+    "XLV": {
+      "ticker": "XLV",
+      "close": 184.8000030517578,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 180.0,
+        "resistance": 187.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 180.0,
+        "resistance": 187.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 180.0,
+        "resistance": 187.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 155.0,
+        "resistance": 190.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 100.0,
+        "resistance": 175.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 184.8000030517578
+        },
+        {
+          "date": "9-11",
+          "close": 184.8000030517578
+        }
+      ]
+    },
+    "XLY": {
+      "ticker": "XLY",
+      "close": 117.58000183105469,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 116.0,
+        "resistance": 121.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 116.0,
+        "resistance": 121.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 116.0,
+        "resistance": 121.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 105.0,
+        "resistance": 114.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 107.5,
+        "resistance": 120.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 117.58000183105469
+        },
+        {
+          "date": "9-11",
+          "close": 117.58000183105469
+        }
+      ]
+    },
+    "XLP": {
+      "ticker": "XLP",
+      "close": 90.08000183105469,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 88.0,
+        "resistance": 91.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 88.0,
+        "resistance": 91.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 88.0,
+        "resistance": 91.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 86.0,
+        "resistance": 89.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 80.0,
+        "resistance": 92.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 90.08000183105469
+        },
+        {
+          "date": "9-11",
+          "close": 90.08000183105469
+        }
+      ]
+    },
+    "XLE": {
+      "ticker": "XLE",
+      "close": 61.619998931884766,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-09",
+        "pull_date": "9-11",
+        "support": 60.0,
+        "resistance": 64.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-11",
+        "pull_date": "9-11",
+        "support": 60.0,
+        "resistance": 66.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 60.0,
+        "resistance": 62.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 57.0,
+        "resistance": 70.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 60.0,
+        "resistance": 60.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 61.619998931884766
+        },
+        {
+          "date": "9-11",
+          "close": 61.619998931884766
+        }
+      ]
+    },
+    "XLI": {
+      "ticker": "XLI",
+      "close": 162.6699981689453,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 162.0,
+        "resistance": 176.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 162.0,
+        "resistance": 176.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 162.0,
+        "resistance": 176.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 170.0,
+        "resistance": 195.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 170.0,
+        "resistance": 180.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 162.6699981689453
+        },
+        {
+          "date": "9-11",
+          "close": 162.6699981689453
+        }
+      ]
+    },
+    "XLB": {
+      "ticker": "XLB",
+      "close": 51.95000076293945,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 52.0,
+        "resistance": 54.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 52.0,
+        "resistance": 54.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 52.0,
+        "resistance": 54.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 49.0,
+        "resistance": 51.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 47.0,
+        "resistance": 60.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 51.95000076293945
+        },
+        {
+          "date": "9-11",
+          "close": 51.95000076293945
+        }
+      ]
+    },
+    "XLU": {
+      "ticker": "XLU",
+      "close": 43.130001068115234,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 43.5,
+        "resistance": 45.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 43.5,
+        "resistance": 45.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 43.5,
+        "resistance": 45.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 25.0,
+        "resistance": 41.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 43.130001068115234
+        },
+        {
+          "date": "9-11",
+          "close": 43.130001068115234
+        }
+      ]
+    },
+    "XLRE": {
+      "ticker": "XLRE",
+      "close": 44.0,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 44.0,
+        "resistance": 43.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 44.0
+        },
+        {
+          "date": "9-11",
+          "close": 44.0
+        }
+      ]
+    },
+    "XLC": {
+      "ticker": "XLC",
+      "close": 104.79000091552734,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 102.0,
+        "resistance": 108.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 102.0,
+        "resistance": 108.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 102.0,
+        "resistance": 108.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 104.0,
+        "resistance": 113.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 106.0,
+        "resistance": 115.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 104.79000091552734
+        },
+        {
+          "date": "9-11",
+          "close": 104.79000091552734
+        }
+      ]
+    },
+    "SMH": {
+      "ticker": "SMH",
+      "close": 463.9599914550781,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-09",
+        "pull_date": "9-11",
+        "support": 375.0,
+        "resistance": 500.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-11",
+        "pull_date": "9-11",
+        "support": 410.0,
+        "resistance": 495.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 445.0,
+        "resistance": 532.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 500.0,
+        "resistance": 650.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 400.0,
+        "resistance": 550.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 463.9599914550781
+        },
+        {
+          "date": "9-11",
+          "close": 463.9599914550781
+        }
+      ]
+    },
+    "IGV": {
+      "ticker": "IGV",
+      "close": 98.87999725341797,
+      "as_of": "9-11",
+      "updated_at": "2026-11-09T18:35:52Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 107.0,
+        "resistance": 101.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 107.0,
+        "resistance": 101.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "9-11",
+        "support": 107.0,
+        "resistance": 101.5,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "9-11",
+        "support": 80.0,
+        "resistance": 100.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "9-11",
+        "support": 95.0,
+        "resistance": 90.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-09",
+        "daily_ref": "2026-11-09",
+        "tomorrow_cal": "2026-11-10",
+        "tomorrow_session": "2026-11-10",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "6-11",
+          "close": 98.87999725341797
+        },
+        {
+          "date": "9-11",
+          "close": 98.87999725341797
         }
       ]
     }
