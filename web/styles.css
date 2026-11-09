@@ -5112,3 +5112,17 @@ html[data-theme="light"] table.oi .sum-dl { color: #0f766e !important; }
 html[data-theme="light"] table.oi .sum-dl-top { background: rgba(15,118,110,.12) !important; color: #0f766e !important; }
 html body .controls .oi-seg #totTabBtn { order: 3 !important; }
 .exp-series-row #totTabBtn { order: 2 !important; }
+
+/* فاصل قسم SECTORS داخل قائمة STOCKS */
+.stocks-dd-sep {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--muted, #94a3b8);
+  padding: 8px 10px 4px;
+  margin-top: 4px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+  direction: ltr;
+  pointer-events: none;
+}

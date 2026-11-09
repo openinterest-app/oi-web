@@ -25,8 +25,26 @@ const STOCKS_TICKERS = [
   { symbol: "SQQQ", name: "ProShares Short QQQ", color: "#DC2626" },
 ];
 
+
+/** قطاعات السوق الأمريكي (11 قطاع SPDR لمؤشر S&P 500) + SMH و IGV */
+const SECTORS_TICKERS = [
+  { symbol: "XLK", name: "Technology", color: "#2563EB" },
+  { symbol: "XLF", name: "Financials", color: "#0D9488" },
+  { symbol: "XLV", name: "Health Care", color: "#DC2626" },
+  { symbol: "XLY", name: "Consumer Discretionary", color: "#F59E0B" },
+  { symbol: "XLP", name: "Consumer Staples", color: "#16A34A" },
+  { symbol: "XLE", name: "Energy", color: "#92400E" },
+  { symbol: "XLI", name: "Industrials", color: "#64748B" },
+  { symbol: "XLB", name: "Materials", color: "#7C3AED" },
+  { symbol: "XLU", name: "Utilities", color: "#0EA5E9" },
+  { symbol: "XLRE", name: "Real Estate", color: "#DB2777" },
+  { symbol: "XLC", name: "Communication Services", color: "#4F46E5" },
+  { symbol: "SMH", name: "VanEck Semiconductor", color: "#76B900" },
+  { symbol: "IGV", name: "iShares Software", color: "#0891B2" },
+];
+
 /** كل الرموز للبحث/العرض */
-const TICKERS = INDEX_TICKERS.concat(STOCKS_TICKERS);
+const TICKERS = INDEX_TICKERS.concat(STOCKS_TICKERS, SECTORS_TICKERS);
 
 const state = {
   ticker: "SPY", days: "2", strikes: "30",
@@ -1486,6 +1504,16 @@ function renderStocksDropdown() {
       (t.symbol === cur ? " active" : "") +
       '" data-value="' + t.symbol + '" role="option">' + t.symbol + "</button>";
   });
+  // القطاعات: النسخة المخفية الثانية فقط (?unlock=oi-total-2026)
+  if (typeof isTotalUnlocked === "function" && isTotalUnlocked()) {
+    itemsHtml += '<div class="stocks-dd-sep" aria-hidden="true">SECTORS</div>';
+    SECTORS_TICKERS.forEach(function (t) {
+      itemsHtml +=
+        '<button type="button" class="stocks-dd-item' +
+        (t.symbol === cur ? " active" : "") +
+        '" data-value="' + t.symbol + '" title="' + t.name + '" role="option">' + t.symbol + "</button>";
+    });
+  }
   host.innerHTML =
     '<label class="stocks-label">STOCKS</label>' +
     '<div class="stocks-dd" id="stocksDd">' +
@@ -4732,6 +4760,7 @@ if ($("#expSelect")) {
     };
   }
   tryConsumeSigmaUnlockFromUrl();
+  if (isTotalUnlocked()) renderStocksDropdown();
   injectSigmaButtonIfUnlocked();
   injectTotalTabIfUnlocked();
   try {
