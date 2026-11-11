@@ -23,6 +23,7 @@ const STOCKS_TICKERS = [
   { symbol: "SNDK", name: "SanDisk", color: "#6366F1" },
   { symbol: "VOO", name: "Vanguard S&P 500", color: "#C41230" },
   { symbol: "SQQQ", name: "ProShares Short QQQ", color: "#DC2626" },
+  { symbol: "SPXS", name: "Direxion Daily S&P 500 Bear 3X", color: "#B91C1C" },
 ];
 
 
