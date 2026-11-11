@@ -118,6 +118,7 @@ TICKER_URLS = {
     "SNDK": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=sndk",
     "VOO": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=voo",
     "SQQQ": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=sqqq",
+    "SPXS": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=spxs",
     # قطاعات السوق (11 SPDR) + SMH + IGV
     "XLK": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlk",
     "XLF": "https://marketdata.theocc.com/series-search?symbolType=O&symbol=xlf",
