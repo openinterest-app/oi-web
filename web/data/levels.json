@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11T06:04:14.530253Z",
+  "updated_at": "2026-11-11T23:10:44.383451Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
@@ -3761,6 +3761,77 @@
         {
           "date": "11-11",
           "close": 43.560001373291016
+        }
+      ]
+    },
+    "SPXS": {
+      "ticker": "SPXS",
+      "close": 25.899999618530273,
+      "as_of": "11-11",
+      "updated_at": "2026-11-11T23:09:56Z",
+      "daily": {
+        "exp": "2026-11-13",
+        "pull_date": "11-11",
+        "support": 25.0,
+        "resistance": 27.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "tomorrow": {
+        "exp": "2026-11-13",
+        "pull_date": "11-11",
+        "support": 25.0,
+        "resistance": 27.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "weekly": {
+        "exp": "2026-11-13",
+        "pull_date": "11-11",
+        "support": 25.0,
+        "resistance": 27.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "11-11",
+        "support": 26.0,
+        "resistance": 28.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "11-11",
+        "support": 24.0,
+        "resistance": 23.0,
+        "prev_support": null,
+        "prev_resistance": null,
+        "prev_as_of": null
+      },
+      "meta": {
+        "today": "2026-11-11",
+        "daily_ref": "2026-11-11",
+        "tomorrow_cal": "2026-11-12",
+        "tomorrow_session": "2026-11-12",
+        "weekly_friday": "2026-11-13",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "10-11",
+          "close": 25.899999618530273
+        },
+        {
+          "date": "11-11",
+          "close": 25.899999618530273
         }
       ]
     },
