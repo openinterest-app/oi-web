@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-11-12T01:17:23.662030Z",
+  "updated_at": "2026-11-12T02:20:13.920897Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
       "close": 759.81,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-12",
         "pull_date": "12-11",
-        "support": 744.0,
-        "resistance": 775.0,
+        "support": 756.0,
+        "resistance": 770.0,
         "prev_support": 744.0,
         "prev_resistance": 775.0,
         "prev_as_of": "11-11"
@@ -45,7 +45,7 @@
         "exp": "2026-12-18",
         "pull_date": "12-11",
         "support": 480.0,
-        "resistance": 810.0,
+        "resistance": 800.0,
         "prev_support": 480.0,
         "prev_resistance": 810.0,
         "prev_as_of": "11-11"
@@ -187,12 +187,12 @@
       "ticker": "QQQ",
       "close": 690.38,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-12",
         "pull_date": "12-11",
-        "support": 525.0,
-        "resistance": 740.0,
+        "support": 685.0,
+        "resistance": 700.0,
         "prev_support": 525.0,
         "prev_resistance": 740.0,
         "prev_as_of": "11-11"
@@ -209,7 +209,7 @@
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 650.0,
-        "resistance": 700.0,
+        "resistance": 710.0,
         "prev_support": 650.0,
         "prev_resistance": 700.0,
         "prev_as_of": "11-11"
@@ -227,7 +227,7 @@
         "exp": "2026-12-18",
         "pull_date": "12-11",
         "support": 680.0,
-        "resistance": 700.0,
+        "resistance": 800.0,
         "prev_support": 680.0,
         "prev_resistance": 700.0,
         "prev_as_of": "11-11"
@@ -369,11 +369,11 @@
       "ticker": "IWM",
       "close": 283.09,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-12",
         "pull_date": "12-11",
-        "support": 265.0,
+        "support": 280.0,
         "resistance": 287.0,
         "prev_support": 265.0,
         "prev_resistance": 287.0,
@@ -399,7 +399,7 @@
       "opx": {
         "exp": "2026-11-20",
         "pull_date": "12-11",
-        "support": 270.0,
+        "support": 265.0,
         "resistance": 285.0,
         "prev_support": 270.0,
         "prev_resistance": 285.0,
@@ -551,7 +551,7 @@
       "ticker": "GLD",
       "close": 365.17,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-12",
         "pull_date": "12-11",
@@ -573,7 +573,7 @@
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 300.0,
-        "resistance": 380.0,
+        "resistance": 385.0,
         "prev_support": 300.0,
         "prev_resistance": 380.0,
         "prev_as_of": "11-11"
@@ -591,7 +591,7 @@
         "exp": "2026-12-18",
         "pull_date": "12-11",
         "support": 380.0,
-        "resistance": 400.0,
+        "resistance": 450.0,
         "prev_support": 380.0,
         "prev_resistance": 400.0,
         "prev_as_of": "11-11"
@@ -733,11 +733,11 @@
       "ticker": "SPX",
       "close": 7619.3798828125,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-12",
         "pull_date": "12-11",
-        "support": 6200.0,
+        "support": 7150.0,
         "resistance": 7750.0,
         "prev_support": 6200.0,
         "prev_resistance": 7750.0,
@@ -915,12 +915,12 @@
       "ticker": "NDX",
       "close": 28374.251953125,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-12",
         "pull_date": "12-11",
-        "support": 25000.0,
-        "resistance": 30100.0,
+        "support": 23000.0,
+        "resistance": 28800.0,
         "prev_support": 25000.0,
         "prev_resistance": 30100.0,
         "prev_as_of": "11-11"
@@ -937,7 +937,7 @@
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 24000.0,
-        "resistance": 30400.0,
+        "resistance": 29000.0,
         "prev_support": 24000.0,
         "prev_resistance": 30400.0,
         "prev_as_of": "11-11"
@@ -1097,11 +1097,11 @@
       "ticker": "AAPL",
       "close": 355.63,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 265.0,
+        "support": 340.0,
         "resistance": 360.0,
         "prev_support": 265.0,
         "prev_resistance": 360.0,
@@ -1118,7 +1118,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 265.0,
+        "support": 340.0,
         "resistance": 360.0,
         "prev_support": 265.0,
         "prev_resistance": 360.0,
@@ -1279,7 +1279,7 @@
       "ticker": "MSFT",
       "close": 521.125,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -1461,11 +1461,11 @@
       "ticker": "NVDA",
       "close": 173.73,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 80.0,
+        "support": 160.0,
         "resistance": 190.0,
         "prev_support": 80.0,
         "prev_resistance": 190.0,
@@ -1482,7 +1482,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 80.0,
+        "support": 160.0,
         "resistance": 190.0,
         "prev_support": 80.0,
         "prev_resistance": 190.0,
@@ -1643,7 +1643,7 @@
       "ticker": "TSLA",
       "close": 390.84,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -1825,11 +1825,11 @@
       "ticker": "AMZN",
       "close": 266.17,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 250.0,
+        "support": 255.0,
         "resistance": 270.0,
         "prev_support": 250.0,
         "prev_resistance": 270.0,
@@ -1846,7 +1846,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 250.0,
+        "support": 255.0,
         "resistance": 270.0,
         "prev_support": 250.0,
         "prev_resistance": 270.0,
@@ -2007,7 +2007,7 @@
       "ticker": "META",
       "close": 628.77,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -2189,12 +2189,12 @@
       "ticker": "GOOGL",
       "close": 293.45,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 270.0,
-        "resistance": 360.0,
+        "resistance": 300.0,
         "prev_support": 270.0,
         "prev_resistance": 360.0,
         "prev_as_of": "11-11"
@@ -2211,7 +2211,7 @@
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 270.0,
-        "resistance": 360.0,
+        "resistance": 300.0,
         "prev_support": 270.0,
         "prev_resistance": 360.0,
         "prev_as_of": "11-11"
@@ -2371,11 +2371,11 @@
       "ticker": "AVGO",
       "close": 345.22,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 250.0,
+        "support": 320.0,
         "resistance": 330.0,
         "prev_support": 250.0,
         "prev_resistance": 330.0,
@@ -2392,7 +2392,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 250.0,
+        "support": 320.0,
         "resistance": 330.0,
         "prev_support": 250.0,
         "prev_resistance": 330.0,
@@ -2401,8 +2401,8 @@
       "opx": {
         "exp": "2026-11-20",
         "pull_date": "12-11",
-        "support": 300.0,
-        "resistance": 420.0,
+        "support": 340.0,
+        "resistance": 400.0,
         "prev_support": 300.0,
         "prev_resistance": 420.0,
         "prev_as_of": "11-11"
@@ -2553,12 +2553,12 @@
       "ticker": "MSTR",
       "close": 122.35,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 80.0,
-        "resistance": 133.0,
+        "resistance": 139.0,
         "prev_support": 80.0,
         "prev_resistance": 133.0,
         "prev_as_of": "11-11"
@@ -2575,7 +2575,7 @@
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 80.0,
-        "resistance": 133.0,
+        "resistance": 139.0,
         "prev_support": 80.0,
         "prev_resistance": 133.0,
         "prev_as_of": "11-11"
@@ -2735,7 +2735,7 @@
       "ticker": "AMD",
       "close": 552.9,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -2917,12 +2917,12 @@
       "ticker": "MU",
       "close": 811.3,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 450.0,
-        "resistance": 800.0,
+        "resistance": 900.0,
         "prev_support": 450.0,
         "prev_resistance": 800.0,
         "prev_as_of": "11-11"
@@ -2939,7 +2939,7 @@
         "exp": "2026-11-13",
         "pull_date": "12-11",
         "support": 450.0,
-        "resistance": 800.0,
+        "resistance": 900.0,
         "prev_support": 450.0,
         "prev_resistance": 800.0,
         "prev_as_of": "11-11"
@@ -3099,7 +3099,7 @@
       "ticker": "COHR",
       "close": 234.51,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -3281,12 +3281,12 @@
       "ticker": "SNDK",
       "close": 977.69,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 700.0,
-        "resistance": 1000.0,
+        "support": 850.0,
+        "resistance": 1100.0,
         "prev_support": 700.0,
         "prev_resistance": 1000.0,
         "prev_as_of": "11-11"
@@ -3302,8 +3302,8 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 700.0,
-        "resistance": 1000.0,
+        "support": 850.0,
+        "resistance": 1100.0,
         "prev_support": 700.0,
         "prev_resistance": 1000.0,
         "prev_as_of": "11-11"
@@ -3463,12 +3463,12 @@
       "ticker": "VOO",
       "close": 698.35,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 670.0,
-        "resistance": 705.0,
+        "support": 690.0,
+        "resistance": 710.0,
         "prev_support": 670.0,
         "prev_resistance": 705.0,
         "prev_as_of": "11-11"
@@ -3484,8 +3484,8 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 670.0,
-        "resistance": 705.0,
+        "support": 690.0,
+        "resistance": 710.0,
         "prev_support": 670.0,
         "prev_resistance": 705.0,
         "prev_as_of": "11-11"
@@ -3645,11 +3645,11 @@
       "ticker": "SQQQ",
       "close": 40.55,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 46.0,
+        "support": 38.0,
         "resistance": 50.0,
         "prev_support": 46.0,
         "prev_resistance": 50.0,
@@ -3666,7 +3666,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 46.0,
+        "support": 38.0,
         "resistance": 50.0,
         "prev_support": 46.0,
         "prev_resistance": 50.0,
@@ -3751,7 +3751,7 @@
       "ticker": "SPXS",
       "close": 24.89,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T23:09:56Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -3782,7 +3782,7 @@
         "exp": "2026-11-20",
         "pull_date": "12-11",
         "support": 26.0,
-        "resistance": 28.0,
+        "resistance": 25.0,
         "prev_support": 26.0,
         "prev_resistance": 28.0,
         "prev_as_of": "11-11"
@@ -3821,7 +3821,7 @@
       "ticker": "XLK",
       "close": 174.36,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -3861,7 +3861,7 @@
         "exp": "2026-12-18",
         "pull_date": "12-11",
         "support": 87.5,
-        "resistance": 190.0,
+        "resistance": 200.0,
         "prev_support": 87.5,
         "prev_resistance": 190.0,
         "prev_as_of": "11-11"
@@ -3899,7 +3899,7 @@
       "ticker": "XLF",
       "close": 58.63,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -3977,7 +3977,7 @@
       "ticker": "XLV",
       "close": 188.95,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4055,7 +4055,7 @@
       "ticker": "XLY",
       "close": 120.99,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4133,7 +4133,7 @@
       "ticker": "XLP",
       "close": 91.45,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4211,7 +4211,7 @@
       "ticker": "XLE",
       "close": 63.37,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4251,7 +4251,7 @@
         "exp": "2026-12-18",
         "pull_date": "12-11",
         "support": 60.0,
-        "resistance": 60.0,
+        "resistance": 65.0,
         "prev_support": 60.0,
         "prev_resistance": 60.0,
         "prev_as_of": "11-11"
@@ -4289,11 +4289,11 @@
       "ticker": "XLI",
       "close": 170.97,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 161.0,
+        "support": 157.0,
         "resistance": 175.0,
         "prev_support": 161.0,
         "prev_resistance": 175.0,
@@ -4310,7 +4310,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 161.0,
+        "support": 157.0,
         "resistance": 175.0,
         "prev_support": 161.0,
         "prev_resistance": 175.0,
@@ -4367,11 +4367,11 @@
       "ticker": "XLB",
       "close": 53.02,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 52.0,
+        "support": 50.0,
         "resistance": 54.0,
         "prev_support": 52.0,
         "prev_resistance": 54.0,
@@ -4388,7 +4388,7 @@
       "weekly": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
-        "support": 52.0,
+        "support": 50.0,
         "resistance": 54.0,
         "prev_support": 52.0,
         "prev_resistance": 54.0,
@@ -4445,7 +4445,7 @@
       "ticker": "XLU",
       "close": 43.82,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4523,7 +4523,7 @@
       "ticker": "XLRE",
       "close": 44.59,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-20",
         "pull_date": "12-11",
@@ -4601,7 +4601,7 @@
       "ticker": "XLC",
       "close": 108.6,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4679,7 +4679,7 @@
       "ticker": "SMH",
       "close": 506.96,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
@@ -4709,7 +4709,7 @@
       "opx": {
         "exp": "2026-11-20",
         "pull_date": "12-11",
-        "support": 450.0,
+        "support": 380.0,
         "resistance": 650.0,
         "prev_support": 450.0,
         "prev_resistance": 650.0,
@@ -4718,7 +4718,7 @@
       "next_opx": {
         "exp": "2026-12-18",
         "pull_date": "12-11",
-        "support": 400.0,
+        "support": 450.0,
         "resistance": 550.0,
         "prev_support": 400.0,
         "prev_resistance": 550.0,
@@ -4757,7 +4757,7 @@
       "ticker": "IGV",
       "close": 102.23,
       "as_of": "12-11",
-      "updated_at": "2026-11-11T02:16:25Z",
+      "updated_at": "2026-11-12T02:16:08Z",
       "daily": {
         "exp": "2026-11-13",
         "pull_date": "12-11",
