@@ -3678,7 +3678,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   callLab.value = "CALL";
   callLab.font = fontSide("FF1D4ED8");
   var titleCell = ws.getCell(rTitle, strikeCol);
-  titleCell.value = (ticker || "") + "\nجدول الأيام" + (state.twAsOf ? " — " + state.twAsOf.title : "");
+  titleCell.value = (ticker || "") + "\nجدول الأيام" + (state.twAsOf ? "\n" + state.twAsOf.title : "");
   titleCell.font = fontTitle;
   if (nCols > 1) {
     try {
@@ -3686,7 +3686,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
       ws.mergeCells(rTitle, strikeCol + 1, rTitle, endCol);
     } catch (eMerge) {}
   }
-  try { ws.getRow(rTitle).height = 34; } catch (eH) {}
+  try { ws.getRow(rTitle).height = state.twAsOf ? 52 : 34; } catch (eH) {}
 
   // رؤوس التواريخ: جهة PUT معكوسة (الأبعد يميناً) | STRIKE | جهة CALL
   for (var i = 0; i < nCols; i++) {
@@ -5191,9 +5191,11 @@ function renderArchTwRow() {
 
 /** يكتب جدول الأيام للقطة يوم معيّن في ورقة — يعيد آخر عمود أو 0 */
 function writeArchiveTwSnapshot(ws, startCol, data, day, edays, estrikes, showDelta) {
-  var keepAsOf = state.twAsOf, keepDelta = state.showDelta;
+  var keepAsOf = state.twAsOf, keepDelta = state.showDelta, keepTw = state.tawafuqMode, keepSum = state.showOpenSum;
   state.twAsOf = { label: day.label, iso: day.iso, close: day.close, title: day.title };
   state.showDelta = !!showDelta;
+  state.tawafuqMode = true;                          // isOpenSumOn() يشترط وضع جدول الأيام
+  state.showOpenSum = !!state.archShowOpenSum;       // مجموع الأوبن حسب زر الأرشيف
   try {
     var daysTry = [edays, "ALL", "10", "5", "2"];
     for (var di = 0; di < daysTry.length; di++) {
@@ -5207,7 +5209,27 @@ function writeArchiveTwSnapshot(ws, startCol, data, day, edays, estrikes, showDe
   } finally {
     state.twAsOf = keepAsOf;
     state.showDelta = keepDelta;
+    state.tawafuqMode = keepTw;
+    state.showOpenSum = keepSum;
   }
+}
+
+/** زر مجموع الأوبن داخل الأرشيف — يظهر فقط حيث يظهر في الويب (النسخة المخفية)، ويبدأ بحالة الزر الرئيسي إن كان مفعّلًا */
+function syncArchSumBtn() {
+  var btn = $("#archSumBtn");
+  if (!btn) return;
+  var ok = !!isSigmaUnlocked();
+  btn.style.display = ok ? "" : "none";
+  if (!ok) { state.archShowOpenSum = false; return; }
+  if (!btn.innerHTML) btn.innerHTML = OPENSUM_ICON;
+  state.archShowOpenSum = !!(state.showOpenSum && state.tawafuqMode);
+  btn.classList.toggle("active", !!state.archShowOpenSum);
+  btn.setAttribute("aria-pressed", state.archShowOpenSum ? "true" : "false");
+  btn.onclick = function () {
+    state.archShowOpenSum = !state.archShowOpenSum;
+    btn.classList.toggle("active", !!state.archShowOpenSum);
+    btn.setAttribute("aria-pressed", state.archShowOpenSum ? "true" : "false");
+  };
 }
 
 function openArchive() {
@@ -5226,6 +5248,7 @@ function openArchive() {
   renderArchChips();
   renderArchDateRow(exps);
   renderArchTwRow();
+  syncArchSumBtn();
   loadArchiveCloses(state.ticker).then(function () { if (!modal.classList.contains("hidden")) renderArchTwRow(); });
   var modeSel = $("#archExportMode");
   if (modeSel) modeSel.value = state.archExportMode || "multi";
