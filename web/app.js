@@ -2438,7 +2438,8 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
   });
   if (!allExps.length) return null;
 
-  var fromIso = latestPullIso(data);
+  var asOf = state.twAsOf || null;   // لقطة أرشيف: { label: "10-11", iso: "2026-11-10", close: number|null }
+  var fromIso = asOf ? asOf.iso : latestPullIso(data);
   if (!fromIso) {
     // احتياط: اليوم المحلي
     var now = new Date();
@@ -2476,6 +2477,10 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
         : data.pull_dates || [];
     if (!bpulls.length) return;
     var lastIdx = bpulls.length - 1;
+    if (asOf) {
+      lastIdx = bpulls.indexOf(asOf.label);
+      if (lastIdx < 0) return;   // هذا الانتهاء لا يملك سحب ذلك اليوم
+    }
     var prevIdx = lastIdx - 1;
     var strikeMap = {};
     (block.rows || []).forEach(function (r) {
@@ -2529,7 +2534,7 @@ function getTawafuqView(data, daysLimit, strikesLimit) {
       return a - b;
     });
 
-  var close = effectiveClose(data);
+  var close = (asOf && asOf.close != null) ? Number(asOf.close) : effectiveClose(data);
   var rows = strikeNums.map(function (s) {
     var calls = [];
     var puts = [];
@@ -3673,7 +3678,7 @@ function writeTawafuqToSheet(ws, startRow, startCol, data, ticker, daysLimit, st
   callLab.value = "CALL";
   callLab.font = fontSide("FF1D4ED8");
   var titleCell = ws.getCell(rTitle, strikeCol);
-  titleCell.value = (ticker || "") + "\nجدول الأيام";
+  titleCell.value = (ticker || "") + "\nجدول الأيام" + (state.twAsOf ? " — " + state.twAsOf.title : "");
   titleCell.font = fontTitle;
   if (nCols > 1) {
     try {
@@ -5106,10 +5111,110 @@ function renderArchDateRow(exps) {
   updateArchSelectHint();
 }
 
+
+// ========== جدول الأيام في الأرشيف: لقطة لكل يوم من أيام الأسبوع (اثنين → جمعة) ==========
+function archiveTwDays(data) {
+  if (!data) return [];
+  var b = getArchiveWeekBounds(data);
+  var pulls = (data.pull_dates || []).slice();
+  var closes = (state.archCloses && state.archCloses[state.ticker]) || {};
+  var out = [];
+  for (var i = 0; i < 5; i++) {
+    var d = new Date(b.mon);
+    d.setDate(b.mon.getDate() + i);
+    d.setHours(12, 0, 0, 0);
+    var iso = isoFromDate(d), label = null;
+    for (var k = 0; k < pulls.length; k++) {
+      if (pullLabelToExpIso(pulls[k], d.getFullYear()) === iso) { label = pulls[k]; break; }
+    }
+    var t = formatArchDayTitle(iso);
+    var cl = label != null && closes[label] != null && Number(closes[label]) > 0 ? Number(closes[label]) : null;
+    out.push({ iso: iso, label: label, close: cl, available: label != null,
+      top: t.top, sub: t.sub, title: String(d.getDate()) + d.toLocaleString("en", { month: "short" }) });
+  }
+  return out;
+}
+
+/** يحمّل إغلاقات الأيام (لتحديد نافذة السترايكات الصحيحة لكل لقطة) — اختياري، يفشل بصمت */
+async function loadArchiveCloses(ticker) {
+  state.archCloses = state.archCloses || {};
+  if (state.archCloses[ticker]) return;
+  try {
+    const base = document.body.dataset.dataBase || "../data";
+    const res = await fetch(base + "/" + ticker + "_history.json?t=" + Date.now());
+    if (!res.ok) return;
+    const j = JSON.parse(String(await res.text()).replace(/:\s*NaN\b/g, ":null").replace(/:\s*-?Infinity\b/g, ":null"));
+    state.archCloses[ticker] = (j && j.closes) || {};
+  } catch (e) {}
+}
+
+function renderArchTwRow() {
+  var row = $("#archTwRow");
+  if (!row) return;
+  row.innerHTML = "";
+  var data = state.cache[state.ticker];
+  var days = archiveTwDays(data);
+  var avail = days.filter(function (d) { return d.available; });
+  if (!avail.length) {
+    row.innerHTML = '<span class="archive-empty-inline">لا لقطات لجدول الأيام هذا الأسبوع</span>';
+    return;
+  }
+  var sel = state.archTwSelected || [];
+  var allBtn = document.createElement("button");
+  allBtn.type = "button";
+  allBtn.className = "arch-date-chip arch-all-chip arch-tw-chip" + (sel.length === avail.length ? " active" : "");
+  allBtn.innerHTML = '<span class="d-top">جدول الأيام</span><span class="d-sub">تحديد الكل</span>';
+  allBtn.onclick = function () {
+    state.archTwSelected = (state.archTwSelected || []).length === avail.length ? [] : avail.map(function (d) { return d.iso; });
+    renderArchTwRow();
+  };
+  row.appendChild(allBtn);
+  days.forEach(function (d) {
+    var b = document.createElement("button");
+    b.type = "button";
+    var on = sel.indexOf(d.iso) >= 0;
+    b.className = "arch-date-chip arch-tw-chip" + (on ? " active" : "") + (d.available ? "" : " disabled");
+    b.disabled = !d.available;
+    b.title = d.available ? "جدول الأيام — لقطة " + d.top : "لا سحب لهذا اليوم بعد";
+    b.innerHTML = '<span class="d-top">' + d.top + '</span><span class="d-sub">' + d.sub + (d.available ? "" : " · —") + "</span>";
+    b.onclick = function () {
+      var arr = (state.archTwSelected || []).slice();
+      var i = arr.indexOf(d.iso);
+      if (i >= 0) arr.splice(i, 1); else arr.push(d.iso);
+      arr.sort();
+      state.archTwSelected = arr;
+      renderArchTwRow();
+    };
+    row.appendChild(b);
+  });
+}
+
+/** يكتب جدول الأيام للقطة يوم معيّن في ورقة — يعيد آخر عمود أو 0 */
+function writeArchiveTwSnapshot(ws, startCol, data, day, edays, estrikes, showDelta) {
+  var keepAsOf = state.twAsOf, keepDelta = state.showDelta;
+  state.twAsOf = { label: day.label, iso: day.iso, close: day.close, title: day.title };
+  state.showDelta = !!showDelta;
+  try {
+    var daysTry = [edays, "ALL", "10", "5", "2"];
+    for (var di = 0; di < daysTry.length; di++) {
+      var d = daysTry[di];
+      if (d == null || d === "") continue;
+      var ret = writeTawafuqToSheet(ws, 2, startCol, data, state.ticker, d, estrikes);
+      if (typeof ret === "number" && ret > startCol) return ret;
+    }
+    var ret2 = writeTawafuqToSheet(ws, 2, startCol, data, state.ticker, "ALL", "ALL");
+    return typeof ret2 === "number" && ret2 > startCol ? ret2 : 0;
+  } finally {
+    state.twAsOf = keepAsOf;
+    state.showDelta = keepDelta;
+  }
+}
+
 function openArchive() {
   var modal = $("#archiveModal");
   if (!modal) return;
   state.archSelected = [];
+  state.archTwSelected = [];
   state.archShowDelta = false;
   modal.classList.remove("hidden");
   var data = state.cache[state.ticker];
@@ -5120,6 +5225,8 @@ function openArchive() {
   if (sub) sub.textContent = "اختر تاريخًا";
   renderArchChips();
   renderArchDateRow(exps);
+  renderArchTwRow();
+  loadArchiveCloses(state.ticker).then(function () { if (!modal.classList.contains("hidden")) renderArchTwRow(); });
   var modeSel = $("#archExportMode");
   if (modeSel) modeSel.value = state.archExportMode || "multi";
   var db = $("#archDeltaBtn");
@@ -5131,6 +5238,7 @@ function closeArchive() {
   var modal = $("#archiveModal");
   if (modal) modal.classList.add("hidden");
   state.archSelected = [];
+  state.archTwSelected = [];
 }
 
 
@@ -5258,11 +5366,13 @@ async function exportArchiveExcel() {
   var exps = (state.archSelected && state.archSelected.length)
     ? state.archSelected.filter(function (e) { return weekExps.indexOf(e) >= 0; })
     : [];
-  if (!weekExps.length) {
+  var twDaysAll = archiveTwDays(data);
+  var twSel = twDaysAll.filter(function (d) { return d.available && (state.archTwSelected || []).indexOf(d.iso) >= 0; });
+  if (!weekExps.length && !twSel.length) {
     setStatus("الأرشيف فارغ", "err");
     return;
   }
-  if (!exps.length) {
+  if (!exps.length && !twSel.length) {
     setStatus("حدّد تاريخًا واحدًا على الأقل من البطاقات", "err");
     return;
   }
@@ -5285,6 +5395,10 @@ async function exportArchiveExcel() {
   wb.creator = "Oi Archive";
 
   if (mode === "multi") {
+    twSel.forEach(function (day) {   // جدول الأيام: ورقة لكل يوم
+      var wsT = wb.addWorksheet(("جدول " + day.title).slice(0, 31), { views: [{ rightToLeft: true }] });
+      if (!writeArchiveTwSnapshot(wsT, 2, data, day, edays, estrikes, showDelta)) wb.removeWorksheet(wsT.id);
+    });
     exps.forEach(function (exp) {
       var view = getArchiveViewRows(data, exp, edays, estrikes);
       if (!view) return;
@@ -5298,6 +5412,10 @@ async function exportArchiveExcel() {
       views: [{ rightToLeft: true }],
     });
     var col = 2;
+    twSel.forEach(function (day) {   // جدول الأيام أولًا، ثم جداول الانتهاءات
+      var lastT = writeArchiveTwSnapshot(ws, col, data, day, edays, estrikes, showDelta);
+      if (lastT) col = lastT + 1 + GAP;
+    });
     exps.forEach(function (exp) {
       var view = getArchiveViewRows(data, exp, edays, estrikes);
       if (!view) return;
@@ -5318,7 +5436,7 @@ async function exportArchiveExcel() {
   var stamp = new Date().toISOString().slice(0, 10);
   var fname =
     state.ticker +
-    "_Archive_D" +
+    (twSel.length ? "_Archive_TW_D" : "_Archive_D") +
     edays +
     "_S" +
     estrikes +

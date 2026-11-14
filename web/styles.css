@@ -5126,3 +5126,16 @@ html body .controls .oi-seg #totTabBtn { order: 3 !important; }
   direction: ltr;
   pointer-events: none;
 }
+
+/* صف بطاقات «جدول الأيام» في الأرشيف (تحت بطاقات الانتهاءات) */
+.arch-tw-row { padding-top: 2px; border-top: 1px dashed #1e293b; }
+.arch-tw-chip { border-color: #0f766e; }
+.arch-tw-chip:hover { border-color: #14b8a6; }
+.arch-tw-chip.active {
+  background: linear-gradient(160deg, #0f766e, #0d9488);
+  border-color: #5eead4;
+  color: #f0fdfa;
+  box-shadow: 0 0 0 1px rgba(45,212,191,0.35);
+}
+.arch-tw-chip.active .d-sub { color: #ccfbf1; }
+.arch-date-chip.disabled, .arch-date-chip:disabled { opacity: .35; cursor: not-allowed; border-style: dashed; }
