@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18T04:24:22.498569Z",
+  "updated_at": "2026-11-18T06:05:28.806337Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
@@ -918,7 +918,7 @@
     },
     "NDX": {
       "ticker": "NDX",
-      "close": 27001.78515625,
+      "close": 27001.779296875,
       "as_of": "18-11",
       "updated_at": "2026-11-18T03:16:10Z",
       "daily": {
@@ -1091,11 +1091,11 @@
         },
         {
           "date": "17-11",
-          "close": 27001.78515625
+          "close": 27001.779296875
         },
         {
           "date": "18-11",
-          "close": 27001.78515625
+          "close": 27001.779296875
         }
       ]
     },
@@ -4628,6 +4628,101 @@
         {
           "date": "18-11",
           "close": 50.84000015258789
+        }
+      ]
+    },
+    "XLU": {
+      "ticker": "XLU",
+      "close": 43.41999816894531,
+      "as_of": "18-11",
+      "updated_at": "2026-11-18T03:16:10Z",
+      "daily": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": 40.0,
+        "prev_resistance": 41.0,
+        "prev_as_of": "17-11"
+      },
+      "tomorrow": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": 40.0,
+        "prev_resistance": 41.0,
+        "prev_as_of": "17-11"
+      },
+      "weekly": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": 40.0,
+        "prev_resistance": 41.0,
+        "prev_as_of": "17-11"
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 40.0,
+        "resistance": 41.0,
+        "prev_support": 40.0,
+        "prev_resistance": 41.0,
+        "prev_as_of": "17-11"
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "18-11",
+        "support": 25.0,
+        "resistance": 41.0,
+        "prev_support": 25.0,
+        "prev_resistance": 41.0,
+        "prev_as_of": "17-11"
+      },
+      "meta": {
+        "today": "2026-11-18",
+        "daily_ref": "2026-11-18",
+        "tomorrow_cal": "2026-11-19",
+        "tomorrow_session": "2026-11-19",
+        "weekly_friday": "2026-11-20",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "9-11",
+          "close": 43.790000915527344
+        },
+        {
+          "date": "10-11",
+          "close": 43.72999954223633
+        },
+        {
+          "date": "11-11",
+          "close": 43.81999969482422
+        },
+        {
+          "date": "12-11",
+          "close": 43.810001373291016
+        },
+        {
+          "date": "13-11",
+          "close": 44.040000915527344
+        },
+        {
+          "date": "16-11",
+          "close": 44.119998931884766
+        },
+        {
+          "date": "17-11",
+          "close": 43.41999816894531
+        },
+        {
+          "date": "18-11",
+          "close": 43.41999816894531
         }
       ]
     },
