@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18T03:21:06.707333Z",
+  "updated_at": "2026-11-18T03:47:55.822053Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
@@ -4533,6 +4533,101 @@
         {
           "date": "18-11",
           "close": 164.75
+        }
+      ]
+    },
+    "XLB": {
+      "ticker": "XLB",
+      "close": 50.84000015258789,
+      "as_of": "18-11",
+      "updated_at": "2026-11-18T03:46:33Z",
+      "daily": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 51.0,
+        "resistance": 51.0,
+        "prev_support": 49.0,
+        "prev_resistance": 51.0,
+        "prev_as_of": "17-11"
+      },
+      "tomorrow": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 51.0,
+        "resistance": 51.0,
+        "prev_support": 49.0,
+        "prev_resistance": 51.0,
+        "prev_as_of": "17-11"
+      },
+      "weekly": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 51.0,
+        "resistance": 51.0,
+        "prev_support": 49.0,
+        "prev_resistance": 51.0,
+        "prev_as_of": "17-11"
+      },
+      "opx": {
+        "exp": "2026-11-20",
+        "pull_date": "18-11",
+        "support": 51.0,
+        "resistance": 51.0,
+        "prev_support": 49.0,
+        "prev_resistance": 51.0,
+        "prev_as_of": "17-11"
+      },
+      "next_opx": {
+        "exp": "2026-12-18",
+        "pull_date": "18-11",
+        "support": 47.0,
+        "resistance": 60.0,
+        "prev_support": 47.0,
+        "prev_resistance": 60.0,
+        "prev_as_of": "17-11"
+      },
+      "meta": {
+        "today": "2026-11-18",
+        "daily_ref": "2026-11-18",
+        "tomorrow_cal": "2026-11-19",
+        "tomorrow_session": "2026-11-19",
+        "weekly_friday": "2026-11-20",
+        "today_is_weekly": false,
+        "tomorrow_merged_weekly": false,
+        "weekly_is_next_week": false
+      },
+      "path": [
+        {
+          "date": "9-11",
+          "close": 52.939998626708984
+        },
+        {
+          "date": "10-11",
+          "close": 52.849998474121094
+        },
+        {
+          "date": "11-11",
+          "close": 53.02000045776367
+        },
+        {
+          "date": "12-11",
+          "close": 52.34000015258789
+        },
+        {
+          "date": "13-11",
+          "close": 52.22999954223633
+        },
+        {
+          "date": "16-11",
+          "close": 51.470001220703125
+        },
+        {
+          "date": "17-11",
+          "close": 50.84000015258789
+        },
+        {
+          "date": "18-11",
+          "close": 50.84000015258789
         }
       ]
     },
