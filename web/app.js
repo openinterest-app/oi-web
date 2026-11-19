@@ -1402,6 +1402,22 @@ var OS_HEAD_HTML = '<th class="opensum os-head" title="مجموع الأوبن">
 
 /** مجموع رقم الأوبن فقط (بدون تزايد/سترايك) لكل صف على الأعمدة الظاهرة حاليًا — كول وبوت كلٌّ على حدة،
  *  ثم ترتيب 1-4 حسب الأكبر لكل جهة. يُحسب من الـ view الحالي فيتجدد مع تغيير Days. */
+/** تمييز «المتزايد باستمرار» عند تفعيل زر المجموع — الحدود قابلة للتعديل من هنا */
+var OS_UP_MIN_CELLS = 3;     // أقل عدد أيام غير صفرية
+var OS_UP_MIN_OI = 100;      // أقل رقم أوبن في آخر يوم (يستبعد الأرقام الصغيرة مثل 1)
+var OS_UP_MIN_GROWTH = 1.1;  // آخر رقم أكبر من أول رقم بـ 10% على الأقل (الثابت تمامًا لا يُميَّز)
+
+/** arr من الأقدم للأحدث. true = لا نزول إطلاقًا من أول رقم غير صفري حتى آخر يوم (الثبات مسموح) */
+function osRiseRun(arr, present) {
+  var a = [], i;
+  for (i = 0; i < (arr || []).length; i++) { if (present && present[i] === false) continue; a.push(arr[i] || 0); }
+  var n = a.length, f = -1;
+  for (i = 0; i < n; i++) { if (a[i] > 0) { f = i; break; } }
+  if (f < 0 || n - f < OS_UP_MIN_CELLS) return false;
+  for (i = f + 1; i < n; i++) { if (a[i] < a[i - 1]) return false; }
+  return a[n - 1] >= OS_UP_MIN_OI && a[n - 1] >= a[f] * OS_UP_MIN_GROWTH;
+}
+
 function twOpenSums(rows) {
   function sumSide(arr, present) {
     var t = 0, any = false;
@@ -1414,7 +1430,11 @@ function twOpenSums(rows) {
   }
   var call = rows.map(function (r) { return sumSide(r.calls, r.present); });
   var put = rows.map(function (r) { return sumSide(r.puts, r.present); });
-  return { call: call, put: put, rkCall: rankMap(call), rkPut: rankMap(put) };
+  return {
+    call: call, put: put, rkCall: rankMap(call), rkPut: rankMap(put),
+    upCall: rows.map(function (r) { return osRiseRun(r.calls, r.present); }),
+    upPut: rows.map(function (r) { return osRiseRun(r.puts, r.present); })
+  };
 }
 
 /** يضيف/يخفي زر مجموع الأوبن: يظهر فقط داخل جدول الأيام وفي النسخة المخفية، بجانب زر التزايد Δ */
@@ -2319,7 +2339,7 @@ function renderSeriesTable() {
         (d != null ? d.toLocaleString() + rankTag(rkDCs(d)) : "") +
         "</td>";
     }
-    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]));
+    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]), osm.upCall[ri]);
     var bodyPos = 0;
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
@@ -2344,7 +2364,7 @@ function renderSeriesTable() {
         pv.toLocaleString() +
         "</td>";
     }
-    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]));
+    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]), osm.upPut[ri]);
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
       const maxCls =
@@ -2902,9 +2922,9 @@ function renderTawafuqTable() {
 }
 
 /** خلية مجموع الأوبن (ويب): الرقم + دائرة الترتيب 1-4 */
-function twOpenSumCell(v, rk) {
+function twOpenSumCell(v, rk, up) {
   if (v == null) return '<td class="opensum os-empty"></td>';
-  var top = rk === 1 ? " os-top" : "";
+  var top = (rk === 1 ? " os-top" : "") + (up ? " os-up" : "");
   return (
     '<td class="opensum' + top + '"><div class="os-stack"><div class="os-n">' +
     Number(v).toLocaleString() +
@@ -3136,7 +3156,7 @@ function renderTable() {
         (d != null ? d.toLocaleString() + rankTag(rkDC(d)) : "") +
         "</td>";
     }
-    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]));
+    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]), osm.upCall[ri]);
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
       const maxCls = callMax[i] > 0 && cv === callMax[i] ? " max-oi" : "";
@@ -3164,7 +3184,7 @@ function renderTable() {
         pv.toLocaleString() +
         "</td>";
     }
-    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]));
+    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]), osm.upPut[ri]);
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
       const maxCls = d != null && deltaPutMax > 0 && d === deltaPutMax ? " max-oi" : "";

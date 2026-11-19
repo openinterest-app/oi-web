@@ -5174,3 +5174,10 @@ table.oi td.opensum .os-rk3 { --a: .36; }
 table.oi td.opensum .os-rk4 { --a: .26; }
 html[data-theme="light"] table.oi th.opensum.os-head { color: #4c3d80; }
 html[data-theme="light"] table.oi td.opensum .os-rk { color: #3b2f66; }
+
+
+/* زر مجموع الأوبن — خلية المجموع للسترايك المتزايد باستمرار (بدون نزول) */
+table.oi td.opensum.os-up { background: rgba(16,185,129,.30) !important; box-shadow: inset 0 0 0 1px rgba(52,211,153,.55) !important; }
+table.oi td.opensum.os-up .os-n { color: #d1fae5; font-weight: 800; }
+html[data-theme="light"] table.oi td.opensum.os-up { background: rgba(16,185,129,.22) !important; box-shadow: inset 0 0 0 1px rgba(5,150,105,.5) !important; }
+html[data-theme="light"] table.oi td.opensum.os-up .os-n { color: #065f46; }
