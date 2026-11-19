@@ -1394,6 +1394,12 @@ function isOpenSumOn() {
   return !!(isSigmaUnlocked() && state.tawafuqMode && state.showOpenSum);
 }
 
+/** مجموع الأوبن في الجدول الأساسي (الانتهاء العادي) و«اليوم بالسابق» — النسخة المخفية الثانية (total) فقط */
+function isOpenSumOnTbl() {
+  return !!(isTotalUnlocked() && state.showOpenSum && !state.tawafuqMode && !state.totMode && !state.x3Mode);
+}
+var OS_HEAD_HTML = '<th class="opensum os-head" title="مجموع الأوبن">' + OPENSUM_ICON + "</th>";
+
 /** مجموع رقم الأوبن فقط (بدون تزايد/سترايك) لكل صف على الأعمدة الظاهرة حاليًا — كول وبوت كلٌّ على حدة،
  *  ثم ترتيب 1-4 حسب الأكبر لكل جهة. يُحسب من الـ view الحالي فيتجدد مع تغيير Days. */
 function twOpenSums(rows) {
@@ -1414,7 +1420,7 @@ function twOpenSums(rows) {
 /** يضيف/يخفي زر مجموع الأوبن: يظهر فقط داخل جدول الأيام وفي النسخة المخفية، بجانب زر التزايد Δ */
 function syncOpenSumBtn() {
   var btn = $("#openSumBtn");
-  var show = !!(isSigmaUnlocked() && state.tawafuqMode);
+  var show = !!((isSigmaUnlocked() && state.tawafuqMode) || (isTotalUnlocked() && !state.totMode && !state.x3Mode));
   if (!show) {
     if (state.showOpenSum) state.showOpenSum = false; // يخرج من الوضع ← يرجع مخفيًا
     if (btn) btn.style.setProperty("display", "none", "important");
@@ -1787,8 +1793,8 @@ async function refresh() {
   }
 }
 
-function greenBarRow(canDelta, n, close, canSigma) {
-  var extra = (canDelta ? 1 : 0) + (canSigma ? 1 : 0);
+function greenBarRow(canDelta, n, close, canSigma, canSum) {
+  var extra = (canDelta ? 1 : 0) + (canSigma ? 1 : 0) + (canSum ? 1 : 0);
   var cols = n * 2 + 1 + extra * 2;
   var label = close != null ? Number(close).toLocaleString(undefined, { maximumFractionDigits: 2 }) : "";
   return (
@@ -2208,6 +2214,8 @@ function renderSeriesTable() {
   const canDelta = state.showDelta && pullDates.length >= 2;
   const lastI = pullDates.length - 1;
   const prevI = pullDates.length - 2;
+  const canSum = isOpenSumOnTbl();
+  const osm = canSum ? twOpenSums(rows) : null;
 
   let html =
     '<div class="table-title">' +
@@ -2228,13 +2236,14 @@ function renderSeriesTable() {
   // صف CALL | PUT
   html += '<tr class="side-label-row">';
   if (canDelta) html += '<th class="delta side-pad"></th>';
-  html += '<th class="side-label call-side" colspan="' + nCols + '">CALL</th>';
+  html += '<th class="side-label call-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">CALL</th>';
   html += '<th class="strike side-mid"></th>';
-  html += '<th class="side-label put-side" colspan="' + nCols + '">PUT</th>';
+  html += '<th class="side-label put-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">PUT</th>';
   if (canDelta) html += '<th class="delta side-pad"></th>';
   html += "</tr><tr>";
   var colPos = 0;
   if (canDelta) html += '<th class="delta">Δ</th>';
+  if (canSum) html += OS_HEAD_HTML;
   for (let i = nCols - 1; i >= 0; i--) {
     const f = formatPullDate(pullDates[i]);
     const sc = seriesColClass(colPos++, totalSideCols);
@@ -2246,6 +2255,7 @@ function renderSeriesTable() {
     const sc = seriesColClass(colPos++, totalSideCols);
     html += '<th class="' + sc + '">' + f.top + '<br><span class="subh">' + f.sub + "</span></th>";
   }
+  if (canSum) html += OS_HEAD_HTML;
   if (canDelta) html += '<th class="delta">Δ</th>';
   html += "</tr></thead><tbody>";
 
@@ -2280,7 +2290,7 @@ function renderSeriesTable() {
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
       if (typeof greenBarRow === "function") {
-        html += greenBarRow(canDelta, pullDates.length, close);
+        html += greenBarRow(canDelta, pullDates.length, close, false, canSum);
       } else {
         html +=
           '<tr class="close-bar-row"><td colspan="99"><div class="close-bar-line">' +
@@ -2309,6 +2319,7 @@ function renderSeriesTable() {
         (d != null ? d.toLocaleString() + rankTag(rkDCs(d)) : "") +
         "</td>";
     }
+    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]));
     var bodyPos = 0;
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
@@ -2333,6 +2344,7 @@ function renderSeriesTable() {
         pv.toLocaleString() +
         "</td>";
     }
+    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]));
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
       const maxCls =
@@ -2347,7 +2359,7 @@ function renderSeriesTable() {
     html += "</tr>";
   });
   if (close != null && !barDone && typeof greenBarRow === "function") {
-    html += greenBarRow(canDelta, pullDates.length, close);
+    html += greenBarRow(canDelta, pullDates.length, close, false, canSum);
   }
   html += "</tbody></table></div>";
   host.innerHTML = html;
@@ -3004,6 +3016,8 @@ function renderTable() {
   const canSigma = !!(isSigmaUnlocked() && state.showSigma && state.sigmaExps && state.sigmaExps.length);
   const lastI = pullDates.length - 1;
   const prevI = pullDates.length - 2;
+  const canSum = isOpenSumOnTbl();
+  const osm = canSum ? twOpenSums(rows) : null;
 
   let html =
     '<div class="table-title">' +
@@ -3025,14 +3039,15 @@ function renderTable() {
   html += '<tr class="side-label-row">';
   if (canSigma) html += '<th class="sigma side-pad"></th>';
   if (canDelta) html += '<th class="delta side-pad"></th>';
-  html += '<th class="side-label call-side" colspan="' + nCols + '">CALL</th>';
+  html += '<th class="side-label call-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">CALL</th>';
   html += '<th class="strike side-mid"></th>';
-  html += '<th class="side-label put-side" colspan="' + nCols + '">PUT</th>';
+  html += '<th class="side-label put-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">PUT</th>';
   if (canDelta) html += '<th class="delta side-pad"></th>';
   if (canSigma) html += '<th class="sigma side-pad"></th>';
   html += "</tr><tr>";
   if (canSigma) html += '<th class="sigma" style="background:rgba(45,212,191,0.12)!important;color:inherit;font-weight:600">ΣΔ</th>';
   if (canDelta) html += '<th class="delta">Δ</th>';
+  if (canSum) html += OS_HEAD_HTML;
   for (let i = pullDates.length - 1; i >= 0; i--) {
     const f = formatPullDate(pullDates[i]);
     html += "<th>" + f.top + '<br><span class="subh">' + f.sub + "</span></th>";
@@ -3042,6 +3057,7 @@ function renderTable() {
     const f = formatPullDate(pullDates[j]);
     html += "<th>" + f.top + '<br><span class="subh">' + f.sub + "</span></th>";
   }
+  if (canSum) html += OS_HEAD_HTML;
   if (canDelta) html += '<th class="delta">Δ</th>';
   if (canSigma) html += '<th class="sigma" style="background:rgba(45,212,191,0.12)!important;color:inherit;font-weight:600">ΣΔ</th>';
   html += "</tr></thead><tbody>";
@@ -3088,7 +3104,7 @@ function renderTable() {
   let barDone = false;
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
-      html += greenBarRow(canDelta, pullDates.length, close, canSigma);
+      html += greenBarRow(canDelta, pullDates.length, close, canSigma, canSum);
       barDone = true;
     }
     const zebra = ri % 2 === 1 ? " zebra" : "";
@@ -3120,6 +3136,7 @@ function renderTable() {
         (d != null ? d.toLocaleString() + rankTag(rkDC(d)) : "") +
         "</td>";
     }
+    if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]));
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
       const maxCls = callMax[i] > 0 && cv === callMax[i] ? " max-oi" : "";
@@ -3147,6 +3164,7 @@ function renderTable() {
         pv.toLocaleString() +
         "</td>";
     }
+    if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]));
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
       const maxCls = d != null && deltaPutMax > 0 && d === deltaPutMax ? " max-oi" : "";
@@ -3170,7 +3188,7 @@ function renderTable() {
     html += "</tr>";
   });
   if (close != null && !barDone) {
-    html += greenBarRow(canDelta, pullDates.length, close, canSigma);
+    html += greenBarRow(canDelta, pullDates.length, close, canSigma, canSum);
   }
   html += "</tbody></table></div>";
   host.innerHTML = html;
