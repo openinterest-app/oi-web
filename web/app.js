@@ -1814,7 +1814,7 @@ async function refresh() {
 }
 
 function greenBarRow(canDelta, n, close, canSigma, canSum) {
-  var extra = (canDelta ? 1 : 0) + (canSigma ? 1 : 0) + (canSum ? 1 : 0);
+  var extra = (canDelta ? 1 : 0) + (canSigma ? 1 : 0) + (typeof canSum === "number" ? canSum : canSum ? 1 : 0);
   var cols = n * 2 + 1 + extra * 2;
   var label = close != null ? Number(close).toLocaleString(undefined, { maximumFractionDigits: 2 }) : "";
   return (
@@ -2236,6 +2236,8 @@ function renderSeriesTable() {
   const prevI = pullDates.length - 2;
   const canSum = isOpenSumOnTbl();
   const osm = canSum ? twOpenSums(rows) : null;
+  const canGrow = isGrowthOnTbl();
+  const grw = canGrow ? { call: rows.map(function (r) { return twGrowthNet(r.calls, r.present); }), put: rows.map(function (r) { return twGrowthNet(r.puts, r.present); }) } : null;
 
   let html =
     '<div class="table-title">' +
@@ -2256,14 +2258,15 @@ function renderSeriesTable() {
   // صف CALL | PUT
   html += '<tr class="side-label-row">';
   if (canDelta) html += '<th class="delta side-pad"></th>';
-  html += '<th class="side-label call-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">CALL</th>';
+  html += '<th class="side-label call-side" colspan="' + (nCols + (canSum ? 1 : 0) + (canGrow ? 1 : 0)) + '">CALL</th>';
   html += '<th class="strike side-mid"></th>';
-  html += '<th class="side-label put-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">PUT</th>';
+  html += '<th class="side-label put-side" colspan="' + (nCols + (canSum ? 1 : 0) + (canGrow ? 1 : 0)) + '">PUT</th>';
   if (canDelta) html += '<th class="delta side-pad"></th>';
   html += "</tr><tr>";
   var colPos = 0;
   if (canDelta) html += '<th class="delta">Δ</th>';
   if (canSum) html += OS_HEAD_HTML;
+  if (canGrow) html += GR_HEAD_HTML;
   for (let i = nCols - 1; i >= 0; i--) {
     const f = formatPullDate(pullDates[i]);
     const sc = seriesColClass(colPos++, totalSideCols);
@@ -2275,6 +2278,7 @@ function renderSeriesTable() {
     const sc = seriesColClass(colPos++, totalSideCols);
     html += '<th class="' + sc + '">' + f.top + '<br><span class="subh">' + f.sub + "</span></th>";
   }
+  if (canGrow) html += GR_HEAD_HTML;
   if (canSum) html += OS_HEAD_HTML;
   if (canDelta) html += '<th class="delta">Δ</th>';
   html += "</tr></thead><tbody>";
@@ -2310,7 +2314,7 @@ function renderSeriesTable() {
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
       if (typeof greenBarRow === "function") {
-        html += greenBarRow(canDelta, pullDates.length, close, false, canSum);
+        html += greenBarRow(canDelta, pullDates.length, close, false,(canSum ? 1 : 0) + (canGrow ? 1 : 0));
       } else {
         html +=
           '<tr class="close-bar-row"><td colspan="99"><div class="close-bar-line">' +
@@ -2340,6 +2344,7 @@ function renderSeriesTable() {
         "</td>";
     }
     if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]), osm.upCall[ri]);
+    if (canGrow) html += twGrowthCell(grw.call[ri]);
     var bodyPos = 0;
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
@@ -2364,6 +2369,7 @@ function renderSeriesTable() {
         pv.toLocaleString() +
         "</td>";
     }
+    if (canGrow) html += twGrowthCell(grw.put[ri]);
     if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]), osm.upPut[ri]);
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
@@ -2379,7 +2385,7 @@ function renderSeriesTable() {
     html += "</tr>";
   });
   if (close != null && !barDone && typeof greenBarRow === "function") {
-    html += greenBarRow(canDelta, pullDates.length, close, false, canSum);
+    html += greenBarRow(canDelta, pullDates.length, close, false,(canSum ? 1 : 0) + (canGrow ? 1 : 0));
   }
   html += "</tbody></table></div>";
   host.innerHTML = html;
@@ -2934,6 +2940,67 @@ function twOpenSumCell(v, rk, up) {
   );
 }
 
+/** ===== زر «صافي النمو» بجانب زر مجموع الأوبن: مجموع فروق الأيام (يزيد/ينقص) = آخر يوم − أول يوم ضمن الأيام المعروضة ===== */
+var GROWTH_ICON =
+  '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<polyline points="3,17 9,11 13,15 21,7"/><polyline points="15,7 21,7 21,13"/></svg>';
+var GR_HEAD_HTML = '<th class="opensum growth os-head" title="صافي النمو">' + GROWTH_ICON + "</th>";
+
+function isGrowthOnTbl() {
+  return !!(isTotalUnlocked() && state.showGrowth && !state.tawafuqMode && !state.totMode && !state.x3Mode);
+}
+
+/** arr من الأقدم للأحدث → صافي التغيّر (مجموع فروق كل يوم عن اليوم السابق). null = لا بيانات */
+function twGrowthNet(arr, present) {
+  var a = [], i;
+  for (i = 0; i < (arr || []).length; i++) { if (present && present[i] === false) continue; a.push(arr[i] || 0); }
+  if (a.length < 2) return null;
+  var net = 0;
+  for (i = 1; i < a.length; i++) net += a[i] - a[i - 1];
+  var any = false;
+  for (i = 0; i < a.length; i++) { if (a[i] > 0) { any = true; break; } }
+  return any ? net : null;
+}
+
+function twGrowthCell(v) {
+  if (v == null) return '<td class="opensum growth os-empty"></td>';
+  var cls = v > 0 ? " gr-up" : v < 0 ? " gr-dn" : " gr-zero";
+  var txt = v > 0 ? "+" + v.toLocaleString() : v < 0 ? "\u2212" + Math.abs(v).toLocaleString() : "0";
+  return '<td class="opensum growth' + cls + '"><div class="os-n">' + txt + "</div></td>";
+}
+
+function syncGrowthBtn() {
+  var btn = $("#growthBtn");
+  var show = !!(isTotalUnlocked() && !state.tawafuqMode && !state.totMode && !state.x3Mode);
+  if (!show) {
+    if (state.showGrowth) state.showGrowth = false;
+    if (btn) btn.style.setProperty("display", "none", "important");
+    return;
+  }
+  if (!btn) {
+    var anchorBtn = $("#openSumBtn") || $("#deltaBtn");
+    if (!anchorBtn || !anchorBtn.parentNode) return;
+    btn = document.createElement("button");
+    btn.id = "growthBtn";
+    btn.type = "button";
+    btn.className = "delta-btn opensum-btn";
+    btn.title = "صافي النمو";
+    btn.setAttribute("aria-label", "صافي النمو");
+    btn.innerHTML = GROWTH_ICON;
+    if (anchorBtn.nextSibling) anchorBtn.parentNode.insertBefore(btn, anchorBtn.nextSibling);
+    else anchorBtn.parentNode.appendChild(btn);
+    btn.onclick = function () {
+      state.showGrowth = !state.showGrowth;
+      btn.classList.toggle("active", !!state.showGrowth);
+      btn.setAttribute("aria-pressed", state.showGrowth ? "true" : "false");
+      renderTable();
+    };
+  }
+  btn.style.removeProperty("display");
+  btn.classList.toggle("active", !!state.showGrowth);
+  btn.setAttribute("aria-pressed", state.showGrowth ? "true" : "false");
+}
+
 function tawafuqColStyle(kind) {
   // شفافية خفيفة مثل اليوم بالسابق: بنفسجي / أخضر تركواز / أزرق
   if (kind === "opx") return "background-color:rgba(167,139,250,0.14)!important;";
@@ -2995,6 +3062,7 @@ function renderTable() {
   const data = state.cache[state.ticker];
   const host = $("#tableHost");
   try { syncOpenSumBtn(); } catch (eOs) {}
+  try { syncGrowthBtn(); } catch (eGr) {}
   if (state.totMode && (!isTotalUnlocked() || state.seriesMode || state.tawafuqMode || state.x3Mode)) clearTotMode();
   try {
     // ΣΔ لا معنى له في «المجموع ككل» (هو أصلًا مجموع كل الانتهاءات) فيُخفى زره هناك فقط
@@ -3038,6 +3106,8 @@ function renderTable() {
   const prevI = pullDates.length - 2;
   const canSum = isOpenSumOnTbl();
   const osm = canSum ? twOpenSums(rows) : null;
+  const canGrow = isGrowthOnTbl();
+  const grw = canGrow ? { call: rows.map(function (r) { return twGrowthNet(r.calls, r.present); }), put: rows.map(function (r) { return twGrowthNet(r.puts, r.present); }) } : null;
 
   let html =
     '<div class="table-title">' +
@@ -3059,15 +3129,16 @@ function renderTable() {
   html += '<tr class="side-label-row">';
   if (canSigma) html += '<th class="sigma side-pad"></th>';
   if (canDelta) html += '<th class="delta side-pad"></th>';
-  html += '<th class="side-label call-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">CALL</th>';
+  html += '<th class="side-label call-side" colspan="' + (nCols + (canSum ? 1 : 0) + (canGrow ? 1 : 0)) + '">CALL</th>';
   html += '<th class="strike side-mid"></th>';
-  html += '<th class="side-label put-side" colspan="' + (nCols + (canSum ? 1 : 0)) + '">PUT</th>';
+  html += '<th class="side-label put-side" colspan="' + (nCols + (canSum ? 1 : 0) + (canGrow ? 1 : 0)) + '">PUT</th>';
   if (canDelta) html += '<th class="delta side-pad"></th>';
   if (canSigma) html += '<th class="sigma side-pad"></th>';
   html += "</tr><tr>";
   if (canSigma) html += '<th class="sigma" style="background:rgba(45,212,191,0.12)!important;color:inherit;font-weight:600">ΣΔ</th>';
   if (canDelta) html += '<th class="delta">Δ</th>';
   if (canSum) html += OS_HEAD_HTML;
+  if (canGrow) html += GR_HEAD_HTML;
   for (let i = pullDates.length - 1; i >= 0; i--) {
     const f = formatPullDate(pullDates[i]);
     html += "<th>" + f.top + '<br><span class="subh">' + f.sub + "</span></th>";
@@ -3077,6 +3148,7 @@ function renderTable() {
     const f = formatPullDate(pullDates[j]);
     html += "<th>" + f.top + '<br><span class="subh">' + f.sub + "</span></th>";
   }
+  if (canGrow) html += GR_HEAD_HTML;
   if (canSum) html += OS_HEAD_HTML;
   if (canDelta) html += '<th class="delta">Δ</th>';
   if (canSigma) html += '<th class="sigma" style="background:rgba(45,212,191,0.12)!important;color:inherit;font-weight:600">ΣΔ</th>';
@@ -3124,7 +3196,7 @@ function renderTable() {
   let barDone = false;
   rows.forEach(function (r, ri) {
     if (close != null && !barDone && r.strike > close) {
-      html += greenBarRow(canDelta, pullDates.length, close, canSigma, canSum);
+      html += greenBarRow(canDelta, pullDates.length, close, canSigma,(canSum ? 1 : 0) + (canGrow ? 1 : 0));
       barDone = true;
     }
     const zebra = ri % 2 === 1 ? " zebra" : "";
@@ -3157,6 +3229,7 @@ function renderTable() {
         "</td>";
     }
     if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]), osm.upCall[ri]);
+    if (canGrow) html += twGrowthCell(grw.call[ri]);
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
       const maxCls = callMax[i] > 0 && cv === callMax[i] ? " max-oi" : "";
@@ -3184,6 +3257,7 @@ function renderTable() {
         pv.toLocaleString() +
         "</td>";
     }
+    if (canGrow) html += twGrowthCell(grw.put[ri]);
     if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]), osm.upPut[ri]);
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
@@ -3208,7 +3282,7 @@ function renderTable() {
     html += "</tr>";
   });
   if (close != null && !barDone) {
-    html += greenBarRow(canDelta, pullDates.length, close, canSigma, canSum);
+    html += greenBarRow(canDelta, pullDates.length, close, canSigma,(canSum ? 1 : 0) + (canGrow ? 1 : 0));
   }
   html += "</tbody></table></div>";
   host.innerHTML = html;

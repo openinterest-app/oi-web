@@ -5180,3 +5180,12 @@ html[data-theme="light"] table.oi td.opensum .os-rk { color: #3b2f66; }
 table.oi td.opensum.os-up { background: rgba(110,190,165,.17) !important; box-shadow: none !important; border-color: transparent !important; }
 table.oi td.opensum.os-up .os-n { color: inherit; font-weight: inherit; }
 html[data-theme="light"] table.oi td.opensum.os-up { background: rgba(80,170,140,.16) !important; }
+
+
+/* زر صافي النمو — أرقام هادئة: أخضر للزيادة، أحمر للنقص */
+table.oi td.opensum.growth .os-n { font-variant-numeric: tabular-nums; font-weight: 600; }
+table.oi td.opensum.growth.gr-up .os-n { color: #6ee7b7; }
+table.oi td.opensum.growth.gr-dn .os-n { color: #fca5a5; }
+table.oi td.opensum.growth.gr-zero .os-n { opacity: .55; }
+html[data-theme="light"] table.oi td.opensum.growth.gr-up .os-n { color: #047857; }
+html[data-theme="light"] table.oi td.opensum.growth.gr-dn .os-n { color: #b91c1c; }
