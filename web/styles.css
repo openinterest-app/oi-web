@@ -5189,3 +5189,11 @@ table.oi td.opensum.growth.gr-dn .os-n { color: #fca5a5; }
 table.oi td.opensum.growth.gr-zero .os-n { opacity: .55; }
 html[data-theme="light"] table.oi td.opensum.growth.gr-up .os-n { color: #047857; }
 html[data-theme="light"] table.oi td.opensum.growth.gr-dn .os-n { color: #b91c1c; }
+
+/* ترتيب 1-4 بين قوسين، والأعلى نموًا (1) بنفس أخضر أعلى تزايد في زر Δ */
+table.oi td.opensum.growth .rk { font-size: 0.82em; font-weight: 600; opacity: .7; white-space: nowrap; }
+html body table.oi:not(.x3-table) td.opensum.growth.gr-top { background: #2f4947 !important; }
+html body table.oi:not(.x3-table) td.opensum.growth.gr-top .os-n { color: #d6efe9; font-weight: 700; }
+html[data-theme="light"] body table.oi:not(.x3-table) td.opensum.growth.gr-top,
+html[data-theme="light"] table.oi:not(.x3-table) td.opensum.growth.gr-top { background: #d8ede9 !important; }
+html[data-theme="light"] table.oi:not(.x3-table) td.opensum.growth.gr-top .os-n { color: #1f4a44; }

@@ -2238,6 +2238,7 @@ function renderSeriesTable() {
   const osm = canSum ? twOpenSums(rows) : null;
   const canGrow = isGrowthOnTbl();
   const grw = canGrow ? { call: rows.map(function (r) { return twGrowthNet(r.calls, r.present); }), put: rows.map(function (r) { return twGrowthNet(r.puts, r.present); }) } : null;
+  if (grw) { grw.rkCall = rankMap(grw.call); grw.rkPut = rankMap(grw.put); }
 
   let html =
     '<div class="table-title">' +
@@ -2344,7 +2345,7 @@ function renderSeriesTable() {
         "</td>";
     }
     if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]), osm.upCall[ri]);
-    if (canGrow) html += twGrowthCell(grw.call[ri]);
+    if (canGrow) html += twGrowthCell(grw.call[ri], grw.rkCall(grw.call[ri]));
     var bodyPos = 0;
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
@@ -2369,7 +2370,7 @@ function renderSeriesTable() {
         pv.toLocaleString() +
         "</td>";
     }
-    if (canGrow) html += twGrowthCell(grw.put[ri]);
+    if (canGrow) html += twGrowthCell(grw.put[ri], grw.rkPut(grw.put[ri]));
     if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]), osm.upPut[ri]);
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
@@ -2962,11 +2963,11 @@ function twGrowthNet(arr, present) {
   return any ? net : null;
 }
 
-function twGrowthCell(v) {
+function twGrowthCell(v, rk) {
   if (v == null) return '<td class="opensum growth os-empty"></td>';
-  var cls = v > 0 ? " gr-up" : v < 0 ? " gr-dn" : " gr-zero";
+  var cls = (v > 0 ? " gr-up" : v < 0 ? " gr-dn" : " gr-zero") + (v > 0 && rk === 1 ? " gr-top" : "");
   var txt = v > 0 ? "+" + v.toLocaleString() : v < 0 ? "\u2212" + Math.abs(v).toLocaleString() : "0";
-  return '<td class="opensum growth' + cls + '"><div class="os-n">' + txt + "</div></td>";
+  return '<td class="opensum growth' + cls + '"><div class="os-n">' + txt + (v > 0 ? rankTag(rk) : "") + "</div></td>";
 }
 
 function syncGrowthBtn() {
@@ -3108,6 +3109,7 @@ function renderTable() {
   const osm = canSum ? twOpenSums(rows) : null;
   const canGrow = isGrowthOnTbl();
   const grw = canGrow ? { call: rows.map(function (r) { return twGrowthNet(r.calls, r.present); }), put: rows.map(function (r) { return twGrowthNet(r.puts, r.present); }) } : null;
+  if (grw) { grw.rkCall = rankMap(grw.call); grw.rkPut = rankMap(grw.put); }
 
   let html =
     '<div class="table-title">' +
@@ -3229,7 +3231,7 @@ function renderTable() {
         "</td>";
     }
     if (canSum) html += twOpenSumCell(osm.call[ri], osm.rkCall(osm.call[ri]), osm.upCall[ri]);
-    if (canGrow) html += twGrowthCell(grw.call[ri]);
+    if (canGrow) html += twGrowthCell(grw.call[ri], grw.rkCall(grw.call[ri]));
     for (let i = pullDates.length - 1; i >= 0; i--) {
       const cv = r.calls[i] || 0;
       const maxCls = callMax[i] > 0 && cv === callMax[i] ? " max-oi" : "";
@@ -3257,7 +3259,7 @@ function renderTable() {
         pv.toLocaleString() +
         "</td>";
     }
-    if (canGrow) html += twGrowthCell(grw.put[ri]);
+    if (canGrow) html += twGrowthCell(grw.put[ri], grw.rkPut(grw.put[ri]));
     if (canSum) html += twOpenSumCell(osm.put[ri], osm.rkPut(osm.put[ri]), osm.upPut[ri]);
     if (canDelta) {
       const d = positiveDelta(r.puts[lastI], r.puts[prevI]);
