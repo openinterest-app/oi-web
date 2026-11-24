@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-24T06:04:47.104690Z",
+  "updated_at": "2026-11-24T17:15:19.415133Z",
   "tickers": {
     "SPY": {
       "ticker": "SPY",
@@ -3297,7 +3297,7 @@
     },
     "SNDK": {
       "ticker": "SNDK",
-      "close": 87.71,
+      "close": 94.3949966430664,
       "as_of": "24-11",
       "updated_at": "2026-11-24T02:46:20Z",
       "daily": {
